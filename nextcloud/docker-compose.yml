@@ -1,0 +1,57 @@
+version: '3'
+
+services:
+  db:
+    image: mariadb:10.5
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    restart: unless-stopped
+    volumes:
+      - ${basepath}/nextcloud_db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=test
+      - MYSQL_PASSWORD=test
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+
+  redis:
+    image: redis:alpine
+    restart: unless-stopped
+
+  app:
+    image: nextcloud:apache
+    restart: unless-stopped
+    volumes:
+      - ${basepath}/nextcloud:/var/www/html
+    environment:
+      - MYSQL_HOST=db
+      - REDIS_HOST=redis
+      - MYSQL_PASSWORD=test
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - TRUSTED_PROXYS=192.168.178.0/24 172.18.0.0/16
+      #  - NEXTCLOUD_TRUSTED_DOMAINS=localhost 127.0.0.1
+    depends_on:
+      - db
+      - redis
+
+  cron:
+    image: nextcloud:apache
+    restart: unless-stopped
+    volumes:
+      - ${basepath}/nextcloud:/var/www/html
+    entrypoint: /cron.sh
+    depends_on:
+      - db
+      - redis
+
+
+  proxy:
+    image: 'jc21/nginx-proxy-manager'
+    restart: unless-stopped
+    ports: 
+      - 80:80
+      - 81:81
+      - 443:443
+    volumes:
+      - '${basepath}/nextcloud_nginx/data:/data'
+      - '${basepath}/nextcloud_nginx/letsencrypt:/etc/letsencrypt'

@@ -1,0 +1,59 @@
+version: '3'
+
+services:
+  db:
+    image: mariadb:10.5
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    restart: unless-stopped
+    volumes:
+      - ${basepath}/nextcloud_db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    env_file:
+      - db.env
+
+  redis:
+    image: redis:alpine
+    restart: unless-stopped
+
+  app:
+    image: nextcloud
+    restart: unless-stopped
+    volumes:
+      - ${basepath}/nextcloud:/var/www/html
+    environment:
+      - MYSQL_HOST=db
+      - REDIS_HOST=redis
+      - trusted_proxys=192.168.178.0/24 172.18.0.0/16
+      - NEXTCLOUD_TRUSTED_DOMAINS=cloud.fairmarkt nextcloud.fairmarkt datein.fairmarkt fairmarkt.ddns.net
+    env_file:
+      - db.env
+    depends_on:
+      - db
+      - redis
+      - proxy
+
+  cron:
+    image: nextcloud
+    restart: unless-stopped
+    volumes:
+      - ${basepath}/nextcloud:/var/www/html
+    entrypoint: /cron.sh
+    depends_on:
+      - db
+      - redis
+        
+  proxy:
+    container_name: nextcloud_nginx
+    image: 'jc21/nginx-proxy-manager'
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 81:81
+      - 443:443
+    volumes:
+      - '${basepath}/nextcloud_nginx/data/:/data'
+      - '${basepath}/nextcloud_nginx/letsencrypt:/etc/letsencrypt'
+
+
+

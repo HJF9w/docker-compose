@@ -1,0 +1,86 @@
+version: '2.3' ## v2 is needet for networking, v2.3 is needet because of healt checks.
+services:
+#  unbound:
+#    container_name: unbound
+#    image: 'klutchell/unbound'
+#    restart: 'always'
+#    env_file:
+#      - ./.env
+#    hostname: unbound 
+#    healthcheck:
+#      test: ["CMD", "dig", "google.com", "@127.0.0.1"]
+#      timeout: 2s
+#      interval: 7s
+#      retries: 1
+#      start_period: 10s
+#    dns: 
+#      - '${dns_address_one}'
+#      - '${dns_address_two}'
+#    networks:
+#      fm_internal:
+
+  pihole:
+    container_name: pihole
+    image: 'pihole/pihole:latest'
+    environment:
+      - TZ=Europe/Berlin
+      - VIRTUAL_HOST=pihole
+      - PROXY_LOCATION=pihole
+        #- WEBPASSWORD=${pihole_web_password}
+    volumes:
+      - '${basepath}/pihole/etc-pihole:/etc/pihole'
+      - '${basepath}/pihole/etc-dnsmasq.d:/etc/dnsmasq.d'
+        #- '${basepath}/pihole/custom.list:/etc/pihole/custom.list'
+        #- '${basepath}/pihole/05-pihole-custom-cname.conf:/etc/dnsmasq.d/05-pihole-custom-cname.conf'
+    hostname: pihole
+    healthcheck:
+      test: ["CMD", "dig", "google.com", "@127.0.0.1"]
+      timeout: 2s
+      interval: 7s
+      retries: 1
+      start_period: 10s
+    restart: always
+    networks:
+      fm_mac_vlan:
+        ipv4_address: ${pihole_fm_mac_vlan_ipv4}
+      fm_internal:
+
+
+  nginx:
+    container_name: nginx
+    image: 'jc21/nginx-proxy-manager'
+    restart: always
+    hostname: nginx
+    healthcheck:
+      test: curl --fail http://127.0.1.1:81 || exit 1
+      timeout: 2s
+      interval: 7s
+      retries: 1
+      start_period: 10s
+    volumes:
+      - '${basepath}/nginx/data/:/data'
+      - '${basepath}/nginx/letsencrypt:/etc/letsencrypt'
+    networks:
+      fm_mac_vlan:
+        ipv4_address: ${nginx_fm_mac_vlan_ipv4}
+      fm_internal:
+    depends_on:
+      - pihole
+
+  uptime_kuma:
+    container_name: uptime_kuma
+    image: 'louislam/uptime-kuma'
+    volumes:
+      - '${basepath}/kuma/app/data:/app/data'
+    hostname: uptime-kuma
+    restart: unless-stopped
+    networks:
+      fm_internal:
+    depends_on:
+      - nginx
+
+networks:
+  fm_internal:
+    external: true
+  fm_mac_vlan:
+    external: true

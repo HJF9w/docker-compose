@@ -1,0 +1,29 @@
+version: '2.3' ## v2 is needet for networking, v2.3 is needet because of healt checks.
+services:
+  portainer:
+    container_name: portainer
+    image: 'cr.portainer.io/portainer/portainer-ce'
+    restart: always
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
+      - '${basepath}/portainer/data:/data'
+    networks:
+      mac_vlan:
+        ipv4_address: ${portainer_mac_vlan_ipv4}
+      internal:
+
+
+networks:
+  internal:
+    driver: bridge
+  mac_vlan:
+    driver: macvlan
+    driver_opts:
+      parent: ens18
+    ipam:
+      config:
+      - subnet: ${subnet_default} 
+        gateway: ${gateway_default}
+        ip_range: ${ip_range}
+        aux_addresses:
+          net_address: ${host_address}
