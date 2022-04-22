@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  vaultwarden:
+    container_name: 'vaultwarden'
+    image: 'vaultwarden/server'
+    env-file: .envp # put either in .env or here.
+      #environment:
+      #  - DOMAIN=example.com
+    volumes:
+      - '/mnt/data/docker/vaultwarden/data:/data/'
+    hostname: 'vaultwarden'
+    restart: always
+    networks:
+      xe_internal:
+
+
+networks:
+  xe_internal:
+    external: true
+
+
+

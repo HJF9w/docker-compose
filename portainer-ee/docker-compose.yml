@@ -1,0 +1,39 @@
+version: '2'
+services:
+  portainer:
+    container_name: portainer
+    #image: 'cr.portainer.io/portainer/portainer-ce' ## Comunity version
+    image: 'portainer/portainer-ee'            ## Business version
+    restart: always
+    #ports:
+    #  - '8000:8000'
+    #  - '9000:9000'
+    hostname: portainer.xe
+    dns: 
+      - '10.10.10.12'
+      - '10.10.10.1'
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
+      - '/mnt/data/docker/portainer/data:/data'
+      - '/mnt/data/docker/portainer/compose:/data/compose/1'
+    networks:
+      mac_vlan:
+        ipv4_address: 10.10.10.11
+          #xe_internal:
+
+
+networks:
+  #  xe_internal:
+  #    external: true
+
+  mac_vlan:
+    driver: macvlan
+    driver_opts:
+      parent: eth0
+    ipam:
+      config:
+      - subnet: 10.10.10.0/24
+        gateway: 10.10.10.1
+        ip_range: 10.10.10.0/24
+        aux_addresses:
+          net_address: 10.10.10.10

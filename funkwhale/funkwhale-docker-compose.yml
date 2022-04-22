@@ -1,0 +1,67 @@
+version: '3'
+services:
+  postgres:
+    image: 'postgres:11'
+    environment:
+      -  POSTGRES_HOST_AUTH_METHOD=trust
+    env_file: .env
+    volumes:
+      - '/mnt/data/docker/funkwhale_postgres:/var/lib/postgresql/data'
+    restart: 'unless-stopped'
+    dns:
+      - 'pihole'
+      - '10.10.10.1'
+    networks:
+      internal:
+
+  redis:
+    image: 'redis:4'
+    env_file: .env
+    networks:
+      internal:
+    depends_on:
+      - 'postgres'
+
+  worker:
+    image: 'funkwhale/funkwhale:latest'
+    environment:
+      - C_FORCE_ROOT=true
+    env_file: .env
+    volumes:
+      - '/mnt/data/music:/mnt/data/music'
+      - '/mnt/data/music:/music:ro'
+    command: 'celery -A funkwhale_api.taskapp worker -l INFO --concurrency=0'
+    networks:
+      internal:
+    depends_on:
+      - 'redis'
+
+  beat:
+    image: 'funkwhale/funkwhale:latest'
+    env_file: .env
+    command: 'celery -A funkwhale_api.taskapp beat --pidfile= -l INFO'
+    networks:
+      internal:
+    depends_on:
+      - 'redis'
+
+  api:
+    image: 'funkwhale/funkwhale:latest'
+    env_file: .env
+    volumes:
+      - '/mnt/data/music:/music:ro'
+      - '/mnt/data/music:/mnt/data/music'
+      - '/mnt/data/docker/funkwhale_api/static:/srv/funkwhale/data/static'
+      - '/mnt/data/docker/funkwhale_api/frontend:/srv/funkwhale/front/dist'
+    ports:
+      - '5000:5000'
+    networks:
+      internal:
+    depends_on:
+      - 'redis'
+
+
+networks:
+  internal:
+  xe_internal:
+    external: true

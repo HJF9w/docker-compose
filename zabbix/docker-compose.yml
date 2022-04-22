@@ -1,0 +1,76 @@
+version: '3'
+services:
+  postgres:
+    image: 'postgres:13'
+    env_file: '.env'
+    networks:
+      internal:
+    restart: unless-stopped
+    tty: true
+
+  snmp_trap:
+    image: 'zabbix/zabbix-snmptraps:alpine-5.4-latest'
+    volumes:
+      - '${basepath}snmptraps:/var/lib/zabbix/snmptraps'
+      - '${basepath}mibs:/usr/share/snmp/mibs:ro'
+    ports:
+      - '162:1162/udp'
+    env_file: '.env'
+    networks:
+      internal:
+    restart: unless-stopped
+    tty: true
+    depends_on:
+      - 'postgres'
+
+  server:
+    image: 'zabbix/zabbix-server-pgsql:alpine-5.4-latest'
+    ports:
+      - '10051:10051'
+    env_file: '.env'
+    networks:
+      internal:
+    restart: unless-stopped
+    tty: true
+    depends_on:
+      - 'snmp_trap'
+
+  web:
+    image: 'zabbix/zabbix-web-nginx-pgsql:alpine-5.4-latest'
+    volumes:
+      - '${basepath}nginx:/etc/ssl/nginx:ro'
+    ports:
+      - '443:8443'
+      - '8080:8080'
+    env_file: '.env'
+    networks:
+      internal:
+      xe_internal:
+    restart: unless-stopped
+    tty: true
+    depends_on:
+      - 'server'
+        
+  agent:
+    image: 'zabbix/zabbix-agent'
+    volumes:
+      - '${basepath}/proc:/host/proc:ro'
+      - '${basepath}/sys:/host/sys:ro'
+      - '${basepath}/dev:/host/dev:ro'
+      - '${basepath}/etc:/host/etc:ro'
+      - '${basepath}/var/run/docker.sock:/host/var/run/docker.sock'
+    ports:
+      - '10050:10050'
+    env_file: '.env'
+    networks:
+      internal:
+    restart: unless-stopped
+    tty: true
+    depends_on:
+      - 'server'
+    
+
+networks:
+  internal:
+  xe_internal:
+    external: true

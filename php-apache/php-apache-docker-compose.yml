@@ -1,0 +1,17 @@
+version: '3'
+services:
+  webcam:
+    container_name: 'webcam'
+    image: 'php:apache'
+    volumes:
+      - '/mnt/data/docker/webcam:/var/www/html'
+    working_dir: /usr/src/webcam
+    ports: 
+      - '80:80'
+    networks:
+      xe_internal:
+
+networks:
+  xe_internal:
+    external: true
+
