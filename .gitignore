@@ -1,3 +1,2 @@
-don't include any env files
-*.env
+don't include private env files
 *.envp
