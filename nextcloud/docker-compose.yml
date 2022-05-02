@@ -12,10 +12,14 @@ services:
       - MYSQL_PASSWORD=test
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
+    networks:
+      default:
 
   redis:
     image: redis:alpine
     restart: unless-stopped
+    networks:
+      default:
 
   app:
     image: nextcloud:apache
@@ -33,6 +37,8 @@ services:
     depends_on:
       - db
       - redis
+    networks:
+      default:
 
   cron:
     image: nextcloud:apache
@@ -43,15 +49,24 @@ services:
     depends_on:
       - db
       - redis
+    networks:
+      default:
 
 
   proxy:
     image: 'jc21/nginx-proxy-manager'
     restart: unless-stopped
-    ports: 
-      - 80:80
-      - 81:81
-      - 443:443
+#    ports: 
+#      - 80:80
+#      - 81:81
+#      - 443:443
     volumes:
       - '${basepath}/nextcloud_nginx/data:/data'
       - '${basepath}/nextcloud_nginx/letsencrypt:/etc/letsencrypt'
+    networks:
+      default:
+      system_mac_vlan:
+        ipv4_address: 
+networks:
+  system_mac_vlan:
+    external: true
