@@ -1,0 +1,40 @@
+version: "2"
+services:
+  db:
+    image: 'mariadb' 
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - MYSQL_ROOT_PASSWORD=lol
+      - TZ=Europe/Berlin
+      - MYSQL_DATABASE=bookstack
+      - MYSQL_USER=bookstack
+      - MYSQL_PASSWORD=lol
+    volumes:
+      - '${basepath}/db:/config'
+    restart: unless-stopped
+    networks:
+      default:
+
+  app:
+    image: 'linuxserver/bookstack'
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - APP_URL=bookstack.xe
+      - DB_HOST=db
+      - DB_USER=bookstack
+      - DB_PASS=lol
+      - DB_DATABASE=bookstack
+    volumes:
+      - '${basepath}/app:/config'
+    restart: unless-stopped
+    depends_on:
+      - db
+    networks:
+      default:
+      xe_internal:
+
+networks:
+  xe_internal:
+    external: true
