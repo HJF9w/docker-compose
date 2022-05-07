@@ -1,0 +1,37 @@
+version: "3.7"
+
+services:
+  db:
+    image: "mongo:4.4.4"
+    restart: "unless-stopped"
+    env_file: .env
+    volumes:
+      - "$BASEPATH/db-data:/data/db"
+      - "$BASEPATH/db-backups:/data/backups"
+      - "$BASEPATH/mongoconfig.js:/docker-entrypoint-initdb.d/mongoconfig.js"
+    networks:
+      default:
+
+  api:
+    image: "xbrowsersync/api:1.1.13"
+    env_file: .env
+    healthcheck:
+      test: [ "CMD", "node", "/usr/src/api/healthcheck.js" ]
+      interval: "1m"
+      timeout: "10s"
+      retries: "5"
+      start_period: "30s"
+    restart: "unless-stopped"
+    volumes:
+      - "$BASEPATH/settings.json:/usr/src/api/config/settings.json"
+      - "$BASEPATH/healthcheck.js:/usr/src/api/healthcheck.js"
+    depends_on:
+      - "db"
+    networks:
+      default:
+      xe_internal:
+
+networks:
+  default:
+  xe_internal:
+    external: true

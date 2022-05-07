@@ -1,0 +1,7 @@
+{
+  "db": {
+    "host": "db"
+  }
+  "server.behindProxy": true
+  "server.port": 80
+}
