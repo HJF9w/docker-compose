@@ -1,0 +1,24 @@
+
+version: '3'
+## v2 is needet for networking, v2.3 is needet because of healt checks.
+
+services:
+  vaultwarden:
+    container_name: 'vaultwarden'
+    image: 'vaultwarden/server'
+      #environment:
+      #  - DOMAIN=https://speicher.ddns.net
+    volumes:
+      - '/mnt/data/docker/vaultwarden/data:/data/'
+    hostname: 'vaultwarden'
+    restart: always
+    networks:
+      xe_internal:
+
+
+networks:
+  xe_internal:
+    external: true
+
+
+
