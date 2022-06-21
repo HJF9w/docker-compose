@@ -6,6 +6,8 @@ services:
     restart: 'unless-stopped'
     volumes:
       - '${basepath}/${COMPOSE_PROJECT_NAME}/broker:/data'
+    networks:
+      - 'default'
 
   db:
     image: 'postgres:13'
@@ -16,6 +18,8 @@ services:
       POSTGRES_DB: paperless
       POSTGRES_USER: paperless
       POSTGRES_PASSWORD: paperless
+    networks:
+      - 'default'
 
   gotenberg:
     image: 'gotenberg/gotenberg:7.4'
@@ -23,10 +27,14 @@ services:
     command:
       - "gotenberg"
       - "--chromium-disable-routes=true"
+    networks:
+      - 'default'
 
   tika:
     image: 'ghcr.io/paperless-ngx/tika:latest'
     restart: 'unless-stopped'
+  networks:
+    - 'default'
 
   server:
     image: 'ghcr.io/paperless-ngx/paperless-ngx:latest'
@@ -56,6 +64,11 @@ services:
       PAPERLESS_TIKA_ENABLED: 1
       PAPERLESS_TIKA_GOTENBERG_ENDPOINT: http://gotenberg:3000
       PAPERLESS_TIKA_ENDPOINT: http://tika:9998
+    networks:
+      - 'default'
+      - 'fm_internal'
 
 networks:
   default:
+  fm_internal:
+    external: true
