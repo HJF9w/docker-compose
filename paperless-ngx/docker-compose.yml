@@ -33,8 +33,8 @@ services:
   tika:
     image: 'ghcr.io/paperless-ngx/tika:latest'
     restart: 'unless-stopped'
-  networks:
-    - 'default'
+    networks:
+      - 'default'
 
   server:
     image: 'ghcr.io/paperless-ngx/paperless-ngx:latest'
