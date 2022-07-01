@@ -4,7 +4,7 @@ services:
   vaultwarden:
     container_name: 'vaultwarden'
     image: 'vaultwarden/server'
-    env-file: .envp # put either in .env or here.
+    env_file: .envp # put either in .env or here.
       #environment:
       #  - DOMAIN=example.com
     volumes:
