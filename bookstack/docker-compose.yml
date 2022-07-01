@@ -1,7 +1,8 @@
 version: "2"
 services:
   db:
-    image: 'mariadb' 
+    #image: 'mariadb' 
+    image: 'mariadb@sha256:07e06f2e7ae9dfc63707a83130a62e00167c827f08fcac7a9aa33f4b6dc34e0e'
     environment:
       - PUID=1000
       - PGID=1000
@@ -11,13 +12,15 @@ services:
       - MYSQL_USER=bookstack
       - MYSQL_PASSWORD=lol
     volumes:
-      - '${basepath}/db:/config'
+      - '${basepath}/${COMPOSE_PROJECT_NAME}/db:/config'
+      - '${basepath}/${COMPOSE_PROJECT_NAME}/mysql-data:/var/lib/mysql'
     restart: unless-stopped
     networks:
       default:
 
   app:
-    image: 'linuxserver/bookstack'
+    #image: 'linuxserver/bookstack'
+    image: 'linuxserver/bookstack@sha256:ee35cdbb7de64cab7c8cdee3c4b0f42861831e93fd7fdeb9398f8caddc083eb4'
     environment:
       - PUID=1000
       - PGID=1000
@@ -27,7 +30,9 @@ services:
       - DB_PASS=lol
       - DB_DATABASE=bookstack
     volumes:
-      - '${basepath}/app:/config'
+      - '${basepath}/${COMPOSE_PROJECT_NAME}/app:/config'
+      - '${basepath}/${COMPOSE_PROJECT_NAME}/uploads:/var/www/bookstack/public/uploads'
+      - '${basepath}/${COMPOSE_PROJECT_NAME}/storage-uploads:/var/www/bookstack/storage/uploads'
     restart: unless-stopped
     depends_on:
       - db
