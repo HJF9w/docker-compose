@@ -25,8 +25,8 @@ services:
 
   server:
     image: 'zabbix/zabbix-server-pgsql:alpine-5.4-latest'
-    ports:
-      - '10051:10051'
+#    ports:
+#      - '10051:10051'
     env_file: '.env'
     volumes:
       - '${basepath}/ssk_keys:/var/lib/zabbix/ssh_keys' # put ssh keys vor ssh availability checks, as well as actions here.
@@ -41,9 +41,9 @@ services:
     image: 'zabbix/zabbix-web-nginx-pgsql:alpine-5.4-latest'
     volumes:
       - '${basepath}nginx:/etc/ssl/nginx:ro'
-    ports:
-      - '443:8443'
-      - '8080:8080'
+#    ports:
+#      - '443:8443'
+#      - '8080:8080'
     env_file: '.env'
     networks:
       internal:
