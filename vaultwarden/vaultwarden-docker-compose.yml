@@ -8,6 +8,7 @@ services:
     image: 'vaultwarden/server'
     environment:
       - WEBSOCKET_ENABLED: "true"
+      #- ADMIN_TOKEN=123 # use to access the /admin pannel
       #  - DOMAIN=https://speicher.ddns.net
     volumes:
       - '/mnt/data/docker/vaultwarden/data:/data/'
