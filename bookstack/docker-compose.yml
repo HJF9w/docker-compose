@@ -31,8 +31,9 @@ services:
       - DB_DATABASE=bookstack
     volumes:
       - '${basepath}/${COMPOSE_PROJECT_NAME}/app:/config'
-      - '${basepath}/${COMPOSE_PROJECT_NAME}/uploads:/var/www/bookstack/public/uploads'
-      - '${basepath}/${COMPOSE_PROJECT_NAME}/storage-uploads:/var/www/bookstack/storage/uploads'
+      - '${basepath}/${COMPOSE_PROJECT_NAME}/storage:/var/www'
+#      - '${basepath}/${COMPOSE_PROJECT_NAME}/uploads:/var/www/bookstack/public/uploads'
+#      - '${basepath}/${COMPOSE_PROJECT_NAME}/storage-uploads:/var/www/bookstack/storage/uploads'
     restart: unless-stopped
     depends_on:
       - db
