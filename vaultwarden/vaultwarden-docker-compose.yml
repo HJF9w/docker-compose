@@ -1,12 +1,13 @@
 
-version: '3'
+version: '3.8'
 ## v2 is needet for networking, v2.3 is needet because of healt checks.
 
 services:
   vaultwarden:
     container_name: 'vaultwarden'
     image: 'vaultwarden/server'
-      #environment:
+    environment:
+      - WEBSOCKET_ENABLED: "true"
       #  - DOMAIN=https://speicher.ddns.net
     volumes:
       - '/mnt/data/docker/vaultwarden/data:/data/'
