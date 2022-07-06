@@ -1,16 +1,13 @@
 version: "2"
 services:
   db:
-    #image: 'mariadb' 
-    image: 'mariadb@sha256:07e06f2e7ae9dfc63707a83130a62e00167c827f08fcac7a9aa33f4b6dc34e0e'
+    image: 'mariadb' 
     environment:
-      - PUID=1000
-      - PGID=1000
-      - MYSQL_ROOT_PASSWORD=lol
       - TZ=Europe/Berlin
-      - MYSQL_DATABASE=bookstack
-      - MYSQL_USER=bookstack
+      - MYSQL_ROOT_PASSWORD=lol
       - MYSQL_PASSWORD=lol
+      - MYSQL_USER=bookstack
+      - MYSQL_DATABASE=bookstack
     volumes:
       - '${basepath}/${COMPOSE_PROJECT_NAME}/db:/config'
       - '${basepath}/${COMPOSE_PROJECT_NAME}/mysql-data:/var/lib/mysql'
@@ -19,21 +16,18 @@ services:
       default:
 
   app:
-    #image: 'linuxserver/bookstack'
-    image: 'linuxserver/bookstack@sha256:ee35cdbb7de64cab7c8cdee3c4b0f42861831e93fd7fdeb9398f8caddc083eb4'
+    image: 'solidnerd/bookstack:22.04.02'
     environment:
-      - PUID=1000
-      - PGID=1000
-      - APP_URL=bookstack.xe
+    #set the APP_ to the URL of bookstack without without a trailing slash APP_URL=https://example.com
+      - APP_URL=http://localhost
       - DB_HOST=db
-      - DB_USER=bookstack
       - DB_PASS=lol
+      - DB_USER=bookstack
       - DB_DATABASE=bookstack
     volumes:
       - '${basepath}/${COMPOSE_PROJECT_NAME}/app:/config'
-      - '${basepath}/${COMPOSE_PROJECT_NAME}/storage:/var/www'
-#      - '${basepath}/${COMPOSE_PROJECT_NAME}/uploads:/var/www/bookstack/public/uploads'
-#      - '${basepath}/${COMPOSE_PROJECT_NAME}/storage-uploads:/var/www/bookstack/storage/uploads'
+      - '${basepath}/${COMPOSE_PROJECT_NAME}/uploads:/var/www/bookstack/public/uploads'
+      - '${basepath}/${COMPOSE_PROJECT_NAME}/storage-uploads:/var/www/bookstack/storage/uploads'
     restart: unless-stopped
     depends_on:
       - db
@@ -44,3 +38,5 @@ services:
 networks:
   xe_internal:
     external: true
+  default:
+
