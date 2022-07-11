@@ -56,7 +56,7 @@ services:
       - '${basepath}/${COMPOSE_PROJECT_NAME}/media:/usr/src/paperless/media:Z'
       - '${basepath}/${COMPOSE_PROJECT_NAME}/export:/usr/src/paperless/export:Z'
       - '${basepath}/${COMPOSE_PROJECT_NAME}/consume:/usr/src/paperless/consume:Z'
-      - '${basepath}/${COMPOSE_PROJECT_NAME}/trash:/media/trash:Z'
+      - '${basepath}/${COMPOSE_PROJECT_NAME}/trash:/media/trash:Z' ## the trash directory has to be writable by the user running docker-compose, with 755 permissions.
     env_file: .env
     environment:
       PAPERLESS_REDIS: redis://broker:6379
