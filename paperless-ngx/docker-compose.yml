@@ -5,7 +5,7 @@ services:
     image: 'redis:6.0'
     restart: 'unless-stopped'
     volumes:
-      - '${basepath}/${COMPOSE_PROJECT_NAME}/broker:/data'
+      - '${basepath}/${COMPOSE_PROJECT_NAME}/broker:/data:Z'
     networks:
       - 'default'
 
@@ -13,7 +13,7 @@ services:
     image: 'postgres:13'
     restart: 'unless-stopped'
     volumes:
-      - '${basepath}/${COMPOSE_PROJECT_NAME}/db:/var/lib/postgresql/data'
+      - '${basepath}/${COMPOSE_PROJECT_NAME}/db:/var/lib/postgresql/data:Z'
     environment:
       POSTGRES_DB: paperless
       POSTGRES_USER: paperless
@@ -52,11 +52,11 @@ services:
       timeout: 10s
       retries: 5
     volumes:
-      - '${basepath}/${COMPOSE_PROJECT_NAME}/data:/usr/src/paperless/data'
-      - '${basepath}/${COMPOSE_PROJECT_NAME}/media:/usr/src/paperless/media'
-      - '${basepath}/${COMPOSE_PROJECT_NAME}/export:/usr/src/paperless/export'
-      - '${basepath}/${COMPOSE_PROJECT_NAME}/consume:/usr/src/paperless/consume'
-      - '${basepath}/${COMPOSE_PROJECT_NAME}/trash:/media/trash'
+      - '${basepath}/${COMPOSE_PROJECT_NAME}/data:/usr/src/paperless/data:Z'
+      - '${basepath}/${COMPOSE_PROJECT_NAME}/media:/usr/src/paperless/media:Z'
+      - '${basepath}/${COMPOSE_PROJECT_NAME}/export:/usr/src/paperless/export:Z'
+      - '${basepath}/${COMPOSE_PROJECT_NAME}/consume:/usr/src/paperless/consume:Z'
+      - '${basepath}/${COMPOSE_PROJECT_NAME}/trash:/media/trash:Z'
     env_file: .env
     environment:
       PAPERLESS_REDIS: redis://broker:6379
