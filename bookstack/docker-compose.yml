@@ -1,42 +1,41 @@
-version: "2"
+version: '3'
 services:
-  db:
-    image: 'mariadb' 
+  mysql:
+    image: mysql
     environment:
-      - TZ=Europe/Berlin
-      - MYSQL_ROOT_PASSWORD=lol
-      - MYSQL_PASSWORD=lol
-      - MYSQL_USER=bookstack
-      - MYSQL_DATABASE=bookstack
+    - MYSQL_ALLOW_EMPTY_PASSWORD=1
+    - MYSQL_DATABASE=bookstack
+    - MYSQL_USER=bookstack
+    - MYSQL_PASSWORD=secret
     volumes:
-      - '${basepath}/${COMPOSE_PROJECT_NAME}/db:/config'
-      - '${basepath}/${COMPOSE_PROJECT_NAME}/mysql-data:/var/lib/mysql'
-    restart: unless-stopped
+    - '${basepath}/${COMPOSE_PROJECT_NAME}/mysql-data:/var/lib/mysql'
     networks:
       default:
 
   app:
-    image: 'solidnerd/bookstack:22.04.02'
-    environment:
-    #set the APP_ to the URL of bookstack without without a trailing slash APP_URL=https://example.com
-      - APP_URL=http://localhost
-      - DB_HOST=db
-      - DB_PASS=lol
-      - DB_USER=bookstack
-      - DB_DATABASE=bookstack
-    volumes:
-      - '${basepath}/${COMPOSE_PROJECT_NAME}/app:/config'
-      - '${basepath}/${COMPOSE_PROJECT_NAME}/uploads:/var/www/bookstack/public/uploads'
-      - '${basepath}/${COMPOSE_PROJECT_NAME}/storage-uploads:/var/www/bookstack/storage/uploads'
-    restart: unless-stopped
+    image: test:10
+    build:
+      context: ./docker-bookstack
+      dockerfile: Dockerfile
     depends_on:
-      - db
+    - mysql
+    environment:
+    - DB_HOST=mysql:3306
+    - DB_DATABASE=bookstack
+    - DB_USERNAME=bookstack
+    - DB_PASSWORD=secret
+    #set the APP_ to the URL of bookstack without without a trailing slash APP_URL=https://example.com
+    - APP_URL=https://bookstack.xe
+    volumes:
+    - '${basepath}/${COMPOSE_PROJECT_NAME}/uploads:/var/www/bookstack/public/uploads'
+    - '${basepath}/${COMPOSE_PROJECT_NAME}/storage-uploads:/var/www/bookstack/storage/uploads'
+#    ports:
+#    - "8080:8080"
     networks:
       default:
       xe_internal:
 
 networks:
+  default:
   xe_internal:
     external: true
-  default:
-
