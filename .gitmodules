@@ -1,6 +1,3 @@
 [submodule "docker-bookstack"]
- path = bookstack/docker-bookstack
- url = https://github.com/solidnerd/docker-bookstack.git
-[submodule "test"]
-	path = test
-	url = https://github.com/solidnerd/docker-bookstack.git
+	 path = bookstack/docker-bookstack
+	 url = https://github.com/HJF9w/docker-bookstack.git
