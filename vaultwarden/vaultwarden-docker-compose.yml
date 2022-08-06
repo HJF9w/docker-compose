@@ -1,5 +1,5 @@
 
-version: '3.8'
+version: '3'
 ## v2 is needet for networking, v2.3 is needet because of healt checks.
 
 services:
