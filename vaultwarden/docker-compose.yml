@@ -1,12 +1,15 @@
+
 version: '3'
+## v2 is needet for networking, v2.3 is needet because of healt checks.
 
 services:
   vaultwarden:
     container_name: 'vaultwarden'
     image: 'vaultwarden/server'
-    env_file: .envp # put either in .env or here.
-      #environment:
-      #  - DOMAIN=example.com
+    environment:
+      - WEBSOCKET_ENABLED: "true"
+      #- ADMIN_TOKEN=123 # use to access the /admin pannel
+      #  - DOMAIN=https://speicher.ddns.net
     volumes:
       - '/mnt/data/docker/vaultwarden/data:/data/'
     hostname: 'vaultwarden'
