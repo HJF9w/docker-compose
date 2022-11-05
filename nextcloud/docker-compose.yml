@@ -39,6 +39,7 @@ services:
       - TRUSTED_PROXYS=192.168.178.0/24 172.18.0.0/16 10.10.10.0/8
       - NEXTCLOUD_TRUSTED_DOMAINS=localhost 127.0.0.1 127.0.1.1 nextcloud.xe
       - OVERWRITEPROTOCOL=https
+      - DEFAULT_PHONE_REGION=de
     depends_on:
       - redis
     networks:
