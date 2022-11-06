@@ -29,16 +29,16 @@ services:
     image: nextcloud:apache
     restart: unless-stopped
     volumes:
-      - ${basepath}/${COMPOSE_PROJECT_NAME}:/var/www/html
+      - ${basepath}/${COMPOSE_PROJECT_NAME}/app:/var/www/html
     environment:
       - MYSQL_HOST=db
       - REDIS_HOST=redis
       - MYSQL_PASSWORD=test
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
-      - TRUSTED_PROXYS=192.168.178.0/24 172.18.0.0/16 10.10.10.0/8
       - NEXTCLOUD_TRUSTED_DOMAINS=localhost 127.0.0.1 127.0.1.1 nextcloud.xe
       - OVERWRITEPROTOCOL=https
+        #- NC_DEFAULT_PHONE_REGION='DE' # or NEXTCLOUD_DEFAULT_PHONE_REGION this currently doesn't work, see https://github.com/nextcloud/docker/issues/1465 you need to manualy add "'default_phone_region' => 'DE'," to config/config.php
     depends_on:
       - redis
     networks:
@@ -49,7 +49,7 @@ services:
     image: nextcloud:apache
     restart: unless-stopped
     volumes:
-      - ${basepath}/${COMPOSE_PROJECT_NAME}:/var/www/html
+      - ${basepath}/${COMPOSE_PROJECT_NAME}/app:/var/www/html
     entrypoint: /cron.sh
     depends_on:
       - redis
