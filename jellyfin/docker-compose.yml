@@ -1,17 +1,21 @@
-version: "3.5"
+version: "3"
+
 services:
-  jellyfin:
+  app:
     image: jellyfin/jellyfin
-    container_name: jellyfin
-    user: uid:gid
-    network_mode: "host"
+    user: 1000:1000
+    # network_mode: "host" ## Bridge mode will be used if host mode is omitted. Using host networking (--net=host) is optional but required in order to use DLNA. https://jellyfin.org/docs/general/administration/installing#docker
     volumes:
-      - /path/to/config:/config
-      - /path/to/cache:/cache
-      - /path/to/media:/media
-      - /path/to/media2:/media2:ro
+      - "${basepath}/${COMPOSE_PROJECT_NAME}/config:/config"
+      - "${basepath}/${COMPOSE_PROJECT_NAME}/cache:/cache"
+      - "${basepath}/${COMPOSE_PROJECT_NAME}/media:/media"
+      - "${basepath}/${COMPOSE_PROJECT_NAME}/media2:/media2:ro"
     restart: "unless-stopped"
-    # Optional - alternative address used for autodiscovery
-    environment:
-      - JELLYFIN_PublishedServerUrl=http://example.com
+    networks:
+      - xe_internal
+
+networks:
+  xe_internal:
+    external: true
+
 
