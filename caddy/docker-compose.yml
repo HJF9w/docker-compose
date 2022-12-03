@@ -10,9 +10,9 @@ services:
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/config:/config"
     restart: always
     healthcheck:
-      test: ["CMD", "dig", "google.com"]
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://google.com || exit 1"]
       timeout: 2s
-      interval: 10s
+      interval: 1m
       retries: 1
       start_period: 10s
     networks:
