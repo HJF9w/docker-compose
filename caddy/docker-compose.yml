@@ -10,7 +10,7 @@ services:
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/config:/config"
     restart: always
     healthcheck:
-      test: ["CMD", "dig", "google.com", "@127.0.0.1"]
+      test: ["CMD", "dig", "google.com"]
       timeout: 2s
       interval: 10s
       retries: 1
