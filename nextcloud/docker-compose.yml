@@ -43,7 +43,7 @@ services:
       - redis
     networks:
       default:
-      xe_internal:
+      system_internal:
 
   cron:
     image: nextcloud:apache
@@ -58,5 +58,5 @@ services:
 
 networks:
   default:
-  xe_internal:
+  system_internal:
     external: true
