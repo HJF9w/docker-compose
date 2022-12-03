@@ -1,0 +1,32 @@
+version: "2.3"
+services:
+
+  app:
+    image: "pihole/pihole:latest"
+    environment:
+      - TZ=Europe/Berlin
+      - VIRTUAL_HOST=pihole.local
+    volumes:
+      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/etc-pihole:/etc/pihole"
+      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/etc-dnsmasq.d:/etc/dnsmasq.d"
+      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/custom.list:/etc/pihole/custom.list"
+      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/05-pihole-custom-cname.conf:/etc/dnsmasq.d/05-pihole-custom-cname.conf"
+#     ports:
+#       - "53:53/tcp"
+#       - "53:53/udp"
+#       - "80:80"
+    restart: always
+    networks:
+      system_mac_vlan:
+        ipv4_address: "${EXT_IPV4}"
+      internal:
+#    cap_add: #only needet if used as dhcp provider
+#      - NET_ADMIN 
+        
+networks:
+  system_internal:
+  system_mac_vlan:
+    external: true
+
+
+
