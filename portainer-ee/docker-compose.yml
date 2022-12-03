@@ -14,6 +14,7 @@ services:
     networks:
       mac_vlan:
         ipv4_address: "${EXT_IPV4}"
+      internal:
 
 
 networks:
