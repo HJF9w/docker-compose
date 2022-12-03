@@ -1,30 +1,30 @@
-version: '2'
+version: "2"
 services:
   app:
-    #image: 'cr.portainer.io/portainer/portainer-ce' ## Comunity version
-    image: 'portainer/portainer-ee'            ## Business version
+    #image: "cr.portainer.io/portainer/portainer-ce" ## Comunity version
+    image: "portainer/portainer-ee"            ## Business version
     restart: always
     #ports:
-    #  - '8000:8000'
-    #  - '9000:9000'
+    #  - "8000:8000"
+    #  - "9000:9000"
     volumes:
-      - '/var/run/docker.sock:/var/run/docker.sock'
-      - '{BASEPATH}/{COMPOSE_PROJECT_NAME}/data:/data'
-      - '{BASEPATH}/{COMPOSE_PROJECT_NAME}/compose:/data/compose/1'
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/data:/data"
+      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/compose:/data/compose/1"
     networks:
       mac_vlan:
-        ipv4_address: '{EXT_IPV4}'
+        ipv4_address: "${EXT_IPV4}"
 
 
 networks:
   mac_vlan:
     driver: macvlan
     driver_opts:
-      parent: "{MAC_VLAN_PARENT}"
+      parent: "${MAC_VLAN_PARENT}"
     ipam:
       config:
-      - subnet: "{IPAM_SUBNET}"
-        gateway: "{IPAM_GATEWAY}"
-        ip_range: "{IPAM_IP_RANGE}"
+      - subnet: "${IPAM_SUBNET}"
+        gateway: "${IPAM_GATEWAY}"
+        ip_range: "${IPAM_IP_RANGE}"
         aux_addresses:
-          net_address: "{IPAM_NET_ADDRESS}"
+          net_address: "${IPAM_NET_ADDRESS}"
