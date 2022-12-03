@@ -1,12 +1,17 @@
 version: "2"
 services:
   app:
-    #image: "cr.portainer.io/portainer/portainer-ce" ## Comunity version
     image: "portainer/portainer-ee"            ## Business version
     restart: always
     #ports:
     #  - "8000:8000"
     #  - "9000:9000"
+    healthcheck:
+      test: curl --fail http://127.0.0.1:8000 || exit 1
+      timeout: 2s
+      interval: 10s
+      retries: 1
+      start_period: 10s
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/data:/data"
