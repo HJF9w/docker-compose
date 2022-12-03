@@ -17,6 +17,8 @@ services:
 
 
 networks:
+  internal:
+    driver: "bridge"
   mac_vlan:
     driver: macvlan
     driver_opts:
