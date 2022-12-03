@@ -19,7 +19,7 @@ services:
     networks:
       system_mac_vlan:
         ipv4_address: "${EXT_IPV4}"
-      internal:
+      system_internal:
 #    cap_add: #only needet if used as dhcp provider
 #      - NET_ADMIN 
         
