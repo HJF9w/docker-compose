@@ -1,25 +1,23 @@
 
-version: '3'
-## v2 is needet for networking, v2.3 is needet because of healt checks.
+version: "3"
 
 services:
-  vaultwarden:
-    container_name: 'vaultwarden'
-    image: 'vaultwarden/server'
+  app:
+    image: "vaultwarden/server"
     environment:
       - WEBSOCKET_ENABLED=true
       #- ADMIN_TOKEN=123 # use to access the /admin pannel
       #  - DOMAIN=https://speicher.ddns.net
     volumes:
-      - '/mnt/data/docker/vaultwarden/data:/data/'
-    hostname: 'vaultwarden'
+      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/data:/data/"
+    hostname: "${HOSTNAME}"
     restart: always
     networks:
-      xe_internal:
+      system_internal:
 
 
 networks:
-  xe_internal:
+  system_internal:
     external: true
 
 
