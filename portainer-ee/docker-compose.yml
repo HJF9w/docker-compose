@@ -7,11 +7,11 @@ services:
     #  - "8000:8000"
     #  - "9000:9000"
     healthcheck:
-      test: [ "CMD", "curl", "--fail", "http://127.0.0.1:8000", "||", "exit", "1",]
-      timeout: 2s
-      interval: 10s
-      retries: 1
-      start_period: 10s
+      test: ["CMD", "curl", "-f", "http://localhost"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/data:/data"
