@@ -25,6 +25,7 @@ services:
         
 networks:
   system_internal:
+    external: true
   system_mac_vlan:
     external: true
 
