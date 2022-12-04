@@ -1,0 +1,26 @@
+
+version: "2.3" ## v2 is needet for networking, v2.3 is needet because of healt checks.
+services:
+
+  app:
+    image: linuxserver/pyload
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Berlin
+    volumes:
+      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/config:/config"
+      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/downloads:/downloads"
+ #    ports:
+ #      - 8000:8000
+ #      - 7227:7227 #optional
+    restart: unless-stopped
+    networks:
+      system_internal:
+
+networks:
+  system_internal:
+    external: true
+
+
+
