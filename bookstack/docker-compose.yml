@@ -8,12 +8,12 @@ services:
     - MYSQL_USER=bookstack
     - MYSQL_PASSWORD=secret
     volumes:
-    - '${basepath}/${COMPOSE_PROJECT_NAME}/mysql-data:/var/lib/mysql'
+    - '${BASEPATH}/${COMPOSE_PROJECT_NAME}/mysql-data:/var/lib/mysql'
     networks:
       default:
 
   app:
-    image: bookstack:22.10.2
+    image: bookstack:22.11
     build:
       context: ./docker-bookstack
       dockerfile: Dockerfile
@@ -25,17 +25,17 @@ services:
     - DB_USERNAME=bookstack
     - DB_PASSWORD=secret
     #set the APP_ to the URL of bookstack without without a trailing slash APP_URL=https://example.com
-    - APP_URL=https://bookstack.xe
+    - APP_URL=https://bookstack.local
     volumes:
-    - '${basepath}/${COMPOSE_PROJECT_NAME}/uploads:/var/www/bookstack/public/uploads'
-    - '${basepath}/${COMPOSE_PROJECT_NAME}/storage-uploads:/var/www/bookstack/storage/uploads'
+    - '${BASEPATH}/${COMPOSE_PROJECT_NAME}/uploads:/var/www/bookstack/public/uploads'
+    - '${BASEPATH}/${COMPOSE_PROJECT_NAME}/storage-uploads:/var/www/bookstack/storage/uploads'
 #    ports:
 #    - "8080:8080"
     networks:
       default:
-      xe_internal:
+      system_internal:
 
 networks:
   default:
-  xe_internal:
+  system_internal:
     external: true
