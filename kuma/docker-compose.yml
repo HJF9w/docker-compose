@@ -1,0 +1,18 @@
+
+version: "2.3" ## v2 is needet for networking, v2.3 is needet because of healt checks.
+services:
+
+  app:
+    image: "louislam/uptime-kuma:latest"
+    volumes:
+      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/data:/app/data"
+ #    ports:
+ #      - "3001:3001"
+    hostname: kuma.local
+    restart: unless-stopped
+    networks:
+      system_internal:
+
+networks:
+  system_internal:
+    external: true
