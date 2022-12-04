@@ -3,7 +3,7 @@ version: "2.3" ## v2 is needet for networking, v2.3 is needet because of healt c
 services:
 
   app:
-    image: linuxserver/pyload
+    image: linuxserver/pyload-ng
     environment:
       - PUID=1000
       - PGID=1000
