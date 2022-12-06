@@ -4,8 +4,8 @@ services:
   app:
     image: "mvance/unbound-rpi:latest"
     volumes:
-      "${BASEPATH}/${COMPOSE_PROJECT_NAME}/a-records.conf:/opt/unbound/etc/unbound/a-records.conf:ro"
-      "${BASEPATH}/${COMPOSE_PROJECT_NAME}/srv-records.conf:/opt/unbound/etc/unbound/srv-records.conf:ro"
+      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/a-records.conf:/opt/unbound/etc/unbound/a-records.conf:ro"
+      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/srv-records.conf:/opt/unbound/etc/unbound/srv-records.conf:ro"
     restart: always
     networks:
       system_mac_vlan:
