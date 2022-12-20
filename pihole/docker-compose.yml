@@ -16,7 +16,7 @@ services:
 #       - "53:53/udp"
 #       - "80:80"
     restart: always
-    hostname: pihole.local
+    hostname: pi.hole
     networks:
       system_mac_vlan:
         ipv4_address: "${EXT_IPV4}"
