@@ -13,7 +13,7 @@ services:
       default:
 
   app:
-    image: bookstack:22.11.1
+    image: bookstack:23.01
     build:
       context: ./docker-bookstack
       dockerfile: Dockerfile
