@@ -1,0 +1,31 @@
+version: '3'
+services:
+  ${APP_NAME}:
+    image: 'pihole/pihole:latest'
+    environment:
+      - TZ=${TZ:-Europe/Berlin}
+      - VIRTUAL_HOST=${APP_NAME:-pihole}
+      - FTLCONF_LOCAL_IPV4=${PIHOLE_FM_MAC_VLAN_IPV4}
+    volumes:
+      - '${BASEPATH}/${APP_NAME}/etc-pihole:/etc/pihole'
+      - '${BASEPATH}/${APP_NAME}/etc-dnsmasq.d:/etc/dnsmasq.d'
+      #- '${basepath}/pihole/custom.list:/etc/pihole/custom.list'
+      #- '${basepath}/pihole/05-pihole-custom-cname.conf:/etc/dnsmasq.d/05-pihole-custom-cname.conf'
+    hostname: ${APP_NAME}
+    healthcheck:
+      test: ['CMD', 'dig', 'google.com', '@127.0.0.1']
+      timeout: 2s
+      interval: 7s
+      retries: 1
+      start_period: 10s
+    restart: 'always'
+    networks:
+      fm_mac_vlan:
+        ipv4_address: ${PIHOLE_FM_MAC_VLAN_IPV4}
+      fm_internal:
+
+networks:
+  fm_mac_vlan:
+    external: true
+  fm_internal:
+    external: true
