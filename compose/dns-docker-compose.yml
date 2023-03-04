@@ -21,29 +21,4 @@ services:
 
 
 
-  nginx:
-    container_name: nginx
-    image: 'jc21/nginx-proxy-manager'
-    restart: always
-    hostname: nginx
-    healthcheck:
-      test: curl --fail http://127.0.1.1:81 || exit 1
-      timeout: 2s
-      interval: 7s
-      retries: 1
-      start_period: 10s
-    volumes:
-      - '${basepath}/nginx/data/:/data'
-      - '${basepath}/nginx/letsencrypt:/etc/letsencrypt'
-    networks:
-      fm_mac_vlan:
-        ipv4_address: ${nginx_fm_mac_vlan_ipv4}
-      fm_internal:
-    depends_on:
-      - pihole
 
-networks:
-  fm_internal:
-    external: true
-  fm_mac_vlan:
-    external: true
