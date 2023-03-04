@@ -42,18 +42,6 @@ services:
     depends_on:
       - pihole
 
-  uptime_kuma:
-    container_name: uptime_kuma
-    image: 'louislam/uptime-kuma'
-    volumes:
-      - '${basepath}/kuma/app/data:/app/data'
-    hostname: uptime-kuma
-    restart: unless-stopped
-    networks:
-      fm_internal:
-    depends_on:
-      - nginx
-
 networks:
   fm_internal:
     external: true
