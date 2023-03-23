@@ -1,6 +1,6 @@
-version: '3'
+version: '3.5'
 services:
-  ${APP_NAME}:
+  pihole:
     image: 'pihole/pihole:latest'
     environment:
       - TZ=${TZ:-Europe/Berlin}

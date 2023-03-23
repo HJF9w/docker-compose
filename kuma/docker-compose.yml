@@ -3,7 +3,7 @@ services:
   app:
     image: "louislam/uptime-kuma:latest"
     volumes:
-      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/data:/app/data"
+      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}:/app/data"
     hostname: kuma.fairmarkt
     restart: unless-stopped
     networks:
