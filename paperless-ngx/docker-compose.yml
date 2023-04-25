@@ -59,11 +59,11 @@ services:
       - '${basepath}/${COMPOSE_PROJECT_NAME}/trash:/media/trash:Z' ## the trash directory has to be writable by the user running docker-compose, with 755 permissions.
     env_file: .env
     environment:
-      PAPERLESS_REDIS: redis://broker:6379
-      PAPERLESS_DBHOST: db
+      PAPERLESS_REDIS: redis://paperless_broker_1:6379
+      PAPERLESS_DBHOST: paperless_db_1
       PAPERLESS_TIKA_ENABLED: 1
-      PAPERLESS_TIKA_GOTENBERG_ENDPOINT: http://gotenberg:3000
-      PAPERLESS_TIKA_ENDPOINT: http://tika:9998
+      PAPERLESS_TIKA_GOTENBERG_ENDPOINT: http://paperless_gotenberg_1:3000
+      PAPERLESS_TIKA_ENDPOINT: http://paperless_tika_1:9998
       PAPERLESS_CONSUMER_POLLING: 20
     networks:
       - 'default'
