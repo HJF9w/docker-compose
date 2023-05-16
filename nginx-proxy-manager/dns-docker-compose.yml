@@ -1,0 +1,21 @@
+version: '3.5'
+services:
+  app:
+    image: 'jc21/nginx-proxy-manager'
+    restart: always
+    healthcheck:
+      test: curl --fail http://127.0.1.1:81 || exit 1
+      timeout: 2s
+      interval: 10s
+      retries: 1
+      start_period: 10s
+    volumes:
+      - '${BASEPATH}/${COMPOSE_PROJECT_NAME}/data/:/data'
+      - '${BASEPATH}/${COMPOSE_PROJECT_NAME}/letsencrypt:/etc/letsencrypt'
+    networks:
+      system_mac_vlan:
+        ipv4_address: ${MAC_VLAN_IPV4}
+
+networks:
+  system_mac_vlan:
+    external: true
