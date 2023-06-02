@@ -4,9 +4,9 @@ services:
     image: "corentinth/it-tools:latest"
     restart: unless-stoped
     networks:
-      xe_internal:
+      system_internal:
 
 
 networks:
-  xe_internal:
+  system_internal:
     external: true
