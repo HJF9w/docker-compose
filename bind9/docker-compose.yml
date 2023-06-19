@@ -11,7 +11,7 @@ services:
       - "$PWD/.cache:/var/cache/bind"
       - "$PWD/.records:/var/lib/bind"
     restart: always
-    network:
+    networks:
       system_mac_vlan:
         ipv4_address: "${EXT_IPV4}"
 
