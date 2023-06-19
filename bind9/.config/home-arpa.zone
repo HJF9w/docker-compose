@@ -1,0 +1,22 @@
+$TTL 0
+
+$ORIGIN home.arpa.
+
+@	IN	SOA	ns.home.arpa. maurice.home.arpa. (
+				2023061915     ; serial
+				1m            ; refresh 12h
+				1m            ; retry 15m
+				1m             ; expire 3w
+				1m )           ; minimum TTL 2h
+
+		IN	NS	ns.demo.clcreative.de.
+ns		IN	A	10.20.3.4
+
+; -- add your DNS Records
+demo-2		IN	A	10.0.0.4
+*.demo-2	IN	A	10.0.0.5
+		IN	CNAME	demo-2
+
+;address	IN	A	10.0.0.1 ; easy Load Balancing
+;		IN	A	10.0.0.2
+;		IN	A	10.0.0.3

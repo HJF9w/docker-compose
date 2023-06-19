@@ -1,0 +1,20 @@
+version: "3"
+
+services:
+  app:
+    image: ubuntu/bind9:latest
+    environment:
+      - BIND9_USER=root
+      - TZ=Europe/Berlin
+    volumes:
+      - "$PWD/.config:/etc/bind"
+      - "$PWD/.cache:/var/cache/bind"
+      - "$PWD/.records:/var/lib/bind"
+    restart: always
+    network:
+      system_mac_vlan:
+        ipv4_address: "${EXT_IPV4}"
+
+networks:
+  system_mac_vlan:
+    external: true
