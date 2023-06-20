@@ -14,7 +14,11 @@ services:
     networks:
       system_mac_vlan:
         ipv4_address: "${EXT_IPV4}"
+      system_internal:
+        external: true
 
 networks:
   system_mac_vlan:
+    external: true
+  system_internal:
     external: true
