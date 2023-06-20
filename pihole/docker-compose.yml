@@ -9,8 +9,8 @@ services:
     volumes:
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/etc-pihole:/etc/pihole"
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/etc-dnsmasq.d:/etc/dnsmasq.d"
-      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/custom.list:/etc/pihole/custom.list"
-      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/05-pihole-custom-cname.conf:/etc/dnsmasq.d/05-pihole-custom-cname.conf"
+        #      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/custom.list:/etc/pihole/custom.list"
+        #      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/05-pihole-custom-cname.conf:/etc/dnsmasq.d/05-pihole-custom-cname.conf"
 #     ports:
 #       - "53:53/tcp"
 #       - "53:53/udp"
