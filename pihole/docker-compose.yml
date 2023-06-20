@@ -5,7 +5,7 @@ services:
     image: "pihole/pihole:latest"
     environment:
       - TZ=Europe/Berlin
-      - VIRTUAL_HOST=pihole.local
+      - VIRTUAL_HOST=pihole.home.arpa
     volumes:
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/etc-pihole:/etc/pihole"
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/etc-dnsmasq.d:/etc/dnsmasq.d"

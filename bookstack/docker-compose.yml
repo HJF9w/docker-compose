@@ -25,7 +25,7 @@ services:
     - DB_USERNAME=bookstack
     - DB_PASSWORD=secret
     #set the APP_ to the URL of bookstack without without a trailing slash APP_URL=https://example.com
-    - APP_URL=https://bookstack.local
+    - APP_URL=https://bookstack.home.arpa
     volumes:
     - '${BASEPATH}/${COMPOSE_PROJECT_NAME}/uploads:/var/www/bookstack/public/uploads'
     - '${BASEPATH}/${COMPOSE_PROJECT_NAME}/storage-uploads:/var/www/bookstack/storage/uploads'
