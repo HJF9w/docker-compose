@@ -12,21 +12,19 @@ $ORIGIN home.arpa.
 		IN	NS	ns.home.arpa.
 ns		IN	A	10.0.42.26
 
+; -- Catch all
+*		IN	A	10.0.42.23
+
 ; -- add your DNS Records
 
-;address	IN	A	10.0.0.1 ; easy Load Balancing
-;		IN	A	10.0.0.2
-;		IN	A	10.0.0.3
-
-*		IN	A	10.0.42.23
-fritz		IN	A	10.0.42.1
-fritz7272	IN	A	10.0.42.10
 fritz7170	IN	A	10.0.42.11
 xenon		IN	A	10.0.42.20
 pihole		IN	A	10.0.42.21
-gitea		IN	A	10.0.42.24
 bind		IN	A	10.0.42.26
 neon		IN	A	10.0.42.108
 pikrellcam	IN	CNAME	neon
 cam		IN	CNAME	neon
 
+;address	IN	A	10.0.0.1 ; easy Load Balancing
+;		IN	A	10.0.0.2
+;		IN	A	10.0.0.3
