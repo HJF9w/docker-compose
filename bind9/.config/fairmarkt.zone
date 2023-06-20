@@ -34,7 +34,6 @@ raw.drucker	IN	A	192.168.178.141
 ; paperless
 paperless	IN	A	192.168.178.222
 dokumente	IN	A	paperless
-
 ; shinobi
 shinobi		IN	A	192.168.178.222
 cams		IN	CNAME	shinobi
