@@ -14,6 +14,8 @@ services:
       options:
         max-size: "1G"
         max-file: "4"
+    networks:
+      system_internal:
 
   db:
     image: postgres:14
@@ -25,6 +27,6 @@ services:
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
 
-volumes:
-  postgresdata:
-
+networks:
+  system_internal:
+    external: true
