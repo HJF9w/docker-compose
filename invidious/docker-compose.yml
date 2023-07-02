@@ -1,0 +1,30 @@
+version: "3"
+services:
+  app:
+    image: quay.io/invidious/invidious:latest-arm64
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3000:3000"
+    healthcheck:
+      test: wget -nv --tries=1 --spider http://127.0.0.1:3000/api/v1/comments/jNQXAC9IVRw || exit 1
+      interval: 30s
+      timeout: 5s
+      retries: 2
+    logging:
+      options:
+        max-size: "1G"
+        max-file: "4"
+
+  db:
+    image: postgres:14
+    restart: unless-stopped
+    volumes:
+      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}:/var/lib/postgresql/data
+      - ./sql:/config/sql
+      - ./init-invidious-db.sh:/docker-entrypoint-initdb.d/init-invidious-db.sh
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+
+volumes:
+  postgresdata:
+
