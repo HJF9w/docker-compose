@@ -1,13 +1,14 @@
-$TTL 0
+$TTL 12h
+; https://bind9.readthedocs.io/en/stable/chapter3.html#setting-ttls
 
 $ORIGIN home.arpa.
 
 @	IN	SOA	ns.home.arpa. admin.home.arpa. (
-				2023061915     ; serial
-				1m            ; refresh 12h
-				1m            ; retry 15m
-				1m             ; expire 3w
-				1m )           ; minimum TTL 2h
+				2023070320     ; serial
+				12h            ; refresh 12h
+				15m            ; retry 15m
+				1w             ; expire 3w
+				2h )           ; minimum 2h
 
 		IN	NS	ns.home.arpa.
 ns		IN	A	10.0.42.26
