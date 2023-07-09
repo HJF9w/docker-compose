@@ -12,4 +12,4 @@ services:
       - INFLUXDB_ADMIN_PASSWORD=admin
 
 volumes:
-  influxdb-storage
+  influxdb-storage:
