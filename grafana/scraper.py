@@ -20,7 +20,7 @@ else:
 #temperature_value = 15
 bucket = "db0"
 org = "local"
-token = "_iAgV7QQcvZlyoOuQI0oHupuboMZPctoZ9ZSjEaR7YO59bKZqmR6XOk-MEKjaWtB_TsYtTiH_vcQNlqi4o-gew=="
+token = os.environ.get("INFLUXDB_TOKEN")
 url = "http://localhost:8086"
 client = InfluxDBClient(url=url, token=token, org=org)
 write_api = client.write_api()
