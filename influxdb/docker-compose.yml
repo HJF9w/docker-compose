@@ -6,6 +6,7 @@ services:
     user: "$PUID"
     volumes:
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/grafana:/var/lib/grafana"
+      - "$PWD/config.yml:/etc/influxdb2/config.yml"
     networks:
       - "system_internal"
 
