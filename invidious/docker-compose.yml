@@ -1,8 +1,19 @@
 version: "3"
 services:
   app:
-    image: quay.io/invidious/invidious:latest-arm64
+    #image: quay.io/invidious/invidious:latest-arm64
+    image: quay.io/invidious/invidious:latest
     restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      INVIDIOUS_CONFIG: |
+        db:
+          dbname: invidious
+          user: kemal
+          password: kemal
+          host: db
+          port: 5432
     ports:
       - "127.0.0.1:3000:3000"
     healthcheck:
@@ -10,18 +21,20 @@ services:
       interval: 30s
       timeout: 5s
       retries: 2
-    logging:
-      options:
-        max-size: "1G"
-        max-file: "4"
+#    logging:
+#      options:
+#        max-size: "1G"
+#        max-file: "4"
     networks:
       system_internal:
 
   db:
     image: postgres:14
     restart: unless-stopped
+    env_file:
+      - .env
     volumes:
-      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}:/var/lib/postgresql/data
+      - data:/var/lib/postgresql/data
       - ./sql:/config/sql
       - ./init-invidious-db.sh:/docker-entrypoint-initdb.d/init-invidious-db.sh
     healthcheck:
@@ -30,3 +43,6 @@ services:
 networks:
   system_internal:
     external: true
+
+volumes:
+  data:
