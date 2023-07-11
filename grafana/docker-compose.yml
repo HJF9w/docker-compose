@@ -3,7 +3,7 @@ services:
   app:
     image: "grafana/grafana:latest"
     restart: "unless-stopped"
-    user: 1000
+    user: 472
     volumes:
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/grafana:/var/lib/grafana"
       - "$PWD/config.yml:/etc/influxdb2/config.yml"
