@@ -19,11 +19,11 @@ else:
 
 # Writing to InfluxDB
 #temperature_value = 15
-bucket = "db0"
-org = "local"
+bucket = "wetter"
+org = "org"
 token = os.environ.get("INFLUXDB_TOKEN")
-url = "http://localhost:8086"
-client = InfluxDBClient(url=url, token=token, org=org)
+url = "https://influxdb.home.arpa"
+client = InfluxDBClient(url=url, token=token, org=org, verify_ssl=False)
 write_api = client.write_api()
 
 data = f"temperature value={temperature_value}"
