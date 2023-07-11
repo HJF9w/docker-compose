@@ -7,3 +7,5 @@ enter the venv using ». venv/bin/activate« or for use with cronjobs instead of
 install the requirements in the venv »pip install -r requirements.txt«
 upgrade the requirements »pip install --upgrade -r requirements.txt«
 
+to leave the venv »deactivate«
+
