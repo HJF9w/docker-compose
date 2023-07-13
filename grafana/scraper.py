@@ -17,10 +17,10 @@ else:
     exit()
 
 # Writing to InfluxDB
-temperature_value = 10
+#temperature_value = 15
 bucket = "db0"
-org = "admin"
-token = "P7PS2xH0Dasl4GgyLbjxEpyMcGlsNYKUoagDtRALZDYnh4VJ6uGvjR3jo_wMkonZwJIDBDlimZECHAK5r2MReg=="
+org = "local"
+token = "_iAgV7QQcvZlyoOuQI0oHupuboMZPctoZ9ZSjEaR7YO59bKZqmR6XOk-MEKjaWtB_TsYtTiH_vcQNlqi4o-gew=="
 url = "http://localhost:8086"
 client = InfluxDBClient(url=url, token=token, org=org)
 write_api = client.write_api()
