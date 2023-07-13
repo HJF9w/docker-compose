@@ -1,0 +1,24 @@
+version: "3"
+services:
+  app:
+    image: "grafana/grafana:latest"
+    restart: "unless-stopped"
+    user: "472"
+    volumes:
+      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/grafana:/var/lib/grafana"
+      - "$PWD/config.yml:/etc/influxdb2/config.yml"
+    networks:
+      - "system_internal"
+
+  db:
+    image: "influxdb:latest"
+    ports:
+      - '8086:8086'
+    volumes:
+      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/influxdb:/var/lib/influxdb"
+    networks:
+      - "system_internal"
+
+networks:
+  system_internal:
+    external: true
