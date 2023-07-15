@@ -1,5 +1,6 @@
 import requests
 import re
+import os
 from bs4 import BeautifulSoup
 from influxdb_client import InfluxDBClient
 
@@ -16,14 +17,13 @@ else:
     print("WindChill value not found on the website.")
     exit()
 
-print("is: {windchill_value}")
 # Writing to InfluxDB
 #windchill_value = 15
-bucket = "db0"
-org = "local"
-token = "_iAgV7QQcvZlyoOuQI0oHupuboMZPctoZ9ZSjEaR7YO59bKZqmR6XOk-MEKjaWtB_TsYtTiH_vcQNlqi4o-gew=="
-url = "http://localhost:8086"
-client = InfluxDBClient(url=url, token=token, org=org)
+bucket = "wetter"
+org = "org"
+token = os.environ.get("INFLUXDB_TOKEN")
+url = "https://influxdb.home.arpa"
+client = InfluxDBClient(url=url, token=token, org=org, verify_ssl=False)
 write_api = client.write_api()
 
 data = f"windchill value={windchill_value}"
