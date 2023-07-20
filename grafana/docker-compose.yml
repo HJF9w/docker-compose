@@ -15,7 +15,7 @@ services:
     ports:
       - '8086:8086'
     volumes:
-      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/influxdb:/var/lib/influxdb"
+      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/influxdb:/var/lib/influxdb2"
     networks:
       - "system_internal"
 
