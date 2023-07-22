@@ -1,0 +1,12 @@
+version: "3.5"
+services:
+  app:
+    image: "corentinth/it-tools:latest"
+    restart: unless-stopped
+    networks:
+      system_internal:
+
+
+networks:
+  system_internal:
+    external: true

@@ -1,0 +1,14 @@
+---
+version: "3.7"
+services:
+  app:
+    image: "containrrr/watchtower"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    environment:
+      - TZ=Europe/Berlin
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_SCHEDULE=0 0 4 * * *
+      - WATCHTOWER_ROLLING_RESTART=true
+      - WATCHTOWER_TIMEOUT=40
+    restart: "always"

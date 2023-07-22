@@ -1,17 +1,16 @@
 version: '3'
 services:
-  searxng:
-    container_name: 'searxng'
+  app:
     image: 'searxng/searxng'
     restart: unless-stopped
     environment:
-      - 'BASE_URL=http://searxng.xe:80/'
-      - 'INSTANCE_NAME=xenon-searxng'
+      - 'BASE_URL=https://searx.home.arpa'
+      - 'INSTANCE_NAME=xenon-searx'
     volumes:
-      - '/mnt/data/docker/searxng:/etc/searxng'
+      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}:/etc/searxng"
     networks:
-      xe_internal:
+      system_internal:
 
 networks:
-  xe_internal:
+  system_internal:
     external: true

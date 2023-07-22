@@ -6,18 +6,22 @@ services:
     command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
     restart: unless-stopped
     volumes:
-      - ${basepath}/nextcloud_db:/var/lib/mysql
+      - ${basepath}/${COMPOSE_PROJECT_NAME}/db:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=test
       - MYSQL_PASSWORD=test
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
+      - MARIADB_AUTO_UPGRADE=1
+      - MARIADB_DISABLE_UPGRADE_BACKUP=1
     networks:
       default:
 
   redis:
     image: redis:alpine
     restart: unless-stopped
+    depends_on:
+      - db
     networks:
       default:
 
@@ -25,48 +29,34 @@ services:
     image: nextcloud:apache
     restart: unless-stopped
     volumes:
-      - ${basepath}/nextcloud:/var/www/html
+      - ${basepath}/${COMPOSE_PROJECT_NAME}/app:/var/www/html
     environment:
       - MYSQL_HOST=db
       - REDIS_HOST=redis
       - MYSQL_PASSWORD=test
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
-      - TRUSTED_PROXYS=192.168.178.0/24 172.18.0.0/16 10.10.10.0/8
-      - NEXTCLOUD_TRUSTED_DOMAINS=localhost 127.0.0.1 127.0.1.1
+      - NEXTCLOUD_TRUSTED_DOMAINS=localhost 127.0.0.1 127.0.1.1 nextcloud.home.arpa
+      - OVERWRITEPROTOCOL=https
+        #- NC_DEFAULT_PHONE_REGION='DE' # or NEXTCLOUD_DEFAULT_PHONE_REGION this currently doesn't work, see https://github.com/nextcloud/docker/issues/1465 you need to manualy add "'default_phone_region' => 'DE'," to config/config.php
     depends_on:
-      - db
       - redis
     networks:
       default:
+      system_internal:
 
   cron:
     image: nextcloud:apache
     restart: unless-stopped
     volumes:
-      - ${basepath}/nextcloud:/var/www/html
+      - ${basepath}/${COMPOSE_PROJECT_NAME}/app:/var/www/html
     entrypoint: /cron.sh
     depends_on:
-      - db
       - redis
     networks:
       default:
 
-
-  proxy:
-    image: 'jc21/nginx-proxy-manager'
-    restart: unless-stopped
-#    ports: 
-#      - 80:80
-#      - 81:81
-#      - 443:443
-    volumes:
-      - '${basepath}/nextcloud_nginx/data:/data'
-      - '${basepath}/nextcloud_nginx/letsencrypt:/etc/letsencrypt'
-    networks:
-      default:
-      system_mac_vlan:
-        ipv4_address: 
 networks:
-  system_mac_vlan:
+  default:
+  system_internal:
     external: true
