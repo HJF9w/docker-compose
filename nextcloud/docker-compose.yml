@@ -68,5 +68,3 @@ services:
 
 networks:
   default:
-  system_mac_vlan:
-    external: true
