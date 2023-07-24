@@ -2,7 +2,7 @@ version: '2.3' ## v2 is needet for networking, v2.3 is needet because of healt c
 services:
   portainer:
     container_name: portainer
-    image: 'cr.portainer.io/portainer/portainer-ce'
+    image: 'cr.portainer.io/portainer/portainer-ee'
     restart: always
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock'
