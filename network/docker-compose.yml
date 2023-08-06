@@ -29,7 +29,7 @@ services:
   bind:
     image: ubuntu/bind9:latest
     environment:
-      - BIND9_USER=bind
+      - BIND9_USER=root
       - TZ=Europe/Berlin
     volumes:
       - "$PWD/.config:/etc/bind"
