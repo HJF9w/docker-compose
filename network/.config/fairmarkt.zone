@@ -1,0 +1,62 @@
+$TTL 12h
+
+$ORIGIN fairmarkt.
+
+@       IN      SOA     ns.fairmarkt. admin.fairmarkt. (
+                                2023070320     ; serial
+                                12h            ; refresh 12h
+                                15m            ; retry 15m
+                                1w             ; expire 3w
+                                2h )           ; minimum 2h
+
+                IN      NS      ns.fairmarkt.
+ns              IN      A       10.0.42.26
+
+; -- catch all
+*               IN      A       192.168.178.222
+
+; -- add your DNS Records
+; freenas
+freenas		IN	A	192.168.178.222
+nas		IN	CNAME	freenas
+raw.freenas	IN	A	192.168.178.79
+raw.nas		IN	CNAME	raw.freenas
+
+; nextcloud
+nextcloud	IN	A	192.168.178.131
+cloud		IN	CNAME	cloud
+datein		IN	CNAME	cloud
+
+; drucker
+drucker		IN	A	192.168.178.222
+raw.drucker	IN	A	192.168.178.141
+
+; paperless
+paperless	IN	A	192.168.178.222
+dokumente	IN	CNAME	paperless
+
+; shinobi
+shinobi		IN	A	192.168.178.222
+cams		IN	CNAME	shinobi
+cctv		IN	CNAME	shinobi
+kamera		IN	CNAME	shinobi
+kameras		IN	CNAME	shinobi
+
+; openproject
+openproject	IN	A	192.168.178.222
+management	IN	CNAME	openproject
+
+; kuma
+uptime-kuma	IN	A	192.168.178.222
+kuma		IN	CNAME	uptime-kuma
+
+; fritzbox
+fritzbox	IN	A	192.168.178.222
+fritz		IN	CNAME	fritzbox
+
+; anderes
+nginx		IN	A	192.168.178.222
+pihole		IN	A	192.168.178.222
+portainer	IN	A	192.168.178.222
+proxmox		IN	A	192.168.178.222
+

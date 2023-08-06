@@ -1,0 +1,31 @@
+$TTL 12h
+; https://bind9.readthedocs.io/en/stable/chapter3.html#setting-ttls
+
+$ORIGIN home.arpa.
+
+@	IN	SOA	ns.home.arpa. admin.home.arpa. (
+				2023070320     ; serial
+				12h            ; refresh 12h
+				15m            ; retry 15m
+				1w             ; expire 3w
+				2h )           ; minimum 2h
+
+		IN	NS	ns.home.arpa.
+ns		IN	A	10.0.42.26
+
+; -- Catch all
+*		IN	A	10.0.42.23
+
+; -- add your DNS Records
+
+fritz7170	IN	A	10.0.42.11
+xenon		IN	A	10.0.42.20
+pihole		IN	A	10.0.42.21
+bind		IN	A	10.0.42.26
+neon		IN	A	10.0.42.108
+pikrellcam	IN	CNAME	neon
+cam		IN	CNAME	neon
+
+;address	IN	A	10.0.0.1 ; easy Load Balancing
+;		IN	A	10.0.0.2
+;		IN	A	10.0.0.3
