@@ -24,8 +24,8 @@ raw.nas		IN	CNAME	raw.freenas
 
 ; nextcloud
 nextcloud	IN	A	192.168.178.131
-cloud		IN	CNAME	cloud
-datein		IN	CNAME	cloud
+cloud		IN	CNAME	nextcloud
+datein		IN	CNAME	nextcloud
 
 ; drucker
 drucker		IN	A	192.168.178.222
