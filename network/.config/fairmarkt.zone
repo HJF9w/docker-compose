@@ -3,7 +3,7 @@ $TTL 12h
 $ORIGIN fairmarkt.
 
 @       IN      SOA     ns.fairmarkt. admin.fairmarkt. (
-                                2023070320     ; serial
+                                2023081712     ; serial
                                 12h            ; refresh 12h
                                 15m            ; retry 15m
                                 1w             ; expire 3w
@@ -24,8 +24,8 @@ raw.nas		IN	CNAME	raw.freenas
 
 ; nextcloud
 nextcloud	IN	A	192.168.178.131
-cloud		IN	CNAME	cloud
-datein		IN	CNAME	cloud
+cloud		IN	CNAME	nextcloud
+datein		IN	CNAME	nextcloud
 
 ; drucker
 drucker		IN	A	192.168.178.222
