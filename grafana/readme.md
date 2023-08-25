@@ -16,3 +16,4 @@ To exit the venv, use "deactivate".
 sources:
 https://www.pegelonline.wsv.de/gast/karte/standard
 fam-lange.de
+https://www.iqair.com/de/germany/saxony/schwartenberg/schwartenberg-s
