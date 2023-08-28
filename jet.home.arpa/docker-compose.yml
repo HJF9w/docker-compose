@@ -12,7 +12,8 @@ services:
     volumes:
       - "$PWD/html:/usr/share/nginx/html:ro,z"
     networks:
-      internal:
+      system_internal:
 
 networks:
-  internal:
+  system_internal:
+    external: true
