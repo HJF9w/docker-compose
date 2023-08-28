@@ -8,7 +8,7 @@ from influxdb_client import InfluxDBClient
 url = "https://fam-lange.de/wetter.php"
 response = requests.get(url)
 soup = BeautifulSoup(response.content, "html.parser")
-dewpoint_element = soup.find("td", text="Taupunkt")
+dewpoint_element = soup.find("td", string="Taupunkt")
 
 if dewpoint_element:
     dewpoint_value = dewpoint_element.find_next_sibling("td").text.strip()

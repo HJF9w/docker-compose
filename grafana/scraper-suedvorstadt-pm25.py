@@ -4,21 +4,24 @@ import os
 from bs4 import BeautifulSoup
 from influxdb_client import InfluxDBClient
 
-# Scraping the website
-url = "https://fam-lange.de/wetter.php"
+# scrape
+url = "https://www.iqair.com/de/germany/saxony/dresden/bergstr" 
+
 response = requests.get(url)
 soup = BeautifulSoup(response.content, "html.parser")
-humidity_element = soup.find("td", string="Luftfeuchte")
 
-if humidity_element:
-    humidity_value = humidity_element.find_next_sibling("td").text.strip()
-    humidity_value = re.sub(r'[^\d.-]', '', humidity_value)  # Remove non-digit, non-dot, non-minus characters
+# Find the row with "PM25"
+row_pm25 = soup.find("td", string=" PM2.5 ")
+
+if row_pm25:
+    value_span = row_pm25.find_next("span", class_="pollutant-concentration-value")
+    value = value_span.get_text()
+    print("The value for PM25 is:", value)
 else:
-    print("Humidity value not found on the website.")
-    exit()
+    print("PM25 value not found on the page.")
 
 # Writing to InfluxDB
-#humidity_value = 15
+#value = 15
 bucket = "wetter"
 org = "org"
 token = os.environ.get("INFLUXDB_TOKEN")
@@ -26,10 +29,10 @@ url = "https://influxdb.home.arpa"
 client = InfluxDBClient(url=url, token=token, org=org, verify_ssl=False)
 write_api = client.write_api()
 
-data = f"humidity value={humidity_value}"
+data = f"suedvorstadt-pm25 value={value}"
 write_api.write(bucket=bucket, org=org, record=data)
 
-print(f"Humidity value {humidity_value} written to InfluxDB.")
+print(f"suedvorstadt-pm25 value {value} written to InfluxDB.")
 
 write_api.close()
 client.close()

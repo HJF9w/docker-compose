@@ -8,7 +8,7 @@ from influxdb_client import InfluxDBClient
 url = "https://fam-lange.de/wetter.php"
 response = requests.get(url)
 soup = BeautifulSoup(response.content, "html.parser")
-windspeed_element = soup.find("td", text="Windgeschwindigkeit")
+windspeed_element = soup.find("td", string="Windgeschwindigkeit")
 
 if windspeed_element:
     windspeed_value = windspeed_element.find_next_sibling("td").text.strip()
