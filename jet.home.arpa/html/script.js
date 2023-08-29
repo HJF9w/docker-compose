@@ -1,32 +1,24 @@
-const modeToggle = document.getElementById('mode-toggle');
-const body = document.body;
-
-// Function to set the theme based on the preferred color scheme
 function setTheme() {
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
   if (prefersDark) {
     body.classList.add('dark-mode');
-    modeToggle.textContent = '🔆';
+    themeToggle.textContent = '🔆';
   } else {
     body.classList.remove('dark-mode');
-    modeToggle.textContent = '🌒';
+    themeToggle.textContent = '🌒';
   }
 }
 
-// Toggle mode logic when the button is clicked
-modeToggle.addEventListener('click', () => {
+themeToggle.addEventListener('click', () => {
   body.classList.toggle('light-mode');
   body.classList.toggle('dark-mode');
   if (body.classList.contains('dark-mode')) {
-    modeToggle.textContent = '🔆';
+    themeToggle.textContent = '🔆';
   } else {
-    modeToggle.textContent = '🌒';
+    themeToggle.textContent = '🌒';
   }
 });
-
-// Call the setTheme function when the page loads
-setTheme();
 
 
 function createBubble() {
@@ -74,4 +66,7 @@ function createBubble() {
   }, 30000)
 }
 
+const themeToggle = document.getElementById('mode-toggle');
+const body = document.body;
+setTheme();
 setInterval(createBubble, 3000)
