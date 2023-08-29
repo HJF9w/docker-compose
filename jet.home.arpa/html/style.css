@@ -49,9 +49,11 @@ a {
 }
 
 /* Dark mode styles */
-.dark-mode div.foreground,
-.dark-mode section {
+.dark-mode div.foreground {
     background: rgba(22, 22, 22, 0.5);
+}
+.dark-mode section {
+    background: black;
 }
 
 .dark-mode p,
