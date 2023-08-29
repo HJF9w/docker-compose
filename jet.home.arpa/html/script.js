@@ -1,3 +1,6 @@
+const themeToggle = document.getElementById('themeToggle');
+const body = document.body;
+
 function setTheme() {
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
@@ -66,7 +69,6 @@ function createBubble() {
   }, 30000)
 }
 
-const themeToggle = document.getElementById('mode-toggle');
-const body = document.body;
+
 setTheme();
 setInterval(createBubble, 3000)
