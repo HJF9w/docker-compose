@@ -3,6 +3,7 @@
     margin: 0;
     padding: 0;
     font-family: Comfortaa, "Exo Regular", "AntipastoPro Hairline";
+    text-decoration: none;
 }
 
 /* Scrollbar styles */
@@ -39,6 +40,13 @@ h2 {
     font-family: "AntipastoPro Hairline";
 }
 
+h3 {
+    text-align: center;
+    font-size: 2em;
+    font-family: "AntipastoPro Hairline";
+    color: black;
+}
+
 button {
     text-align: center;
     font-size: 1em;
@@ -58,8 +66,13 @@ a {
 
 .dark-mode p,
 .dark-mode h2,
+.dark-mode h3,
 .dark-mode .glass-button {
     color: #fff;
+}
+
+.dark-mode .news {
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .dark-mode .glass-button {
@@ -82,7 +95,6 @@ a {
     border-radius: 1rem;
     background-color: rgba(0, 0, 0, 0);
     color: black;
-    text-decoration: none;
 }
 
 .glass-button:hover {
@@ -113,21 +125,11 @@ a {
         width: 100%;
         height: 100%;
     }
-
-    .fixmobile {
-        visibility: hidden;
-    }
 }
-
 @media (min-width: 60rem) {
     .foreground {
         width: 60%;
         height: 80%;
-    }
-
-    .fixmobile {
-        width: 0;
-        height: 0;
     }
 }
 
@@ -145,6 +147,23 @@ a {
     overflow: auto;
 }
 
+.news {
+    padding: 1rem;
+    margin: 1rem;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 1rem;
+    /*box-shadow: inset 0 -50px 20px rgba(255, 255, 255, 1)*/
+}
+
+.fade-out-text {
+  /* Standard syntax */
+  mask-image: linear-gradient(0deg, transparent 0.15rem, red 3rem);
+  
+  /* Vendor prefixes for cross-browser compatibility */
+  -webkit-mask-image: linear-gradient(0deg, transparent 0.1rem, red 3rem);
+  -moz-mask-image: linear-gradient(0deg, transparent 0.1rem, red 3rem);
+  -ms-mask-image: linear-gradient(0deg, transparent 0.1rem, red 3rem);
+}
 .footer {
     padding: 1.5rem;
     text-align: center;
