@@ -1,0 +1,28 @@
+/* Dark mode styles */
+.dark-mode div.foreground {
+    background: rgba(22, 22, 22, 0.5);
+}
+.dark-mode section {
+    background: black;
+}
+
+.dark-mode p,
+.dark-mode h2,
+.dark-mode h3,
+.dark-mode .glass-button {
+    color: #fff;
+}
+
+.dark-mode .news {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .glass-button {
+    background-color: rgba(0, 0, 0, 0);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .glass-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 2rem rgba(255, 255, 255, 0.2);
+}
