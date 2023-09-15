@@ -32,12 +32,12 @@
 /* Font face declarations */
 @font-face {
     font-family: 'Exo Regular';
-    src: url(fonts/exo/Exo-Regular.woff) format('woff');
+    src: url(../fonts/exo/Exo-Regular.woff) format('woff');
 }
 
 @font-face {
     font-family: "AntipastoPro Hairline";
-    src: url(fonts/antipasto/AntipastoPro-Hairline_trial.woff) format('woff');
+    src: url(../fonts/antipasto/AntipastoPro-Hairline_trial.woff) format('woff');
 }
 
 /* Default styles for elements */
