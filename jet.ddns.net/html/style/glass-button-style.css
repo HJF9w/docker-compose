@@ -1,0 +1,28 @@
+/* Glass button styles */
+.glass-button {
+    transition: background-color 0.3s, color 0.3s;
+    display: inline-block;
+    margin-bottom: 0.3rem;
+    padding: 0.75em 1em;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 1rem;
+    background-color: rgba(0, 0, 0, 0);
+    color: black;
+}
+
+.glass-button:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 2rem rgba(0, 0, 0, 0.2);
+}
+#start:hover {
+    background-color: rgba(255, 175, 100, 0.2);
+    box-shadow: 0 0 2rem rgba(255, 175, 100, 0.2);
+}
+#news:hover {
+    background-color: rgba(88, 177, 255, 0.2);
+    box-shadow: 0 0 2rem rgba(88, 177, 255, 0.2);
+}
+#contact:hover {
+    background-color: rgba(200, 100, 255, 0.2);
+    box-shadow: 0 0 2rem rgba(200, 100, 255, 0.2);
+}
