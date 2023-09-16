@@ -4,7 +4,7 @@ $TTL 12h
 $ORIGIN home.arpa.
 
 @	IN	SOA	ns.home.arpa. admin.home.arpa. (
-				2023070320     ; serial
+				2023091612     ; serial
 				12h            ; refresh 12h
 				15m            ; retry 15m
 				1w             ; expire 3w
@@ -25,6 +25,7 @@ bind		IN	A	10.0.42.26
 neon		IN	A	10.0.42.108
 pikrellcam	IN	CNAME	neon
 cam		IN	CNAME	neon
+shop		IN	A	10.0.42.132
 
 ;address	IN	A	10.0.0.1 ; easy Load Balancing
 ;		IN	A	10.0.0.2
