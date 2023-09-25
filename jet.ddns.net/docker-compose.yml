@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   app:
-    image: "nginx"
+    image: "trafex/php-nginx"
     restart: unless-stopped
     healthcheck:
       test: curl --fail http://127.0.1.1:80 || exit 1
@@ -10,7 +10,7 @@ services:
       retries: 1
       start_period: 10s
     volumes:
-      - "$PWD/html:/usr/share/nginx/html:ro,z"
+      - "$PWD/html:/var/www/html:ro,z"
     networks:
       system_internal:
 
