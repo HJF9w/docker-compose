@@ -15,20 +15,6 @@
     background-color: rgba(125, 125, 125, 0.5);
 }
 
-/* Media queries */
-@media (max-width: 60rem) {
-    .foreground {
-        width: 100%;
-        height: 100%;
-    }
-}
-@media (min-width: 60rem) {
-    .foreground {
-        width: 60%;
-        height: 80%;
-    }
-}
-
 /* Font face declarations */
 @font-face {
     font-family: 'Exo Regular';
@@ -148,6 +134,20 @@ section span::after {
     background: radial-gradient(rgba(255, 255, 255, 0.8), transparent);
     border-radius: 50%;
     filter: blur(0.75rem);
+}
+
+/* Media queries */
+@media (max-width: 60rem) {
+    .foreground {
+        width: 100%;
+        height: 100%;
+    }
+}
+@media (min-width: 60rem) {
+    .foreground {
+        width: 60%;
+        height: 80%;
+    }
 }
 
 @keyframes animate {
