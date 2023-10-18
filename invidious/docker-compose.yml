@@ -21,7 +21,7 @@ services:
         # https_only: false
         # statistics_enabled: false
         hmac_key: "aekee9ahh7AicheiYaec"
-        https_only: "true"
+        https_only: true
         domain: "invidious.home.arpa"
         external_port: 443
     healthcheck:
