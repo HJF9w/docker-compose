@@ -20,7 +20,10 @@ services:
         # domain:
         # https_only: false
         # statistics_enabled: false
-        hmac_key: "hSL3EUJT5aF6tgXyCyC17ey0zBzi2IsX"
+        hmac_key: "aekee9ahh7AicheiYaec"
+        https_only: "true"
+        domain: "invidious.home.arpa"
+        external_port: 443
     healthcheck:
       test: wget -nv --tries=1 --spider http://127.0.0.1:3000/api/v1/comments/jNQXAC9IVRw || exit 1
       interval: 30s
