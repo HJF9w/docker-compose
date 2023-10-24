@@ -4,6 +4,8 @@ services:
   broker:
     image: 'redis:7'
     restart: 'unless-stopped'
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
     volumes:
       - '${basepath}/${COMPOSE_PROJECT_NAME}/broker:/data:Z'
     networks:
