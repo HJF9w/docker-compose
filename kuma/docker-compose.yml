@@ -10,10 +10,13 @@ services:
  #    ports:
  #      - "3001:3001"
     hostname: kuma.home.arpa
-    restart: unless-stopped
+    restart: allways
     networks:
       system_internal:
+      bookstack_default:
 
 networks:
   system_internal:
+    external: true
+  bookstack_default:
     external: true
