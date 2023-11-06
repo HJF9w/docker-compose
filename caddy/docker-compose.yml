@@ -4,7 +4,7 @@ services:
   app:
     image: "caddy:latest"
     volumes:
-      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/Caddyfile:/etc/caddy/Caddyfile:ro"
+      - "$PWD/Caddyfile:/etc/caddy/Caddyfile:ro"
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/srv:/srv"
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/data:/data"
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/config:/config"
