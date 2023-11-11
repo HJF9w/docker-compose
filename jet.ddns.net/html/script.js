@@ -6,19 +6,40 @@ const body = document.body;
 function setTheme() {
   // Check if user prefers dark mode
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  
-  // Apply the appropriate class and update the theme toggle button text
-  body.classList.toggle('dark-mode', prefersDark);
-  themeToggle.textContent = prefersDark ? '🔆' : '🌒';
+
+  // Check if there's a theme cookie, if not, create it with no value
+  if (!document.cookie.includes('theme')) {
+    document.cookie = 'theme=;';
+  }
+
+  // Apply the appropriate class based on the theme cookie value
+  const themeCookieValue = document.cookie.replace(/(?:(?:^|.*;\s*)theme\s*=\s*([^;]*).*$)|^.*$/, '$1');
+  body.classList.toggle('dark-mode', themeCookieValue === 'dark' || (prefersDark && themeCookieValue !== 'light'));
+  body.classList.toggle('light-mode', themeCookieValue === 'light' || (!prefersDark && themeCookieValue !== 'dark'));
+  themeToggle.textContent = body.classList.contains('dark-mode') ? '🔆' : '🌒';
 }
 
 // Toggle theme when the button is clicked
 themeToggle.addEventListener('click', () => {
+  // Toggle between light and dark modes
   body.classList.toggle('light-mode');
   body.classList.toggle('dark-mode');
+
   // Update theme toggle button text based on the active class
   themeToggle.textContent = body.classList.contains('dark-mode') ? '🔆' : '🌒';
+
+  // Set the theme cookie based on the active class
+  const themeCookieValue = body.classList.contains('dark-mode') ? 'dark' : 'light';
+  document.cookie = `theme=${themeCookieValue}; path=/`;
 });
+
+// Funktion to add transition after 0.1s to body
+function addGlobalTransition() {
+  setTimeout(function() {
+    document.body.classList.add('global-transition');
+  }, 100);
+}
+
 
 // Function to create bubbles with dynamic colors and sizes
 function createBubble() {
@@ -60,3 +81,4 @@ function createBubble() {
 // Initialize theme and start creating bubbles at intervals
 setTheme();
 setInterval(createBubble, 3000);
+window.onload = addGlobalTransition;
