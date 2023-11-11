@@ -74,6 +74,15 @@ jet.ddns.net {
 	}
 	respond @local "Not allowed" 403
 }
+speicher.ddns.net {
+	@local {
+        	remote_ip 87.128.0.0/0 # block ip's in this range
+	}
+	route @local {
+		reverse_proxy jetddnsnet_app_1:8080
+	}
+	respond @local "Not allowed" 403
+}
 
 # -- intern
 
