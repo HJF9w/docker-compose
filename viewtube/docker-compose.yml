@@ -18,7 +18,7 @@ services:
 
   mongodb:
     restart: unless-stopped
-    image: mongo:7
+    image: mongo:4.4
     networks:
       internal:
     volumes:
