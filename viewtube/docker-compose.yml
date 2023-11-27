@@ -9,8 +9,6 @@ services:
     environment:
       - 'VIEWTUBE_DATABASE_HOST=mongodb'
       - 'VIEWTUBE_REDIS_HOST=redis'
-    ports:
-      - 8066:8066
     depends_on:
       - "mongodb"
       - "redis"
