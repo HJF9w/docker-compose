@@ -1,0 +1,41 @@
+---
+version: '3'
+services:
+  app:
+    image: 'mauriceo/viewtube:latest' # use mauriceo/viewtube:dev for beta version
+    volumes:
+      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/viewtube:/data"
+    restart: unless-stopped
+    environment:
+      - 'VIEWTUBE_DATABASE_HOST=mongodb'
+      - 'VIEWTUBE_REDIS_HOST=redis'
+    ports:
+      - 8066:8066
+    depends_on:
+      - "mongodb"
+      - "redis"
+    networks:
+      internal:
+      system_mac_vlan:
+
+  mongodb:
+    restart: unless-stopped
+    image: mongo:7
+    networks:
+      internal:
+    volumes:
+      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/db:/data/db"
+
+  redis:
+    restart: unless-stopped
+    image: redis:7
+    networks:
+      internal:
+    volumes:
+      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/redis:/data"
+
+networks:
+  internal:
+  system_mac_vlan:
+    external: true
+
