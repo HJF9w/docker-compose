@@ -7,10 +7,6 @@ services:
       - 'BASE_URL=https://searx.home.arpa'
       - 'INSTANCE_NAME=xenon-searx'
     volumes:
-      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}:/etc/searxng"
-    networks:
-      system_internal:
-
-networks:
-  system_internal:
-    external: true
+      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}:/etc/searxng:z"
+    ports:
+      - "8080:8080"
