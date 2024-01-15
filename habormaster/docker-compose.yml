@@ -1,0 +1,12 @@
+---
+## https://gitlab.com/stavros/harbormaster
+version: '3'
+services:
+  app:
+    image: 'stavros/harbormaster'
+    restart: unless-stopped
+    privileged: true
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
+      - '${PWD}/config:/config:z'
+      - '${PWD}/main:/main:z'

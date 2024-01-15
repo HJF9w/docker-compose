@@ -1,0 +1,16 @@
+apps:
+  docker-compose:
+    url: https://github.com/HJF9w/docker-compose.git
+    compose_config:
+    - searxng/docker-compose.yml
+    branch: testing
+    environment:
+      BASEPATH: /tmp/searxng
+
+  docker-compose:
+    url: https://github.com/HJF9w/docker-compose.git
+    compose_config:
+    - it-tools/docker-compose.yml
+    branch: testing
+    environment:
+      BASEPATH: /tmp/searxng
