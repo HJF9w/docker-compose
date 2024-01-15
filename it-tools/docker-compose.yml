@@ -1,7 +1,7 @@
 version: "3.5"
 services:
   app:
-    image: "corentinth/it-tools:2023.4.13-dce9ff9"
+    image: "corentinth/it-tools:latest"
     restart: unless-stopped
     ports:
       - "8081:80"
