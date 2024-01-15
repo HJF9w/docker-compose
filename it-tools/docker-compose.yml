@@ -1,12 +1,7 @@
 version: "3.5"
 services:
   app:
-    image: "corentinth/it-tools:latest"
+    image: "corentinth/it-tools:2023.4.13-dce9ff9"
     restart: unless-stopped
-    networks:
-      system_internal:
-
-
-networks:
-  system_internal:
-    external: true
+    ports:
+      - "8081:80"
