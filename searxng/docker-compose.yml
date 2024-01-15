@@ -5,7 +5,7 @@ services:
     restart: unless-stopped
     environment:
       - 'BASE_URL=https://searx.home.arpa'
-      - 'INSTANCE_NAME=xenon-searx'
+      - 'INSTANCE_NAME=1'
     volumes:
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}:/etc/searxng:z"
     ports:
