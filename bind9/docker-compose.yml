@@ -2,7 +2,7 @@ version: "3"
 
 services:
   app:
-    image: ubuntu/bind9:latest
+    image: ubuntu/bind9@sha256:70b26544bc66e5152319fc2d022fc9f4d4bd8ced31bbba9fdd06ede469a27170
     environment:
       - BIND9_USER=root
       - TZ=Europe/Berlin

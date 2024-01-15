@@ -1,0 +1,18 @@
+---
+version: "3.8"
+services:
+  app:
+    image: "frooodle/s-pdf:latest"
+    volumes:
+      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/trainingData:/usr/share/tesseract-ocr/4.00/tessdata" #Required for extra OCR languages
+      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/extraConfigs:/configs"
+#      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/customFiles:/customFiles/"
+    environment:
+      - ENABLE_SECURITY=false
+      - SECURITY_ENABLE_LOGIN=true
+    networks:
+      system_internal:
+
+networks:
+  system_internal:
+    external: true

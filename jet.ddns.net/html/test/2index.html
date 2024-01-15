@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * {
+      outline: 1px solid red;
+    }
+
+    .carousel-container {
+      overflow: scroll;
+      transition: background-color 0.3s, color 0.3s;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      z-index: 10;
+      background: rgba(245, 245, 245, 0.5);
+      transform: translate(-50%, -50%);
+      width: 60%;
+      height: 80%;
+      backdrop-filter: blur(1rem) saturate(400%);
+      border-radius: 4%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .carousel-image {
+      width: 100%;
+    }
+
+    /* Media queries */
+    @media (max-width: 60rem) {
+      .carousel-container {
+        width: 100%;
+        height: 100%;
+     }
+    }
+    @media (min-width: 60rem) {
+      .carousel-container {
+        width: 60%;
+        height: 80%;
+      }
+    }
+    .carousel {
+      display: flex;
+      gap: 1vw;
+    }
+
+    .carousel.sliding-transition {
+      transition: transform 0.2s ease-in-out;
+    }
+  </style>
+</head>
+
+<body>
+  <section>
+    <div class="carousel-container">
+      <div class="carousel">
+        <img src="https://picsum.photos/id/23/500" alt="Image 1" class='carousel-image'>
+        <img src="https://picsum.photos/id/2/500" alt="Image 2" class='carousel-image'>
+        <img src="https://picsum.photos/id/12/500" alt="Image 3" class='carousel-image'>
+        <img src="https://picsum.photos/id/321/500" alt="Image 4" class='carousel-image'>
+        <img src="https://picsum.photos/id/233/500" alt="Image 5" class='carousel-image'>
+        <img src="https://picsum.photos/id/24/500" alt="Image 6" class='carousel-image'>
+        <img src="https://picsum.photos/id/125/500" alt="Image 7" class='carousel-image'>
+        <img src="https://picsum.photos/id/321/500" alt="Image 8" class='carousel-image'>
+      </div>
+      <!--<button class="arrow-button left-arrow"><span>links</span></button>
+      <button class="arrow-button right-arrow"><span>rechts</span></button>-->
+    </div>
+  </section>
+  <!--<script>
+    // Select elements
+    const carousel = document.querySelector(".carousel");
+    const leftArrow = document.querySelector(".left-arrow");
+    const rightArrow = document.querySelector(".right-arrow");
+    const images = document.querySelectorAll(".carousel-image");
+
+    // Initialize variables
+    let currentIndex = 0;
+    let prevIndex;
+    const imageWidth = 41;
+    //const imagewidth = images[1].getBoundingClientRect().x;
+    console.log(imageWidth);
+
+    const totalImages = images.length;
+
+    console.log("getbounding1", images[1].getBoundingClientRect());
+
+    // Function to handle left arrow click
+    function handleLeftArrowClick() {
+      prevIndex = currentIndex;
+      currentIndex = (currentIndex - 1 + totalImages) % totalImages;
+
+      carousel.style.transform = `translateX(-${imageWidth}vw)`;
+      carousel.insertBefore(images[currentIndex], carousel.firstChild);
+
+      setTimeout(() => {
+        carousel.style.transform = "";
+        carousel.classList.add("sliding-transition");
+      }, 10);
+
+      setTimeout(() => {
+        carousel.classList.remove("sliding-transition");
+      }, 490);
+    }
+
+    // Function to handle right arrow click
+    function handleRightArrowClick() {
+      carousel.classList.add("sliding-transition");
+
+      prevIndex = currentIndex;
+      currentIndex = (currentIndex + 1) % totalImages;
+
+      carousel.style.transform = `translateX(-${imageWidth}vw)`;
+
+      setTimeout(() => {
+        carousel.appendChild(images[prevIndex]);
+        carousel.classList.remove("sliding-transition");
+        carousel.style.transform = "";
+      }, 500);
+    }
+
+    // Add event listeners
+    leftArrow.addEventListener("click", handleLeftArrowClick);
+    rightArrow.addEventListener("click", handleRightArrowClick);
+
+  </script>-->
+</body>
+
+</html>

@@ -1,0 +1,181 @@
+/* Reset styles for all elements */
+* {
+    margin: 0;
+    padding: 0;
+    font-family: Comfortaa, "Exo Regular", "AntipastoPro Hairline";
+    text-decoration: none;
+}
+
+.global-transition * {
+    transition: background-color 0.5s, color 0.5s, box-shadow 0.5s;
+  }
+  
+/* Scrollbar styles */
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: rgba(125, 125, 125, 0.5);
+}
+
+/* Font face declarations */
+@font-face {
+    font-family: 'Exo Regular';
+    src: url(../fonts/exo/Exo-Regular.woff) format('woff');
+}
+
+@font-face {
+    font-family: 'Exo Thin Italic';
+    src: url(../fonts/exo/Exo-Thin-Italic.woff) format('woff');
+}
+
+@font-face {
+    font-family: "AntipastoPro Hairline";
+    src: url(../fonts/antipasto/AntipastoPro-Hairline_trial.woff) format('woff');
+}
+
+/* Default styles for elements */
+p {
+    color: black;
+    text-align: center;
+    font-size: 1.2em;
+}
+
+h2 {
+    text-align: center;
+    color: black;
+    font-size: 5em;
+    font-family: "AntipastoPro Hairline";
+}
+
+h3 {
+    text-align: center;
+    font-size: 2em;
+    font-family: "AntipastoPro Hairline";
+    color: black;
+}
+
+h6 {
+    text-align: right;
+    font-size: 0.9em;
+    font-family: "Exo Thin Italic";
+    color: black;
+    white-space:nowrap;
+}
+
+button {
+    text-align: center;
+    font-size: 1em;
+}
+
+
+/* Header, main, footer, .forground and section styles */
+.header {
+    position: relative;
+    top: 1rem;
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.main {
+    padding: 0 2rem;
+    flex: 1;
+    overflow: auto;
+}
+
+.footer {
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.foreground {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 10;
+    background: rgba(245, 245, 249, 0.5);
+    transform: translate(-50%, -50%);
+    width: 60%;
+    height: 80%;
+    backdrop-filter: blur(1rem) saturate(400%);
+    border-radius: 4%;
+    display: flex;
+    flex-direction: column;
+}
+
+section {
+    position: absolute;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    background: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+section span {
+    position: absolute;
+    bottom: -5rem;
+    background: transparent;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: animate 30s linear infinite;
+}
+
+section span::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transform: scale(0.17, 0.4) translate(220%, 1%);
+    rotate: 40deg;
+    background: radial-gradient(rgba(255, 255, 255, 0.5), transparent);
+    border-radius: 50%;
+    filter: blur(3rem);
+}
+
+section span::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transform: scale(0.17) translate(-120%, -120%);
+    background: radial-gradient(rgba(255, 255, 255, 0.8), transparent);
+    border-radius: 50%;
+    filter: blur(0.75rem);
+}
+
+/* Media queries */
+@media (max-width: 60rem) {
+    .foreground {
+        width: 100%;
+        height: 100%;
+    }
+    .container {
+        column-count: 1;
+    }
+}
+@media (min-width: 60rem) {
+    .foreground {
+        width: 60%;
+        height: 80%;
+    }
+}
+
+@keyframes animate {
+    0% {
+        transform: translateY(0%);
+        opacity: 1;
+    }
+
+    90% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(-1200%);
+        opacity: 0;
+    }
+}

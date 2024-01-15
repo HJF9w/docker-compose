@@ -1,0 +1,48 @@
+version: '3.8'
+services:
+  app:
+    image: "trafex/php-nginx"
+    restart: unless-stopped
+    healthcheck:
+      test: curl --fail http://127.0.0.1:8080 || exit 1
+      timeout: 2s
+      interval: 10s
+      retries: 1
+      start_period: 10s
+    volumes:
+      - "$PWD/html:/var/www/html:ro,z"
+    networks:
+      system_internal:
+
+  umami:
+    image: ghcr.io/umami-software/umami:postgresql-latest
+    environment:
+      DATABASE_URL: postgresql://umami:umami@db:5432/umami
+      DATABASE_TYPE: postgresql
+      APP_SECRET: replace-me-with-a-random-string
+    restart: unless-stopped
+    networks:
+      system_internal:
+      internal:
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: umami
+      POSTGRES_USER: umami
+      POSTGRES_PASSWORD: umami
+    volumes:
+      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/db:/var/lib/postgresql/data"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      internal:
+
+networks:
+  internal:
+  system_internal:
+    external: true

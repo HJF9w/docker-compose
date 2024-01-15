@@ -8,7 +8,7 @@ from influxdb_client import InfluxDBClient
 url = "https://fam-lange.de/wetter.php"
 response = requests.get(url)
 soup = BeautifulSoup(response.content, "html.parser")
-rain_element = soup.find("td", text="Regen (letzte 24h)")
+rain_element = soup.find("td", string="Regen (letzte 24h)")
 
 if rain_element:
     rain_value = rain_element.find_next_sibling("td").text.strip()

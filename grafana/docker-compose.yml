@@ -7,6 +7,7 @@ services:
     volumes:
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/grafana:/var/lib/grafana"
       - "$PWD/config.yml:/etc/influxdb2/config.yml"
+      - "$PWD/grafana.ini:/etc/grafana/grafana.ini"
     networks:
       - "system_internal"
 

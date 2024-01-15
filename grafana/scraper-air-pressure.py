@@ -8,7 +8,7 @@ from influxdb_client import InfluxDBClient
 url = "https://fam-lange.de/wetter.php"
 response = requests.get(url)
 soup = BeautifulSoup(response.content, "html.parser")
-airpressure_element = soup.find("td", text="Luftdruck (rel. NN)")
+airpressure_element = soup.find("td", string="Luftdruck (rel. NN)")
 
 if airpressure_element:
     airpressure_value = airpressure_element.find_next_sibling("td").text.strip()

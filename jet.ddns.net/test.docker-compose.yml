@@ -1,0 +1,9 @@
+version: '3.8'
+services:
+  app:
+    image: "trafex/php-nginx"
+    restart: unless-stopped
+    volumes:
+      - "$PWD/html:/var/www/html:ro,z"
+    ports:
+      - "8080:8080"

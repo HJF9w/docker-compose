@@ -8,7 +8,7 @@ from influxdb_client import InfluxDBClient
 url = "https://fam-lange.de/wetter.php"
 response = requests.get(url)
 soup = BeautifulSoup(response.content, "html.parser")
-humidity_element = soup.find("td", text="Luftfeuchte")
+humidity_element = soup.find("td", string="Luftfeuchte")
 
 if humidity_element:
     humidity_value = humidity_element.find_next_sibling("td").text.strip()

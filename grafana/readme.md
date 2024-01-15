@@ -11,3 +11,9 @@ Enter the venv with ". venv/bin/activate" or for use with cronjobs instead of "/
 install the requirements in venv "pip install -r requirements.txt".
 upgrade the requirements "pip install --upgrade -r requirements.txt".
 To exit the venv, use "deactivate".
+
+
+sources:
+https://www.pegelonline.wsv.de/gast/karte/standard
+fam-lange.de
+https://www.iqair.com/de/germany/saxony/schwartenberg/schwartenberg-s

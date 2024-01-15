@@ -1,0 +1,25 @@
+/** {
+    outline: 1px solid red;
+}*/
+
+.download-style {
+    padding: 1rem;
+    margin: 1rem;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 1rem;
+    /*box-shadow: inset 0 -50px 20px rgba(255, 255, 255, 1)*/
+}
+.download { 
+    display: table;
+    border-collapse: collapse;
+    width: 100%;
+}
+.right {
+    display: table-cell;
+    min-width: 33%;
+}
+.left {
+    display: table-cell;
+    min-width: 77%;
+    width: 100vw;
+}

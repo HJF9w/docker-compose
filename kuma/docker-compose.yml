@@ -6,13 +6,17 @@ services:
     image: "louislam/uptime-kuma:latest"
     volumes:
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/data:/app/data"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
  #    ports:
  #      - "3001:3001"
     hostname: kuma.home.arpa
-    restart: unless-stopped
+    restart: always
     networks:
       system_internal:
+      bookstack_default:
 
 networks:
   system_internal:
+    external: true
+  bookstack_default:
     external: true

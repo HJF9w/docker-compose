@@ -8,7 +8,7 @@ from influxdb_client import InfluxDBClient
 url = "https://fam-lange.de/wetter.php"
 response = requests.get(url)
 soup = BeautifulSoup(response.content, "html.parser")
-temperature_element = soup.find("td", text="Temperatur")
+temperature_element = soup.find("td", string="Temperatur")
 
 if temperature_element:
     temperature_value = temperature_element.find_next_sibling("td").text.strip()
