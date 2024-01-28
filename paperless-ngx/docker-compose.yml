@@ -70,6 +70,7 @@ services:
       PAPERLESS_TIKA_GOTENBERG_ENDPOINT: http://paperless_gotenberg_1:3000
       PAPERLESS_TIKA_ENDPOINT: http://paperless_tika_1:9998
       PAPERLESS_CONSUMER_POLLING: 20
+      PAPERLESS_APP_TITLE: "FairMarkt Paperless"
     networks:
       - 'default'
       - 'fm_internal'
