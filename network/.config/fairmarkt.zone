@@ -1,9 +1,9 @@
-$TTL 12h
+$TTL 15m
 
 $ORIGIN fairmarkt.
 
 @       IN      SOA     ns.fairmarkt. admin.fairmarkt. (
-                                2023081712     ; serial
+                                2024030613     ; serial
                                 12h            ; refresh 12h
                                 15m            ; retry 15m
                                 1w             ; expire 3w
