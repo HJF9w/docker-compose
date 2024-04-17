@@ -1,4 +1,4 @@
 CREATE DATABASE IF NOT EXISTS `wordpress`;
-CREATE USER 'wordpress'@'%' IDENTIFIED BY 'wordpress';
+CREATE USER 'wordpress'@'%' IDENTIFIED BY '7UGRKA5Vz0fb7wlWY7mYI5Aja8MxQViY';
 GRANT ALL PRIVILEGES ON *.* TO 'phpmyadmin'@'%';
 GRANT ALL PRIVILEGES ON wordpress.* TO 'wordpress'@'%';
