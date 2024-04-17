@@ -1,16 +1,16 @@
-$TTL 12h
+$TTL 5m
 
 $ORIGIN fairmarkt.
 
 @       IN      SOA     ns.fairmarkt. admin.fairmarkt. (
-                                2023070320     ; serial
+                                2024041715     ; serial
                                 12h            ; refresh 12h
                                 15m            ; retry 15m
                                 1w             ; expire 3w
                                 2h )           ; minimum 2h
 
                 IN      NS      ns.fairmarkt.
-ns              IN      A       10.0.42.26
+ns              IN      A       192.168.178.221
 
 ; -- catch all
 *               IN      A       192.168.178.222
@@ -59,4 +59,8 @@ nginx		IN	A	192.168.178.222
 pihole		IN	A	192.168.178.222
 portainer	IN	A	192.168.178.222
 proxmox		IN	A	192.168.178.222
+wordpress	IN	A	192.168.178.222
+2wordpress	IN	A	192.168.178.222
+phpmyadmin.wordpress IN A	192.168.178.222
+
 
