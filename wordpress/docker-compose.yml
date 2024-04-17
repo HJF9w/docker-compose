@@ -1,0 +1,53 @@
+---
+version: "3" 
+services:
+  db:
+    image: "mysql:8"
+    restart: unless-stopped
+    env_file:
+      - .env
+    #volumes:
+    #  - ./db:/var/lib/mysql:z
+    volumes:
+      - dbdata:/var/lib/mysql
+      - "./01-databases.sql:/docker-entrypoint-initdb.d/01-databases.sql"
+
+  app:
+    depends_on:
+      - db
+    image: "wordpress:php8.2-apache"
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    environment:
+      WORDPRESS_DB_HOST: "wordpress_db_1:3306"
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+    #volumes:
+    #  - "./app:/var/www/html"
+    volumes:
+      - wordpress:/var/www/html
+
+  phpmyadmin:
+    depends_on:
+      - db
+    image: "phpmyadmin:5-apache"
+    restart: unless-stopped
+    environment:
+      #PMA_ARBITRARY: 1
+      PMA_HOST: "wordpress_db_1:3306"
+      PMA_USER: $MYSQL_USER
+      PMA_PASSWORD: $MYSQL_PASSWORD
+      #PMA_ABSOLUTE_URI: "http://localhost:8081"
+      PMA_PMADB: $MYSQL_DATABASE
+      PMA_CONTROLUSER: $MYSQL_USER
+      PMA_CONTROLPASS: $MYSQL_PASSWORD
+    ports:
+      - "8081:80"
+    volumes:
+      - "./phpmyadmin:/etc/phpmyadmin:z"
+
+volumes:
+  wordpress:
+  dbdata:
