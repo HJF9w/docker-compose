@@ -2,7 +2,7 @@
 version: "3" 
 services:
   db:
-    image: "mysql:8"
+    image: "mysql:oraclelinux8"
     restart: unless-stopped
     env_file:
       - .env
