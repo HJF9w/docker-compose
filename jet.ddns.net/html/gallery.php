@@ -14,7 +14,7 @@
 <body>
     <div class="foreground">
         <div class="header">
-            <h2>Welcome!</h2>
+            <h2>Gallery</h2>
             <p style="font-family: 'AntipastoPro Light';">One day there will be a proper Website.</p>
         </div>
 

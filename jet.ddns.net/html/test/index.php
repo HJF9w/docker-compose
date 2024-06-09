@@ -1,86 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script async src="umami-script.js" data-website-id="8ae45013-37e6-4bb4-bbbe-b651ba3378d7"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Horizontal Image Slider</title>
-    <style>
-        /* Styles for the image slider container */
-        .slider-container {
-            width: 80%;
-            margin: 0 auto;
-            overflow: hidden;
-        }
-
-        /* Styles for the slider frame */
-        .slider-frame {
-            display: flex;
-            transition: transform 0.5s ease;
-        }
-
-        /* Styles for individual slider items (images) */
-        .slider-item {
-            flex: 0 0 33.33%; /* Three items visible at a time */
-            padding: 10px;
-            box-sizing: border-box;
-        }
-
-        /* Styles for navigation buttons */
-        .slider-btn {
-            cursor: pointer;
-            padding: 10px;
-            background-color: #0074d9;
-            color: #fff;
-            border: none;
-        }
-
-        /* Styles for left and right buttons */
-        .slider-btn-left {
-            float: left;
-        }
-
-        .slider-btn-right {
-            float: right;
-        }
-    </style>
+    <title>Jet</title>
+    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="style/dark-mode-style.css">    
+    <link rel="stylesheet" href="style/glass-button-style.css">    
+    <link rel="icon" type="image/x-icon" href="/images/favicon.gif">
 </head>
 <body>
-    <div class="slider-container">
-        <div class="slider-frame">
-            <div class="slider-item"><img src="https://picsum.photos/300/400?random=1" alt="Image 1"></div>
-            <div class="slider-item"><img src="https://picsum.photos/300/400?random=2" alt="Image 2"></div>
-            <div class="slider-item"><img src="https://picsum.photos/300/400?random=3" alt="Image 3"></div>
-            <div class="slider-item"><img src="https://picsum.photos/300/400?random=4" alt="Image 4"></div>
-            <div class="slider-item"><img src="https://picsum.photos/300/400?random=5" alt="Image 5"></div>
-            <div class="slider-item"><img src="https://picsum.photos/300/400?random=6" alt="Image 6"></div>
+    <div class="foreground">
+        <div class="header">
+            <h2>Welcome!</h2>
+            <p style="font-family: 'AntipastoPro Light';">One day there will be a proper Website.</p>
+        </div>
+        <div class="main">
+            <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.   
+
+                Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.   
+                
+                Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.   
+                
+                Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.   
+                
+                Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis.   
+                
+                At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. sanctus sea sed takimata ut vero voluptua. est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat.   
+                
+                Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus.   
+                
+                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.   
+                
+                Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.   
+                
+                Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.   
+                
+                Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo</p>
+        </div>
+        <div class="footer">
+            <?php include('menu.php'); ?>
         </div>
     </div>
-
-    <button class="slider-btn slider-btn-left" onclick="slideLeft()">Previous</button>
-    <button class="slider-btn slider-btn-right" onclick="slideRight()">Next</button>
-
-    <script>
-        const frame = document.querySelector('.slider-frame');
-        let currentIndex = 0;
-
-        function slideLeft() {
-            if (currentIndex > 0) {
-                currentIndex--;
-                updateSlider();
-            }
-        }
-
-        function slideRight() {
-            if (currentIndex < 3) { // Change this number to the total number of slides - 3
-                currentIndex++;
-                updateSlider();
-            }
-        }
-
-        function updateSlider() {
-            const translateX = -currentIndex * 33.33; // Adjust based on the number of items visible
-            frame.style.transform = `translateX(${translateX}%)`;
-        }
-    </script>
+    <div class="background">
+        <section>
+        </section>
+        <script src="script.js"></script>
+    </div>
 </body>
 </html>
