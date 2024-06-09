@@ -4,6 +4,9 @@
     padding: 0;
     font-family: Comfortaa, "Exo Regular", "AntipastoPro Hairline";
     text-decoration: none;
+    /*outline-style: solid;
+    outline-color: red;
+    outline-width: 1px;*/
 }
 
 .global-transition * {

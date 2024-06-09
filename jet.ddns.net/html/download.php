@@ -19,60 +19,60 @@
         </div>
         <div class="main">
             <div class="download-style"><div class="download">
-                    <div class="left">
-                        <h3>Files</h3>
+                    <div class="left"><a href=https://123.com>
+                        <h3>jfidoa fjdkahidoa dejghd hdjg gf gfssgrf</h3>
                         <p >from whatevejfdhajk fhjdksgfh fdfdhfhdsfh as kdhfjdsafdr</p>
-                    </div>
+                    </a></div>
                     <div class="right">
                         <h6>23.09.7693 12:54 UTC</h6>
                         <a href="download/test.html" class="cglass-button" id="blue">⬇️ Download</a>
                     </div>
             </div></div>
             <div class="download-style"><div class="download">
-                    <div class="left">
+                    <div class="left"><a href=https://123.com>
                         <h3>Files</h3>
                         <p >from whatevejfdhajk fhjdksgfh fdfdhfhdsfh as kdhfjdsafdr</p>
-                    </div>
+                    </a></div>
                     <div class="right">
                         <h6>23.09.7693 12:54 UTC</h6>
                         <a href="download/test.html" class="cglass-button" id="blue">⬇️ Download</a>
                     </div>
             </div></div>
             <div class="download-style"><div class="download">
-                    <div class="left">
+                    <div class="left"><a href=https://123.com>
                         <h3>Files</h3>
                         <p >from whatevejfdhajk fhjdksgfh fdfdhfhdsfh as kdhfjdsafdr</p>
-                    </div>
+                    </a></div>
                     <div class="right">
                         <h6>23.09.7693 12:54 UTC</h6>
                         <a href="download/test.html" class="cglass-button" id="blue">⬇️ Download</a>
                     </div>
             </div></div>
             <div class="download-style"><div class="download">
-                    <div class="left">
+                    <div class="left"><a href=https://123.com>
                         <h3>Files</h3>
                         <p >from whatevejfdhajk fhjdksgfh fdfdhfhdsfh as kdhfjdsafdr</p>
-                    </div>
+                    </a></div>
                     <div class="right">
                         <h6>23.09.7693 12:54 UTC</h6>
                         <a href="download/test.html" class="cglass-button" id="blue">⬇️ Download</a>
                     </div>
             </div></div>
             <div class="download-style"><div class="download">
-                    <div class="left">
+                    <div class="left"><a href=https://123.com>
                         <h3>Files</h3>
                         <p >from whatevejfdhajk fhjdksgfh fdfdhfhdsfh as kdhfjdsafdr</p>
-                    </div>
+                    </a></div>
                     <div class="right">
                         <h6>23.09.7693 12:54 UTC</h6>
                         <a href="download/test.html" class="cglass-button" id="blue">⬇️ Download</a>
                     </div>
             </div></div>
             <div class="download-style"><div class="download">
-                    <div class="left">
+                    <div class="left"><a href=https://123.com>
                         <h3>Files</h3>
                         <p >from whatevejfdhajk fhjdksgfh fdfdhfhdsfh as kdhfjdsafdr</p>
-                    </div>
+                    </a></div>
                     <div class="right">
                         <h6>23.09.7693 12:54 UTC</h6>
                         <a href="download/test.html" class="cglass-button" id="blue">⬇️ Download</a>

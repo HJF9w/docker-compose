@@ -21,23 +21,41 @@
         <div class="main">
             <div class="container">
                 <figure>
-                    <a href="1"><img src="https://assets.codepen.io/12005/suspension-bridge.jpg" alt="The Clifton Suspension Bridge" /></a>
+                    <a href="image.php?image=12345678_1.jpg"><img src="images/12345678_1.jpg" alt="abcd" /></a>
                 </figure><figure>
-                    <a href="2"><img src="https://assets.codepen.io/12005/suspension-bridge.jpg" alt="The Clifton Suspension Bridge" /></a>
+                    <a href="image.php?image=12345678_2.jpg"><img src="images/12345678_2.jpg" alt="abcd" /></a>
                 </figure><figure>
-                    <a href="3"><img src="https://assets.codepen.io/12005/suspension-bridge.jpg" alt="The Clifton Suspension Bridge" /></a>
+                    <a href="image.php?image=12345678_3.jpg"><img src="images/12345678_3.jpg" alt="abcd" /></a>
                 </figure><figure>
-                    <a href="4"><img src="https://assets.codepen.io/12005/suspension-bridge.jpg" alt="The Clifton Suspension Bridge" /></a>
+                    <a href="image.php?image=12345678_4.jpg"><img src="images/12345678_4.jpg" alt="abcd" /></a>
                 </figure><figure>
-                    <a href="5"><img src="https://assets.codepen.io/12005/suspension-bridge.jpg" alt="The Clifton Suspension Bridge" /></a>
+                    <a href="image.php?image=12345678_suspension-bridge.jpg"><img src="images/12345678_suspension-bridge.jpg" alt="abcd" /></a>
                 </figure><figure>
-                    <a href="6"><img src="https://assets.codepen.io/12005/suspension-bridge.jpg" alt="The Clifton Suspension Bridge" /></a>
+                    <a href="image.php?image=12345678_1.jpg"><img src="images/12345678_1.jpg" alt="abcd" /></a>
                 </figure><figure>
-                    <a href="7"><img src="https://assets.codepen.io/12005/suspension-bridge.jpg" alt="The Clifton Suspension Bridge" /></a>
+                    <a href="image.php?image=12345678_2.jpg"><img src="images/12345678_2.jpg" alt="abcd" /></a>
                 </figure><figure>
-                    <a href="8"><img src="https://assets.codepen.io/12005/suspension-bridge.jpg" alt="The Clifton Suspension Bridge" /></a>
+                    <a href="image.php?image=12345678_3.jpg"><img src="images/12345678_3.jpg" alt="abcd" /></a>
                 </figure><figure>
-                    <a href="9"><img src="https://assets.codepen.io/12005/suspension-bridge.jpg" alt="The Clifton Suspension Bridge" /></a>
+                    <a href="image.php?image=12345678_4.jpg"><img src="images/12345678_4.jpg" alt="abcd" /></a>
+                </figure><figure>
+                    <a href="image.php?image=12345678_1.jpg"><img src="images/12345678_1.jpg" alt="abcd" /></a>
+                </figure><figure>
+                    <a href="image.php?image=12345678_2.jpg"><img src="images/12345678_2.jpg" alt="abcd" /></a>
+                </figure><figure>
+                    <a href="image.php?image=12345678_3.jpg"><img src="images/12345678_3.jpg" alt="abcd" /></a>
+                </figure><figure>
+                    <a href="image.php?image=12345678_4.jpg"><img src="images/12345678_4.jpg" alt="abcd" /></a>
+                </figure><figure>
+                    <a href="image.php?image=12345678_suspension-bridge.jpg"><img src="images/12345678_suspension-bridge.jpg" alt="abcd" /></a>
+                </figure><figure>
+                    <a href="image.php?image=12345678_1.jpg"><img src="images/12345678_1.jpg" alt="abcd" /></a>
+                </figure><figure>
+                    <a href="image.php?image=12345678_2.jpg"><img src="images/12345678_2.jpg" alt="abcd" /></a>
+                </figure><figure>
+                    <a href="image.php?image=12345678_3.jpg"><img src="images/12345678_3.jpg" alt="abcd" /></a>
+                </figure><figure>
+                    <a href="image.php?image=12345678_4.jpg"><img src="images/12345678_4.jpg" alt="abcd" /></a>
                 </figure>
             </div>
         </div>
