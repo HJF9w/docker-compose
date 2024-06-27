@@ -17,6 +17,7 @@
 .right {
     display: table-cell;
     min-width: 33%;
+    padding-left: 1rem;
 }
 .left {
     display: table-cell;
