@@ -1,2 +1,3 @@
-don't include private env files
 *.envp
+jet.ddns.net/html/material/videos/*
+!jet.ddns.net/html/material/videos/Index
