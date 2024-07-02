@@ -5,10 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jet</title>
-    <link rel="stylesheet" href="style/style.css">
-    <link rel="stylesheet" href="style/dark-mode-style.css">    
-    <link rel="stylesheet" href="style/glass-button-style.css">    
-    <link rel="icon" type="image/x-icon" href="/images/favicon.gif">
+    <link rel="stylesheet" href="bubbles/style/style.css">
+    <link rel="stylesheet" href="bubbles/style/dark-mode-style.css">    
+    <link rel="stylesheet" href="bubbles/style/glass-button-style.css">    
+    <link rel="icon" type="image/x-icon" href="bubbles/images/favicon.gif">
 </head>
 <body>
     <div class="foreground">
@@ -40,13 +40,13 @@
                 Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo</p>
         </div>
         <div class="footer">
-            <?php include('menu.php'); ?>
+            <?php include('bubbles/menu.php'); ?>
         </div>
     </div>
     <div class="background">
         <section>
         </section>
-        <script src="script.js"></script>
+        <script src="bubbles/script.js"></script>
     </div>
 </body>
 </html>

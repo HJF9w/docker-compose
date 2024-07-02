@@ -1,0 +1,22 @@
+.button-img {
+    filter: invert(var(--color-button-img));
+}
+:root {
+    --color-background: rgb(50, 50, 50);
+    --color-menu: rgb(75, 75, 75);
+    --color-menu-sl: rgb(90, 90, 90);
+    --color-menu-sd: rgb(65, 65, 65);
+    --color-foreground: rgb(100, 100, 100);
+    
+    --color-description-sl: rgb(130, 130, 130);
+    --color-description-sd: rgb(110, 110, 110);
+    --color-description:rgb(125, 125, 125);
+    --color-highlight: rgb(200, 200, 200);
+    --color-right-h3: #ffffff;
+    --color-text-gb: #ffffff;
+    --color-text-sgb: #ffffff;
+    --color-text-tgb: #ffffff;
+    --color-text-titel: #ffffff;
+    --color-middle-h5: #ffffff;
+    --color-button-img: 0%;
+}

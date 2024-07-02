@@ -5,11 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jet</title>
-    <link rel="stylesheet" href="style/style.css">
-    <link rel="stylesheet" href="style/dark-mode-style.css">    
-    <link rel="stylesheet" href="style/glass-button-style.css">  
-    <link rel="stylesheet" href="style/image.css">  
-    <link rel="icon" type="image/x-icon" href="/images/favicon.gif">
+    <link rel="stylesheet" href="bubbles/style/style.css">
+    <link rel="stylesheet" href="bubbles/style/dark-mode-style.css">    
+    <link rel="stylesheet" href="bubbles/style/glass-button-style.css">  
+    <link rel="stylesheet" href="bubbles/style/image.css">  
+    <link rel="icon" type="image/x-icon" href="bubbles/images/favicon.gif">
 </head>
 <body>
     <div class="foreground">
@@ -18,7 +18,7 @@
             // Get the image name from the URL parameter
             if (isset($_GET['image'])) {
                 $image = $_GET['image'];
-                $imagePath = 'images/' . $image;
+                $imagePath = 'bubbles/images/' . $image;
                 
                 // Check if the image file exists
                 if (file_exists($imagePath)) {
@@ -50,7 +50,7 @@
             if (isset($image) && file_exists($imagePath)) {
                 echo "<a href='javascript:history.back()' class='glass-button' id='orange'>🔙 Back</a>";
                 echo "<a href> </a>";
-                echo "<a href='images/" . htmlspecialchars($image) . "' class='glass-button' id='blue' download>⬇️ Save this Image</a>";
+                echo "<a href='bubbles/images/" . htmlspecialchars($image) . "' class='glass-button' id='blue' download>⬇️ Save this Image</a>";
             } else {
                 echo "<a href='javascript:history.back()' class='glass-button' id='orange'>🔙 Back</a>";
             }
@@ -61,7 +61,7 @@
     <div class="background">
         <section>
         </section>
-        <script src="script.js"></script>
+        <script src="bubbles/script.js"></script>
     </div>
 </body>
 </html>
