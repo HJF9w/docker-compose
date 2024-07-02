@@ -1,7 +1,13 @@
 <?php
 function getBaseURL() {
-    // Get the scheme (http or https)
-    $scheme = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
+    // Detect the scheme, checking if it's set by a reverse proxy
+    if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') {
+        $scheme = "https";
+    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
+        $scheme = $_SERVER['HTTP_X_FORWARDED_PROTO'];
+    } else {
+        $scheme = "http";
+    }
     
     // Get the host (e.g., example.org)
     $host = $_SERVER['HTTP_HOST'];
