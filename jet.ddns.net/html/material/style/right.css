@@ -23,6 +23,7 @@
 .video-next img {
     width: 100%;
     max-width: 100%;
+    max-height: 20vh;
     border-radius: 1rem;
     padding-bottom: 0;
     object-fit: cover;
