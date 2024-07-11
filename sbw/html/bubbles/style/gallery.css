@@ -1,0 +1,47 @@
+body {
+    background-color: #000;
+    font: 1.1em Arial, Helvetica, sans-serif;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+figure {
+    margin: 0;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    margin-bottom: 10px;
+    break-inside: avoid;
+}
+
+figure>img {
+    grid-row: 1 / -1;
+    grid-column: 1;
+}
+
+figure a {
+    color: black;
+    text-decoration: none;
+}
+
+img {
+    border-radius: 1rem;
+}
+
+.container {
+    column-count: 3;
+    column-gap: 10px;
+}
+
+@media (max-width: 80rem) { 
+    .container {
+        column-count: 2;
+    }
+}
+@media (max-width: 40rem) { 
+    .container {
+        column-count: 1;
+    }
+}

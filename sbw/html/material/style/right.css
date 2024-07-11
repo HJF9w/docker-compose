@@ -1,0 +1,42 @@
+.video-next {
+    border-radius: 1rem;
+    box-shadow: 
+        -0.7rem -0.7rem 1rem var(--color-menu-sl),
+        0.7rem 0.7rem 1rem var(--color-menu-sd);
+    position: relative;
+}
+
+.video-next:hover {
+    transform: scale(0.99);
+    box-shadow: 
+        0px 0px 0px var(--color-menu-sl), 
+        0px 0px 0px var(--color-menu-sd),
+        inset -0.5rem -0.5rem 0.5rem var(--color-menu-sl),
+        inset 0.5rem 0.5rem 0.5rem var(--color-menu-sd);
+}
+.video-next h3 {
+    padding: 1rem;
+    padding-top: 0px;
+    color: var(--color-right-h3);
+    font-size: 0.9em;
+}
+.video-next img {
+    width: 100%;
+    max-width: 100%;
+    max-height: 20vh;
+    border-radius: 1rem;
+    padding-bottom: 0;
+    object-fit: cover;
+}
+a.video-next {
+    display: block;
+    height: 100%;
+    width: 100%;
+}
+.top-right {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    color: white;
+    text-shadow: 1px 1px 2px rgb(0, 0, 0), -1px -1px 2px rgb(0, 0, 0), 0 0 5px rgb(0, 0, 0);
+  }
