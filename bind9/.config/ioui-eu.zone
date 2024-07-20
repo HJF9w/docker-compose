@@ -1,6 +1,6 @@
 $TTL 5m
 
-$ORIGIN ioui.eu
+$ORIGIN ioui.eu.
 
 @	IN	SOA	ns.ioui.eu. admin.ioui.eu. (
 				2024072012     ; serial
