@@ -84,8 +84,6 @@
 #	respond @local "Not allowed" 403
 #}
 *.o.ioui.eu {
-	tls
-
 	o.ioui.eu {
 		@local {
 	        	remote_ip 87.128.0.0/0 # block ip's in this range
