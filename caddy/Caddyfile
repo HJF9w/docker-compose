@@ -83,8 +83,20 @@ speicher.ddns.net {
 	}
 	respond @local "Not allowed" 403
 }
+i.ioui.eu {
+	@local {
+        	remote_ip 87.128.0.0/0 # block ip's in this range
+	}
+	route @local {
+		reverse_proxy jetddnsnet_app_1:8080
+	}
+	respond @local "Not allowed" 403
+}
 
 # -- intern
+test.i.ioui.eu {
+	reverse_proxy 10.0.42.1
+}
 
 fritz.home.arpa {
 	reverse_proxy 10.0.42.1:80
