@@ -97,10 +97,9 @@
 	}
 
 	# -- intern
-	@test host test.o.ioui.eu {
-		handle @test {
-			reverse_proxy 10.0.42.1
-		}
+	@test host test.o.ioui.eu
+	handle @test {
+		reverse_proxy 10.0.42.1
 	}
 }
 fritz.home.arpa {
