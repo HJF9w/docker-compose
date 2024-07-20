@@ -117,20 +117,19 @@
 #	tls internal
 #
 #}
-#portainer.home.arpa {
-#	reverse_proxy system_app_1:9000
-#	tls internal
-#
-#}
+portainer.home.arpa {
+	reverse_proxy system-app-1:9000
+	tls internal
+}
 #pihole.home.arpa {
 #	redir / /admin/
 #	reverse_proxy pihole_app_1:80
 #	tls internal
 #}
-#vaultwarden.home.arpa {
-#	reverse_proxy vaultwarden_app_1:80
-#	tls internal
-#}
+vaultwarden.home.arpa {
+	reverse_proxy vaultwarden-app-1:80
+	tls internal
+}
 #bookstack.home.arpa {
 #	reverse_proxy bookstack_app_1:8080
 #	tls internal

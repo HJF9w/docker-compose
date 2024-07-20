@@ -26,8 +26,10 @@ neon		IN	A	10.0.42.150
 pikrellcam	IN	CNAME	neon
 cam		IN	CNAME	neon
 shop		IN	A	10.0.42.125
+;new opal
 titanite	IN	A	10.0.42.100
 opal		IN	A	10.0.42.224
+vaultwarden	IN	A	10.0.42.225
 
 ;address	IN	A	10.0.0.1 ; easy Load Balancing
 ;		IN	A	10.0.0.2
