@@ -1,0 +1,17 @@
+$TTL 5m
+
+$ORIGIN ioui.eu
+
+@	IN	SOA	ns.ioui.eu. admin.ioui.eu. (
+				2024072012     ; serial
+				12h            ; refresh 12h
+				15m            ; retry 15m
+				1w             ; expire 3w
+				5m )           ; minimum 2h
+
+                IN	NS	ns.ioui.eu.
+ns		IN	A	10.0.42.26
+
+; -- Catch all
+*		IN	A	10.0.42.23
+hallo   IN  A   123.123.123.123
