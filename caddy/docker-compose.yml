@@ -1,6 +1,7 @@
 services:
   app:
-    image: "caddy:latest"
+    #image: "caddy:latest"
+    build: .
     volumes:
       - "$PWD/Caddyfile:/etc/caddy/Caddyfile:ro"
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/srv:/srv"
