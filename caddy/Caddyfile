@@ -93,13 +93,12 @@
 #		respond @local "Not allowed" 403
 #	}
 #
-#*.o.ioui.eu {
-#	# -- intern
-#	@test host test.o.ioui.eu
-#	handle @test {
-#		reverse_proxy 10.0.42.1
-#	}
-#}
+test.ioui.eu {
+	reverse_proxy 10.0.42.1
+	tls {
+		dns hetzner {env.OPAL_CADDY_HETZNER_API_TOKEN}
+	}
+}
 #fritz.home.arpa {
 #	reverse_proxy 10.0.42.1:80
 #	tls internal
