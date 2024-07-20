@@ -83,60 +83,60 @@
 #	}
 #	respond @local "Not allowed" 403
 #}
-o.ioui.eu {
-		@local {
-	        	remote_ip 87.128.0.0/0 # block ip's in this range
-		}
-		route @local {
-			reverse_proxy jetddnsnet_app_1:8080
-		}
-		respond @local "Not allowed" 403
-	}
-
-*.o.ioui.eu {
-	# -- intern
-	@test host test.o.ioui.eu
-	handle @test {
-		reverse_proxy 10.0.42.1
-	}
-}
-fritz.home.arpa {
-	reverse_proxy 10.0.42.1:80
-	tls internal
-}
-fritz7272.home.arpa {
-	reverse_proxy 10.0.42.10:80
-	tls internal
-}
-fritz7170.home.arpa {
-	reverse_proxy 10.0.42.11:80
-	tls internal
-}
-kuma.home.arpa {
-	reverse_proxy kuma_app_1:3001
-	tls internal
-
-}
-portainer.home.arpa {
-	reverse_proxy system_app_1:9000
-	tls internal
-
-}
-pihole.home.arpa {
-	redir / /admin/
-	reverse_proxy pihole_app_1:80
-	tls internal
-}
-vaultwarden.home.arpa {
-	reverse_proxy vaultwarden_app_1:80
-	tls internal
-}
-bookstack.home.arpa {
-	reverse_proxy bookstack_app_1:8080
-	tls internal
-}
+#o.ioui.eu {
+#		@local {
+#	        	remote_ip 87.128.0.0/0 # block ip's in this range
+#		}
+#		route @local {
+#			reverse_proxy jetddnsnet_app_1:8080
+#		}
+#		respond @local "Not allowed" 403
+#	}
+#
+#*.o.ioui.eu {
+#	# -- intern
+#	@test host test.o.ioui.eu
+#	handle @test {
+#		reverse_proxy 10.0.42.1
+#	}
+#}
+#fritz.home.arpa {
+#	reverse_proxy 10.0.42.1:80
+#	tls internal
+#}
+#fritz7272.home.arpa {
+#	reverse_proxy 10.0.42.10:80
+#	tls internal
+#}
+#fritz7170.home.arpa {
+#	reverse_proxy 10.0.42.11:80
+#	tls internal
+#}
+#kuma.home.arpa {
+#	reverse_proxy kuma_app_1:3001
+#	tls internal
+#
+#}
+#portainer.home.arpa {
+#	reverse_proxy system_app_1:9000
+#	tls internal
+#
+#}
+#pihole.home.arpa {
+#	redir / /admin/
+#	reverse_proxy pihole_app_1:80
+#	tls internal
+#}
+#vaultwarden.home.arpa {
+#	reverse_proxy vaultwarden_app_1:80
+#	tls internal
+#}
+#bookstack.home.arpa {
+#	reverse_proxy bookstack_app_1:8080
+#	tls internal
+#}
 nextcloud.home.arpa {
-	reverse_proxy nextcloud_app_1:80
+	reverse_proxy nextcloud-app-1:80
 	redir /.well-known/carddav /remote.php/dav 301
 	redir /.well-known/caldav /remote.php/dav 301
 	redir /.well-known/webfinger /index.php/.well-known/webfinger 301
@@ -146,35 +146,36 @@ nextcloud.home.arpa {
 		Strict-Transport-Security max-age=31536000;
 		}
 }
-it-tools.home.arpa {
-	reverse_proxy it-tools_app_1:80
-	tls internal
-}
-searx.home.arpa {
-	reverse_proxy searx_app_1:8080
-	tls internal
-}
-grafana.home.arpa {
-	reverse_proxy grafana_app_1:3000
-	tls internal
-}
-influxdb.home.arpa {
-	reverse_proxy grafana_db_1:8086
-	tls internal
-}
-test.home.arpa {
-	reverse_proxy  jetddnsnet_umami_1:3000
-	tls internal
-}
-pdf-tools.home.arpa {
-	reverse_proxy pdf-tools_app_1:8080
-	tls internal
-}
-invidious.home.arpa {
-	reverse_proxy invidious_app_1:3000
-	tls internal
-}
-fritz7390.home.arpa {
-	reverse_proxy 10.0.42.12:80
-	tls internal
-}
+#it-tools.home.arpa {
+#	reverse_proxy it-tools_app_1:80
+#	tls internal
+#}
+#searx.home.arpa {
+#	reverse_proxy searx_app_1:8080
+#	tls internal
+#}
+#grafana.home.arpa {
+#	reverse_proxy grafana_app_1:3000
+#	tls internal
+#}
+#influxdb.home.arpa {
+#	reverse_proxy grafana_db_1:8086
+#	tls internal
+#}
+#test.home.arpa {
+#	reverse_proxy  jetddnsnet_umami_1:3000
+#	tls internal
+#}
+#pdf-tools.home.arpa {
+#	reverse_proxy pdf-tools_app_1:8080
+#	tls internal
+#}
+#invidious.home.arpa {
+#	reverse_proxy invidious_app_1:3000
+#	tls internal
+#}
+#fritz7390.home.arpa {
+#	reverse_proxy 10.0.42.12:80
+#	tls internal
+#}
+#
