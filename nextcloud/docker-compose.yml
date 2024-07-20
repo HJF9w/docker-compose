@@ -6,7 +6,7 @@ services:
     command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
     restart: unless-stopped
     volumes:
-      - ${basepath}/${COMPOSE_PROJECT_NAME}/db:/var/lib/mysql
+      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/db:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=test
       - MYSQL_PASSWORD=test
@@ -29,7 +29,7 @@ services:
     image: nextcloud:apache
     restart: unless-stopped
     volumes:
-      - ${basepath}/${COMPOSE_PROJECT_NAME}/app:/var/www/html
+      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/app:/var/www/html
     environment:
       - MYSQL_HOST=db
       - REDIS_HOST=redis
@@ -49,7 +49,7 @@ services:
     image: nextcloud:apache
     restart: unless-stopped
     volumes:
-      - ${basepath}/${COMPOSE_PROJECT_NAME}/app:/var/www/html
+      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/app:/var/www/html
     entrypoint: /cron.sh
     depends_on:
       - redis
