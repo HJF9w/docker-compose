@@ -2,13 +2,16 @@ version: "2.3"
 services:
 
   app:
-    image: "caddy:latest"
+    #image: "caddy:latest"
+    build: .
     volumes:
       - "$PWD/Caddyfile:/etc/caddy/Caddyfile:ro"
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/srv:/srv"
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/data:/data"
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/config:/config"
     restart: always
+    environment:
+      - HETZNER_DNS_TOKEN
     healthcheck:
       test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://google.com || exit 1"]
       timeout: 2s
