@@ -93,10 +93,10 @@
 #		respond @local "Not allowed" 403
 #	}
 #
-test.ioui.eu {
-	reverse_proxy 10.0.42.1
+i.ioui.eu {
+	reverse_proxy jetddnsnet-app-1
 	tls {
-		dns hetzner {env.OPAL_CADDY_HETZNER_API_TOKEN}
+		dns hetzner {env.HETZNER_DNS_TOKEN}
 	}
 }
 #fritz.home.arpa {
@@ -116,30 +116,36 @@ test.ioui.eu {
 #	tls internal
 #
 #}
-portainer.home.arpa {
+portainer.i.ioui.eu {
 	reverse_proxy system-app-1:9000
-	tls internal
+	tls {
+		dns hetzner {env.HETZNER_DNS_TOKEN}
+	}
 }
 #pihole.home.arpa {
 #	redir / /admin/
 #	reverse_proxy pihole_app_1:80
 #	tls internal
 #}
-vaultwarden.home.arpa {
+vaultwarden.i.ioui.eu {
 	reverse_proxy vaultwarden-app-1:80
-	tls internal
+	tls {
+		dns hetzner {env.HETZNER_DNS_TOKEN}
+	}
 }
 #bookstack.home.arpa {
 #	reverse_proxy bookstack_app_1:8080
 #	tls internal
 #}
-nextcloud.home.arpa {
+nextcloud.i.ioui.eu {
 	reverse_proxy nextcloud-app-1:80
 	redir /.well-known/carddav /remote.php/dav 301
 	redir /.well-known/caldav /remote.php/dav 301
 	redir /.well-known/webfinger /index.php/.well-known/webfinger 301
 	redir /.well-known/nodeinfo /index.php/.well-known/nodeinfo 301
-	tls internal
+	tls {
+		dns hetzner {env.HETZNER_DNS_TOKEN}
+	}
 	header {
 		Strict-Transport-Security max-age=31536000;
 		}

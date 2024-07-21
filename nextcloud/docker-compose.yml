@@ -34,7 +34,7 @@ services:
       - MYSQL_PASSWORD=test
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
-      - NEXTCLOUD_TRUSTED_DOMAINS=localhost 127.0.0.1 127.0.1.1 nextcloud.home.arpa
+      - NEXTCLOUD_TRUSTED_DOMAINS=localhost 127.0.0.1 127.0.1.1 nextcloud.i.ioui.eu
       - OVERWRITEPROTOCOL=https
       - NC_DEFAULT_PHONE_REGION='DE' # or NEXTCLOUD_DEFAULT_PHONE_REGION this currently doesn't work, see https://github.com/nextcloud/docker/issues/1465 you need to manualy add "'default_phone_region' => 'DE'," to config/config.php
     depends_on:

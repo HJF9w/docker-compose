@@ -4,7 +4,7 @@ $TTL 1m
 $ORIGIN i.ioui.eu.
 
 @	IN	SOA	ns.i.ioui.eu. admin.i.ioui.eu. (
-				2024062912     ; serial
+				2024072115     ; serial
 				12h            ; refresh 12h
 				15m            ; retry 15m
 				1w             ; expire 3w
@@ -15,24 +15,30 @@ ns		IN	A	10.0.42.254
 
 ; -- Catch all
 *			IN	A	10.0.42.23
-hallo   	IN  A   123.123.123.123
 
-; -- add your DNS Records
+; -- CNAME's for reverse proxy
+xenon-rp	IN	A	10.0.42.23
+opal-rp 	IN	A	10.0.42.225
 
+
+; -- Devices
 fritz7170	IN	A	10.0.42.11
 xenon		IN	A	10.0.42.20
+neon		IN	A	10.0.42.150
+titanite	IN	A	10.0.42.100
+opal		IN	A	10.0.42.224
+
+; -- my DNS Records
 pihole		IN	A	10.0.42.21
 bind		IN	A	10.0.42.26
-neon		IN	A	10.0.42.150
 pikrellcam	IN	CNAME	neon
 cam			IN	CNAME	neon
 shop		IN	A	10.0.42.125
 
 ; -- new opal
-
-titanite	IN	A	10.0.42.100
-opal		IN	A	10.0.42.224
-vaultwarden	IN	A	10.0.42.225
+vaultwarden	IN	CNAME	opal-rp
+nextcloud	IN	CNAME	opal-rp
+portainer	IN	CNAME	opal-rp
 
 ;address	IN	A	10.0.0.1 ; easy Load Balancing
 ;			IN	A	10.0.0.2
