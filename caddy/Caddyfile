@@ -1,6 +1,7 @@
 *.ioui.eu {
 	tls {
 		dns hetzner {env.HETZNER_DNS_TOKEN}
+		resolvers 1.1.1.1 # use Hetzner NS if dns validation fails 193.47.99.5
 	}
 
 	@fritz host fritz.ioui.eu
