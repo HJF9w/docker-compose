@@ -1,180 +1,93 @@
-## # Uncomment this in addition with the import admin_redir statement allow access to the admin interface only from local networks
-## # (admin_redir) {
-## #        @admin {
-## #                path /admin*
-## #                not remote_ip private_ranges
-## #        }
-## #        redir @admin /
-## # }
-## 
-## speicher.ddns.net {
-##   log {
-##     level INFO
-##     output file {$LOG_FILE} {
-##       roll_size 10MB
-##       roll_keep 10
-##     }
-##   }
-## 
-##   # Uncomment this if you want to get a cert via ACME (Let's Encrypt or ZeroSSL).
-##   # tls {$EMAIL}
-## 
-##   # Or uncomment this if you're providing your own cert. You would also use this option
-##   # if you're running behind Cloudflare.
-##   # tls {$SSL_CERT_PATH} {$SSL_KEY_PATH}
-## 
-##   # This setting may have compatibility issues with some browsers
-##   # (e.g., attachment downloading on Firefox). Try disabling this
-##   # if you encounter issues.
-##   encode gzip
-## 
-##   # Uncomment to improve security (WARNING: only use if you understand the implications!)
-##   # If you want to use FIDO2 WebAuthn, set X-Frame-Options to "SAMEORIGIN" or the Browser will block those requests
-##   # header / {
-##   #	# Enable HTTP Strict Transport Security (HSTS)
-##   #	Strict-Transport-Security "max-age=31536000;"
-##   #	# Disable cross-site filter (XSS)
-##   #	X-XSS-Protection "0"
-##   #	# Disallow the site to be rendered within a frame (clickjacking protection)
-##   #	X-Frame-Options "DENY"
-##   #	# Prevent search engines from indexing (optional)
-##   #	X-Robots-Tag "noindex, nofollow"
-##   #	# Disallow sniffing of X-Content-Type-Options
-##   #	X-Content-Type-Options "nosniff"
-##   #	# Server name removing
-##   #	-Server
-##   #	# Remove X-Powered-By though this shouldn't be an issue, better opsec to remove
-##   #	-X-Powered-By
-##   #	# Remove Last-Modified because etag is the same and is as effective
-##   #	-Last-Modified
-##   # }
-## 
-##   # Uncomment to allow access to the admin interface only from local networks
-##   # import admin_redir
-## 
-##   # Proxy everything to Rocket
-##   # if located at a sub-path the reverse_proxy line will look like:
-##   #   reverse_proxy /subpath/* <SERVER>:80
-##   reverse_proxy vaultwarden_app_1:80 {
-##        # Send the true remote IP to Rocket, so that Vaultwarden can put this in the
-##        # log, so that fail2ban can ban the correct IP.
-##        header_up X-Real-IP {remote_host}
-##        # If you use Cloudlfare proxying, replace remote_host with http.request.header.Cf-Connecting-Ip
-##        # See https://developers.cloudflare.com/support/troubleshooting/restoring-visitor-ips/restoring-original-visitor-ips/
-##        # and https://caddy.community/t/forward-auth-copy-headers-value-not-replaced/16998/4
-##   }
-## }
-
-#jet.ddns.net {
-#	@local {
-#        	remote_ip 87.128.0.0/0 # block ip's in this range
-#	}
-#	route @local {
-#		reverse_proxy jetddnsnet_app_1:8080
-#	}
-#	respond @local "Not allowed" 403
-#}
-#speicher.ddns.net {
-#	@local {
-#        	remote_ip 87.128.0.0/0 # block ip's in this range
-#	}
-#	route @local {
-#		reverse_proxy jetddnsnet_app_1:8080
-#	}
-#	respond @local "Not allowed" 403
-#}
-o.ioui.eu {
-		@local {
-	        	remote_ip 87.128.0.0/0 # block ip's in this range
-		}
-		route @local {
-			reverse_proxy jetddnsnet_app_1:8080
-		}
-		respond @local "Not allowed" 403
-	}
-
-*.o.ioui.eu {
-	# -- intern
-	@test host test.o.ioui.eu
-	handle @test {
-		reverse_proxy 10.0.42.1
-	}
-}
-fritz.home.arpa {
+fritz.ioui.eu {
 	reverse_proxy 10.0.42.1:80
-	tls internal
+		tls {
+		dns hetzner {env.HETZNER_DNS_TOKEN}
+	}
 }
-fritz7272.home.arpa {
+fritz7272.ioui.eu {
 	reverse_proxy 10.0.42.10:80
-	tls internal
+		tls {
+		dns hetzner {env.HETZNER_DNS_TOKEN}
+	}
 }
-fritz7170.home.arpa {
+fritz7170.ioui.eu {
 	reverse_proxy 10.0.42.11:80
-	tls internal
+		tls {
+		dns hetzner {env.HETZNER_DNS_TOKEN}
+	}
 }
-kuma.home.arpa {
+kuma.ioui.eu {
 	reverse_proxy kuma_app_1:3001
-	tls internal
+		tls {
+		dns hetzner {env.HETZNER_DNS_TOKEN}
+	}
 
 }
-portainer.home.arpa {
+portainer-xenon.ioui.eu {
 	reverse_proxy system_app_1:9000
-	tls internal
+		tls {
+		dns hetzner {env.HETZNER_DNS_TOKEN}
+	}
 
 }
-pihole.home.arpa {
+pihole.ioui.eu {
 	redir / /admin/
 	reverse_proxy pihole_app_1:80
-	tls internal
+		tls {
+		dns hetzner {env.HETZNER_DNS_TOKEN}
+	}
 }
-vaultwarden.home.arpa {
-	reverse_proxy vaultwarden_app_1:80
-	tls internal
-}
-bookstack.home.arpa {
+bookstack.ioui.eu {
 	reverse_proxy bookstack_app_1:8080
-	tls internal
+		tls {
+		dns hetzner {env.HETZNER_DNS_TOKEN}
+	}
 }
-nextcloud.home.arpa {
-	reverse_proxy nextcloud_app_1:80
-	redir /.well-known/carddav /remote.php/dav 301
-	redir /.well-known/caldav /remote.php/dav 301
-	redir /.well-known/webfinger /index.php/.well-known/webfinger 301
-	redir /.well-known/nodeinfo /index.php/.well-known/nodeinfo 301
-	tls internal
-	header {
-		Strict-Transport-Security max-age=31536000;
-		}
-}
-it-tools.home.arpa {
+it-tools.ioui.eu {
 	reverse_proxy it-tools_app_1:80
-	tls internal
+		tls {
+		dns hetzner {env.HETZNER_DNS_TOKEN}
+	}
 }
-searx.home.arpa {
+searx.ioui.eu {
 	reverse_proxy searx_app_1:8080
-	tls internal
+		tls {
+		dns hetzner {env.HETZNER_DNS_TOKEN}
+	}
 }
-grafana.home.arpa {
+grafana.ioui.eu {
 	reverse_proxy grafana_app_1:3000
-	tls internal
+		tls {
+		dns hetzner {env.HETZNER_DNS_TOKEN}
+	}
 }
-influxdb.home.arpa {
+influxdb.ioui.eu {
 	reverse_proxy grafana_db_1:8086
-	tls internal
+		tls {
+		dns hetzner {env.HETZNER_DNS_TOKEN}
+	}
 }
-test.home.arpa {
+test.ioui.eu {
 	reverse_proxy  jetddnsnet_umami_1:3000
-	tls internal
+		tls {
+		dns hetzner {env.HETZNER_DNS_TOKEN}
+	}
 }
-pdf-tools.home.arpa {
+pdf-tools.ioui.eu {
 	reverse_proxy pdf-tools_app_1:8080
-	tls internal
+		tls {
+		dns hetzner {env.HETZNER_DNS_TOKEN}
+	}
 }
-invidious.home.arpa {
+invidious.ioui.eu {
 	reverse_proxy invidious_app_1:3000
-	tls internal
+		tls {
+		dns hetzner {env.HETZNER_DNS_TOKEN}
+	}
 }
-fritz7390.home.arpa {
+fritz7390.ioui.eu {
 	reverse_proxy 10.0.42.12:80
-	tls internal
+		tls {
+		dns hetzner {env.HETZNER_DNS_TOKEN}
+	}
 }
