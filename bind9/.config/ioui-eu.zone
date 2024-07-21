@@ -1,16 +1,16 @@
 $TTL 1m
 ; -- https://bind9.readthedocs.io/en/stable/chapter3.html#setting-ttls
 
-$ORIGIN i.ioui.eu.
+$ORIGIN ioui.eu.
 
-@	IN	SOA	ns.i.ioui.eu. admin.i.ioui.eu. (
+@	IN	SOA	ns.ioui.eu. admin.ioui.eu. (
 				2024072115     ; serial
 				12h            ; refresh 12h
 				15m            ; retry 15m
 				1w             ; expire 3w
 				1m )           ; minimum 2h
 
-		IN	NS	ns.i.ioui.eu.
+		IN	NS	ns.ioui.eu.
 ns		IN	A	10.0.42.254
 
 ; -- Catch all

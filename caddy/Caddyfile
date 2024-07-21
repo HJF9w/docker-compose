@@ -93,7 +93,7 @@
 #		respond @local "Not allowed" 403
 #	}
 #
-i.ioui.eu {
+ioui.eu {
 	reverse_proxy jetddnsnet-app-1
 	tls {
 		dns hetzner {env.HETZNER_DNS_TOKEN}
@@ -116,7 +116,7 @@ i.ioui.eu {
 #	tls internal
 #
 #}
-portainer.i.ioui.eu {
+portainer.ioui.eu {
 	reverse_proxy system-app-1:9000
 	tls {
 		dns hetzner {env.HETZNER_DNS_TOKEN}
@@ -127,7 +127,7 @@ portainer.i.ioui.eu {
 #	reverse_proxy pihole_app_1:80
 #	tls internal
 #}
-vaultwarden.i.ioui.eu {
+vaultwarden.ioui.eu {
 	reverse_proxy vaultwarden-app-1:80
 	tls {
 		dns hetzner {env.HETZNER_DNS_TOKEN}
@@ -137,7 +137,7 @@ vaultwarden.i.ioui.eu {
 #	reverse_proxy bookstack_app_1:8080
 #	tls internal
 #}
-nextcloud.i.ioui.eu {
+nextcloud.ioui.eu {
 	reverse_proxy nextcloud-app-1:80
 	redir /.well-known/carddav /remote.php/dav 301
 	redir /.well-known/caldav /remote.php/dav 301
