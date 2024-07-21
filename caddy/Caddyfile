@@ -1,93 +1,67 @@
-fritz.ioui.eu {
-	reverse_proxy 10.0.42.1:80
-		tls {
-		dns hetzner {env.HETZNER_DNS_TOKEN}
-	}
-}
-fritz7272.ioui.eu {
-	reverse_proxy 10.0.42.10:80
-		tls {
-		dns hetzner {env.HETZNER_DNS_TOKEN}
-	}
-}
-fritz7170.ioui.eu {
-	reverse_proxy 10.0.42.11:80
-		tls {
-		dns hetzner {env.HETZNER_DNS_TOKEN}
-	}
-}
-kuma.ioui.eu {
-	reverse_proxy kuma_app_1:3001
-		tls {
+*.ioui.eu {
+	tls {
 		dns hetzner {env.HETZNER_DNS_TOKEN}
 	}
 
-}
-portainer-xenon.ioui.eu {
-	reverse_proxy system_app_1:9000
-		tls {
-		dns hetzner {env.HETZNER_DNS_TOKEN}
+	@fritz host fritz.ioui.eu
+	handle @fritz {
+		reverse_proxy 10.0.42.1:80
 	}
-
-}
-pihole.ioui.eu {
-	redir / /admin/
-	reverse_proxy pihole_app_1:80
-		tls {
-		dns hetzner {env.HETZNER_DNS_TOKEN}
+	@fritz7272 host fritz7272.ioui.eu
+	handle @fritz7272 {
+		reverse_proxy 10.0.42.10:80
 	}
-}
-bookstack.ioui.eu {
-	reverse_proxy bookstack_app_1:8080
-		tls {
-		dns hetzner {env.HETZNER_DNS_TOKEN}
+	@fritz7170 host fritz7170.ioui.eu
+	handle @fritz7170 {
+		reverse_proxy 10.0.42.11:80
 	}
-}
-it-tools.ioui.eu {
-	reverse_proxy it-tools_app_1:80
-		tls {
-		dns hetzner {env.HETZNER_DNS_TOKEN}
+	@kuma host kuma.ioui.eu
+	handle @kuma {
+		reverse_proxy kuma_app_1:3001
 	}
-}
-searx.ioui.eu {
-	reverse_proxy searx_app_1:8080
-		tls {
-		dns hetzner {env.HETZNER_DNS_TOKEN}
+	@portainer-xenon host portainer-xenon.ioui.eu
+	handle @portainer-xenon {
+		reverse_proxy system_app_1:9000
 	}
-}
-grafana.ioui.eu {
-	reverse_proxy grafana_app_1:3000
-		tls {
-		dns hetzner {env.HETZNER_DNS_TOKEN}
+	@pihole host pihole.ioui.eu
+	handle @pihole {
+		redir / /admin/
+		reverse_proxy pihole_app_1:80
 	}
-}
-influxdb.ioui.eu {
-	reverse_proxy grafana_db_1:8086
-		tls {
-		dns hetzner {env.HETZNER_DNS_TOKEN}
+	@bookstack host bookstack.ioui.eu
+	handle @bookstack {
+		reverse_proxy bookstack_app_1:8080
 	}
-}
-test.ioui.eu {
-	reverse_proxy  jetddnsnet_umami_1:3000
-		tls {
-		dns hetzner {env.HETZNER_DNS_TOKEN}
+	@it-tools host it-tools.ioui.eu
+	handle @it-tools {
+		reverse_proxy it-tools_app_1:80
 	}
-}
-pdf-tools.ioui.eu {
-	reverse_proxy pdf-tools_app_1:8080
-		tls {
-		dns hetzner {env.HETZNER_DNS_TOKEN}
+	@searx host searx.ioui.eu
+	handle @searx {
+		reverse_proxy searx_app_1:8080
 	}
-}
-invidious.ioui.eu {
-	reverse_proxy invidious_app_1:3000
-		tls {
-		dns hetzner {env.HETZNER_DNS_TOKEN}
+	@grafana host grafana.ioui.eu
+	handle @grafana {
+		reverse_proxy grafana_app_1:3000
 	}
-}
-fritz7390.ioui.eu {
-	reverse_proxy 10.0.42.12:80
-		tls {
-		dns hetzner {env.HETZNER_DNS_TOKEN}
+	@influxdb host influxdb.ioui.eu
+	handle @influxdb {
+		reverse_proxy grafana_db_1:8086
+	}
+	@test host test.ioui.eu
+	handle @test {
+		reverse_proxy  jetddnsnet_umami_1:3000
+	}
+	@pdf-tools host pdf-tools.ioui.eu
+	handle @pdf-tools {
+		reverse_proxy pdf-tools_app_1:8080
+	}
+	@invidious host invidious.ioui.eu
+	handle @invidious {
+		reverse_proxy invidious_app_1:3000
+	}
+	@fritz7390 host fritz7390.ioui.eu
+	handle @fritz7390 {
+		reverse_proxy 10.0.42.12:80
 	}
 }
