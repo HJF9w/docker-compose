@@ -14,7 +14,7 @@ $ORIGIN i.ioui.eu.
 ns		IN	A	10.0.42.254
 
 ; -- Catch all
-*			IN	A	11.0.42.23
+*			IN	A	10.0.42.23
 hallo   	IN  A   123.123.123.123
 
 ; -- add your DNS Records
