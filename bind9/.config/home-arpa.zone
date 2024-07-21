@@ -1,4 +1,4 @@
-$TTL 5m
+$TTL 1m
 ; https://bind9.readthedocs.io/en/stable/chapter3.html#setting-ttls
 
 $ORIGIN home.arpa.
@@ -8,7 +8,7 @@ $ORIGIN home.arpa.
 				12h            ; refresh 12h
 				15m            ; retry 15m
 				1w             ; expire 3w
-				5m )           ; minimum 2h
+				1m )           ; minimum 2h
 
 		IN	NS	ns.home.arpa.
 ns		IN	A	10.0.42.254
