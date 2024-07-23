@@ -21,7 +21,7 @@ else:
 bucket = "wetter"
 org = "org"
 token = os.environ.get("INFLUXDB_TOKEN")
-url = "https://influxdb.home.arpa"
+url = "https://influxdb.ioui.eu"
 client = InfluxDBClient(url=url, token=token, org=org, verify_ssl=False)
 write_api = client.write_api()
 
