@@ -4,6 +4,7 @@ import re
 import os
 from bs4 import BeautifulSoup
 from influxdb_client import InfluxDBClient
+import sys
 
 # Get the directory where the script is located
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -19,7 +20,7 @@ for filename in os.listdir(script_dir):
         file_path = os.path.join(script_dir, filename)
         
         print(f"Running {filename}")
-        # Execute the Python script
-        subprocess.run(['python', file_path], check=True)
+        # Execute the Python script using the same interpreter
+        subprocess.run([sys.executable, file_path], check=True)
 
 print("All scripts executed.")
