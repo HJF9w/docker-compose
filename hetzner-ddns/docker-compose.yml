@@ -1,6 +1,6 @@
 services:
   hetzner-ddns:
-    image: filiparag/hetzner_ddns
+    image: "filiparag/hetzner_ddns:latest-arm64"
     restart: always
     volumes:
       - "./hetzner_ddns.conf:/etc/hetzner_ddns.conf:ro"
