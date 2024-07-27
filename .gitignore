@@ -1,4 +1,4 @@
 *.envp
 jet.ddns.net/html/material/videos/*
 !jet.ddns.net/html/material/videos/Index
-hetzner-ddns/hetzner_ddns.conf
+hetzner_ddns.conf
