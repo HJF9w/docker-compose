@@ -65,4 +65,8 @@
 	handle @fritz7390 {
 		reverse_proxy 10.0.42.12:80
 	}
+	@home host home.ioui.eu
+	handle @home {
+		reverse_proxy 10.0.42.123:8123
+	}
 }
