@@ -1,0 +1,14 @@
+version: '3'
+services:
+  app:
+    image: "itzg/minecraft-server"
+    tty: true
+    stdin_open: true
+    ports:
+      - "25565:25565"
+    environment:
+      EULA: "TRUE"
+      VERSION: "1.21.1"
+      RCON_PASSWORD: "password"
+    volumes:
+      - "/dot/minecraft-server:/data"
