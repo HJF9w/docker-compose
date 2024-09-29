@@ -8,11 +8,16 @@ from influxdb_client import InfluxDBClient
 url = "https://fam-lange.de/wetter.php"
 response = requests.get(url)
 soup = BeautifulSoup(response.content, "html.parser")
-humidity_element = soup.find("td", string="Luftfeuchte")
 
-if humidity_element:
-    humidity_value = humidity_element.find_next_sibling("td").text.strip()
+# Find the card with the header 'Luftfeuchte'
+humidity_card = soup.find("div", class_="card-header", string="Luftfeuchte")
+
+if humidity_card:
+    # The value is in the next sibling card-body
+    humidity_value = humidity_card.find_next("div", class_="card-body").find("h5", class_="card-title").text.strip()
+    # Extract numeric value (humidity)
     humidity_value = re.sub(r'[^\d.-]', '', humidity_value)  # Remove non-digit, non-dot, non-minus characters
+    print(f"Humidity: {humidity_value}%")
 else:
     print("Humidity value not found on the website.")
     exit()

@@ -8,11 +8,16 @@ from influxdb_client import InfluxDBClient
 url = "https://fam-lange.de/wetter.php"
 response = requests.get(url)
 soup = BeautifulSoup(response.content, "html.parser")
-temperature_element = soup.find("td", string="Temperatur")
 
-if temperature_element:
-    temperature_value = temperature_element.find_next_sibling("td").text.strip()
+# Find the card with the header 'Temperatur'
+temperature_card = soup.find("div", class_="card-header", string="Temperatur")
+
+if temperature_card:
+    # The value is in the next sibling card-body
+    temperature_value = temperature_card.find_next("div", class_="card-body").find("h5", class_="card-title").text.strip()
+    # Extract numeric value (temperature)
     temperature_value = re.sub(r'[^\d.-]', '', temperature_value)  # Remove non-digit, non-dot, non-minus characters
+    print(f"Temperature: {temperature_value}°C")
 else:
     print("Temperature value not found on the website.")
     exit()

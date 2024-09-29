@@ -8,13 +8,18 @@ from influxdb_client import InfluxDBClient
 url = "https://fam-lange.de/wetter.php"
 response = requests.get(url)
 soup = BeautifulSoup(response.content, "html.parser")
-windspeed_element = soup.find("td", string="Windgeschwindigkeit")
 
-if windspeed_element:
-    windspeed_value = windspeed_element.find_next_sibling("td").text.strip()
+# Find the card with the header 'Windgeschwindigkeit'
+windspeed_card = soup.find("div", class_="card-header", string="Windgeschwindigkeit")
+
+if windspeed_card:
+    # The value is in the next sibling card-body
+    windspeed_value = windspeed_card.find_next("div", class_="card-body").find("h5", class_="card-title").text.strip()
+    # Extract numeric value (windspeed)
     windspeed_value = re.sub(r'[^\d.-]', '', windspeed_value)  # Remove non-digit, non-dot, non-minus characters
+    print(f"Wind Speed: {windspeed_value} Kmh")
 else:
-    print("WindSpeed value not found on the website.")
+    print("Wind Speed value not found on the website.")
     exit()
 
 # Writing to InfluxDB

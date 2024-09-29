@@ -8,13 +8,23 @@ from influxdb_client import InfluxDBClient
 url = "https://fam-lange.de/wetter.php"
 response = requests.get(url)
 soup = BeautifulSoup(response.content, "html.parser")
-rain_element = soup.find("td", string="Regen (letzte 24h)")
 
-if rain_element:
-    rain_value = rain_element.find_next_sibling("td").text.strip()
-    rain_value = re.sub(r'[^\d.-]', '', rain_value)  # Remove non-digit, non-dot, non-minus characters
+# Find the div containing the rain data
+rain_card = soup.find("div", class_="card-header", string="Regen")
+
+if rain_card:
+    # Find the next sibling div (which contains the rain value)
+    rain_value_element = rain_card.find_next_sibling("div").find("h5")
+    rain_value = rain_value_element.text.strip()
+    # Extract only the numeric value before "mm"
+    match = re.search(r"(\d+\.?\d*)\s*mm", rain_value)
+    if match:
+        rain_value = match.group(1)
+        print(f"Rain value (last 24h): {rain_value} mm")
+    else:
+        print("Rain value not found.")
 else:
-    print("Rain value not found on the website.")
+    print("Rain card not found on the website.")
     exit()
 
 # Writing to InfluxDB
