@@ -168,10 +168,12 @@ nextcloud.ioui.eu {
 #	reverse_proxy it-tools_app_1:80
 #	tls internal
 #}
-#searx.home.arpa {
-#	reverse_proxy searx_app_1:8080
-#	tls internal
-#}
+searx.ioui.eu {
+	reverse_proxy searx-app-1:8080
+	tls {
+		dns hetzner {env.HETZNER_DNS_TOKEN}
+	}
+}
 #grafana.home.arpa {
 #	reverse_proxy grafana_app_1:3000
 #	tls internal
