@@ -4,8 +4,8 @@ services:
     image: 'searxng/searxng'
     restart: unless-stopped
     environment:
-      - 'BASE_URL=https://searx.home.arpa'
-      - 'INSTANCE_NAME=xenon-searx'
+      - 'BASE_URL=https://searx.ioui.eu'
+      - 'INSTANCE_NAME=opal-searx'
     volumes:
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}:/etc/searxng"
     networks:
