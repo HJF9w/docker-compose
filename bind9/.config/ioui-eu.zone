@@ -4,7 +4,7 @@ $TTL 1m
 $ORIGIN ioui.eu.
 
 @	IN	SOA	ns.ioui.eu. admin.ioui.eu. (
-				2025020622     ; serial
+				2025021316     ; serial
 				12h            ; refresh 12h
 				15m            ; retry 15m
 				1w             ; expire 3w
@@ -44,3 +44,7 @@ searx		IN	CNAME	opal-rp
 ;address	IN	A	10.0.0.1 ; easy Load Balancing
 ;			IN	A	10.0.0.2
 ;			IN	A	10.0.0.3
+
+@       60      IN      MX      10 mail
+mail    60      IN      A       91.2.110.40
+91.2.110.40		IN	PTR	mail
