@@ -4,7 +4,7 @@ $TTL 1m
 $ORIGIN ioui.eu.
 
 @	IN	SOA	ns.ioui.eu. admin.ioui.eu. (
-				2025021316     ; serial
+				2025042612     ; serial
 				12h            ; refresh 12h
 				15m            ; retry 15m
 				1w             ; expire 3w
@@ -24,7 +24,7 @@ opal-rp 	IN	A	10.0.42.225
 ; -- Devices
 fritz7170	IN	A	10.0.42.11
 xenon		IN	A	10.0.42.20
-neon		IN	A	10.0.42.150
+neon		IN	A	10.0.42.30
 titanite	IN	A	10.0.42.100
 opal		IN	A	10.0.42.224
 
