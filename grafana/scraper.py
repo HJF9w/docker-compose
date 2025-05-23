@@ -174,8 +174,6 @@ def main():
     if "totalenergy" in solar_data:
         try:
             noon = datetime.combine(date.today(), time(12, 0, 0), tzinfo=timezone.utc)
-            print (noon)
-            print("Writing totalenergy:", solar_data["totalenergy"], "at", noon.isoformat())
             write_metric(write_api, args.influx_bucket, args.influx_org, "totalenergy", solar_data["totalenergy"], timestamp="12:00:00")
         except Exception as e:
             send_error_email(args, "InfluxDB Write Error", f"totalenergy={solar_data['totalenergy']}: {e}")
