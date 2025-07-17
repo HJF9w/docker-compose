@@ -5,8 +5,7 @@ services:
     restart: unless-stopped
     networks:
       system_internal:
+    ports:
+      - "8888:80"
 
 
-networks:
-  system_internal:
-    external: true
