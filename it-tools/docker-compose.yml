@@ -3,8 +3,6 @@ services:
   app:
     image: "corentinth/it-tools:latest"
     restart: unless-stopped
-    networks:
-      system_internal:
     ports:
       - "8888:80"
 
