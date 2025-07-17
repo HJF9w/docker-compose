@@ -4,6 +4,6 @@ services:
     image: "corentinth/it-tools:latest"
     restart: unless-stopped
     ports:
-      - "8888:80"
+      - "8889:80"
 
 
