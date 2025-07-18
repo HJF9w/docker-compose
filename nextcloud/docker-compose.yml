@@ -1,6 +1,6 @@
 services:
   db:
-    image: mariadb:11.4
+    image: mariadb:11.8-noble
     command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
     restart: unless-stopped
     volumes:
@@ -16,7 +16,7 @@ services:
       default:
 
   redis:
-    image: redis:alpine
+    image: redis:8.0-alpine
     restart: unless-stopped
     depends_on:
       - db
@@ -24,7 +24,7 @@ services:
       default:
 
   app:
-    image: nextcloud:apache
+    image: nextcloud:31.0-apache
     restart: unless-stopped
     volumes:
       - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/app:/var/www/html
@@ -44,7 +44,7 @@ services:
       system_internal:
 
   cron:
-    image: nextcloud:apache
+    image: nextcloud:31.0-apache
     restart: unless-stopped
     volumes:
       - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/app:/var/www/html
