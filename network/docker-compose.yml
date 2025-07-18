@@ -26,7 +26,7 @@ services:
       fm_internal:
 
   bind:
-    image: ubuntu/bind9@sha256:70b26544bc66e5152319fc2d022fc9f4d4bd8ced31bbba9fdd06ede469a27170
+    image: ubuntu/bind9@sha256:d3cdf209e7664b1d27ac4090a465740dbb848ecf931e8af0576c4764356a1531
     environment:
       - BIND9_USER=root
       - TZ=Europe/Berlin
