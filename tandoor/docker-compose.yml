@@ -2,7 +2,7 @@ version: '3'
 services:
   tandoor: ## Rezepte!
     container_name: tandoor
-    image: 'vabene1111/recipes'
+    image: 'vabene1111/recipes:tandoor-v1-20250714'
     env_file:
       - ./.env
       - ./.envp
@@ -20,7 +20,7 @@ services:
 
   tandoor-db:
     container_name: tandoor-db
-    image: 'postgres:11-alpine'
+    image: 'postgres:17.5-alpine3.22'
     env_file:
       - ./.env
       - ./.envp
