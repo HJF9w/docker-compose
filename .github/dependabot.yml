@@ -1,11 +1,44 @@
-# To get started with Dependabot version updates, you'll need to specify which
-# package ecosystems to update and where the package manifests are located.
-# Please see the documentation for all configuration options:
-# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
-
 version: 2
 updates:
-  - package-ecosystem: "docker-compose" # See documentation for possible values
-    directory: "/" # Location of package manifests
+  - package-ecosystem: "docker-compose"
+    directories:
+      - "/bind9"
+      - "/bookstack"
+      - "/caddy"
+      - "/code-server"
+      - "/compose"
+      - "/funkwhale"
+      - "/grafana"
+      - "/habormaster"
+      - "/heimdall"
+      - "/hetzner-ddns"
+      - "/homarr"
+      - "/invidious"
+      - "/it-tools"
+      - "/jellyfin"
+      - "/jet.ddns.net"
+      - "/kuma"
+      - "/netbox"
+      - "/nextcloud"
+      - "/nextcloud-aio"
+      - "/nginx-proxy-manager"
+      - "/paperless"
+      - "/paperless-ngx"
+      - "/pdf-tools"
+      - "/pihole"
+      - "/portainer-ce"
+      - "/portainer-ee"
+      - "/pyload"
+      - "/sbw"
+      - "/searxng"
+      - "/statping-ng"
+      - "/tandoor"
+      - "/unbound"
+      - "/vaultwarden"
+      - "/viewtube"
+      - "/watchtower"
+      - "/wordpress"
+      - "/xbrowsersync"
+      - "/zabbix"
     schedule:
-      interval: "weekly"
+      interval: "daily"
