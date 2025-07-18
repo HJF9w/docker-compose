@@ -20,7 +20,7 @@ services:
 
   tandoor-db:
     container_name: tandoor-db
-    image: 'postgres:11-alpine'
+    image: 'postgres:17-alpine'
     env_file:
       - ./.env
       - ./.envp
