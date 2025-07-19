@@ -8,6 +8,7 @@ services:
       - "$PWD/.config:/etc/bind"
       - "$PWD/.cache:/var/cache/bind"
       - "$PWD/.records:/var/lib/bind"
+      - "$PWD/.log:/var/log"
     restart: always
     ports:
       - '53000:53'
