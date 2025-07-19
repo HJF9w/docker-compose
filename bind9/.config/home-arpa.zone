@@ -11,7 +11,7 @@ $ORIGIN home.arpa.
 				1m )           ; minimum 2h
 
 		IN	NS	ns.home.arpa.
-ns		IN	A	10.0.42.254
+ns		IN	A	10.0.42.26
 
 ; -- Catch all
 *		IN	A	10.0.42.23
