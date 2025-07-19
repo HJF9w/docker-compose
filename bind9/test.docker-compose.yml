@@ -1,6 +1,6 @@
 services:
   app:
-    image: 'ubuntu/bind9:9.20-24.10_beta'
+    image: 'ubuntu/bind9:latest'
     environment:
       - BIND9_USER=root
       - TZ=Europe/Berlin
@@ -10,13 +10,5 @@ services:
       - "$PWD/.records:/var/lib/bind"
       - "$PWD/.log:/var/log"
     restart: always
-    networks:
-      system_mac_vlan:
-        ipv4_address: "${EXT_IPV4}"
-      system_internal:
-
-networks:
-  system_mac_vlan:
-    external: true
-  system_internal:
-    external: true
+    ports:
+      - '53000:53'
