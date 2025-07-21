@@ -5,8 +5,8 @@ services:
     user: "472"
     volumes:
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/grafana:/var/lib/grafana"
-      - "$PWD/config.yml:/etc/influxdb2/config.yml"
-      - "$PWD/grafana.ini:/etc/grafana/grafana.ini"
+      - "./config.yml:/etc/influxdb2/config.yml"
+      - "./grafana.ini:/etc/grafana/grafana.ini"
     networks:
       - "system_internal"
 
