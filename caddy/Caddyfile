@@ -31,7 +31,7 @@
 	}
 	@bookstack host bookstack.ioui.eu
 	handle @bookstack {
-		reverse_proxy bookstack_app_1:8080
+		reverse_proxy bookstack-app-1:8080
 	}
 	@it-tools host it-tools.ioui.eu
 	handle @it-tools {
