@@ -10,6 +10,8 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/data:/data"
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/compose:/data/compose/1"
+    environment:
+      - BASEPATH: "/mnt/data/docker"
     networks:
       mac_vlan:
         ipv4_address: "${EXT_IPV4}"
