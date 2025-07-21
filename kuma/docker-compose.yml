@@ -14,8 +14,8 @@ services:
     env_file:
       - stack.env
     environment:
-      - COMPOSE_PROJECT_NAME: ${COMPOSE_PROJECT_NAME}
-      - BASEPATH: ${BASEPATH}
+      - COMPOSE_PROJECT_NAME=${COMPOSE_PROJECT_NAME}
+      - BASEPATH=${BASEPATH}
     networks:
       system_internal:
       bookstack_default:
