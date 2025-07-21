@@ -55,7 +55,7 @@
 	}
 	@pdf-tools host pdf-tools.ioui.eu
 	handle @pdf-tools {
-		reverse_proxy pdf-tools_app_1:8080
+		reverse_proxy pdf-tools-app-1:8080
 	}
 	@invidious host invidious.ioui.eu
 	handle @invidious {
