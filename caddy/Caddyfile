@@ -43,11 +43,11 @@
 	}
 	@grafana host grafana.ioui.eu
 	handle @grafana {
-		reverse_proxy grafana_app_1:3000
+		reverse_proxy grafana-app-1:3000
 	}
 	@influxdb host influxdb.ioui.eu
 	handle @influxdb {
-		reverse_proxy grafana_db_1:8086
+		reverse_proxy grafana-db-1:8086
 	}
 	@test host test.ioui.eu
 	handle @test {
