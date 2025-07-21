@@ -18,7 +18,7 @@
 	}
 	@kuma host kuma.ioui.eu
 	handle @kuma {
-		reverse_proxy kuma_app_1:3001
+		reverse_proxy kuma-app-1:3001
 	}
 	@portainer-xenon host portainer-xenon.ioui.eu
 	handle @portainer-xenon {
