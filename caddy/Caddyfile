@@ -22,7 +22,7 @@
 	}
 	@portainer-xenon host portainer-xenon.ioui.eu
 	handle @portainer-xenon {
-		reverse_proxy system_app_1:9000
+		reverse_proxy system-app-1:9000
 	}
 	@pihole host pihole.ioui.eu
 	handle @pihole {
