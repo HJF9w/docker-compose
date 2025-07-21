@@ -1,6 +1,6 @@
 services:
   app:
-    image: "portainer/portainer-ee"            ## Business version
+    image: "portainer/portainer-ee:2.31.0-alpine"            ## Business version
     restart: always
     #ports:
     #  - "8000:8000"
