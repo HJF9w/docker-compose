@@ -12,7 +12,7 @@ services:
     hostname: kuma.ioui.eu
     restart: always
     env_file:
-      - stack.env
+      - .env
     environment:
       - COMPOSE_PROJECT_NAME=${COMPOSE_PROJECT_NAME}
       - BASEPATH=${BASEPATH}
