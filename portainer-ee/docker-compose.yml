@@ -23,7 +23,7 @@ services:
       - EDGE=1
     restart: always
     volumes:
-      - 'portainer-agent-data:/data'
+      - '${BASEPATH}/${COMPOSE_PROJECT_NAME}/portainer-agent-data:/data'
       - '/:/host'
       - '/var/lib/docker/volumes:/var/lib/docker/volumes'
       - '/var/run/docker.sock:/var/run/docker.sock'
