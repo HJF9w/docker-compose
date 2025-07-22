@@ -189,7 +189,7 @@ services:
 
   mkdocs:
     container_name: mkdocs
-    image: 'polinux/mkdocs:arm64v8-1.1.2'
+    image: 'polinux/mkdocs:arm64v8-1.5.2'
     environment:
       LIVE_RELOAD_SUPPORT: 'true'
       ADD_MODULES: 'mkdocs-gitbook mkdocs-bootswatch fontawesome-markdown mkdocs-git-revision-date-localized-plugin mkdocs-material mkdocs-windmill-dark'
