@@ -1,6 +1,6 @@
 services:
   app:
-    image: "portainer/portainer-ee:2.31.0-alpine"            ## Business version
+    image: "portainer/portainer-ee:2.31.3-alpine"
     restart: always
     #ports:
     #  - "8000:8000"
@@ -13,6 +13,20 @@ services:
       mac_vlan:
         ipv4_address: "${EXT_IPV4}"
       internal:
+
+  agent:
+    image: 'portainer/agent:2.31.3-alpine'
+    environment:
+      - EDGE_INSECURE_POLL=1
+      - EDGE_KEY=${EDGE_KEY}
+      - EDGE_ID=${EDGE_ID}
+      - EDGE=1
+    restart: always
+    volumes:
+      - 'portainer-agent-data:/data'
+      - '/:/host'
+      - '/var/lib/docker/volumes:/var/lib/docker/volumes'
+      - '/var/run/docker.sock:/var/run/docker.sock'
 
 
 networks:
