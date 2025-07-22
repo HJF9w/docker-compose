@@ -40,7 +40,7 @@ services:
       system_internal:
 
   db:
-    image: "postgres:14"
+    image: "postgres:17"
     restart: unless-stopped
     volumes:
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/data:/var/lib/postgresql/data:z"
