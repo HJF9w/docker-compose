@@ -15,7 +15,7 @@ services:
       internal:
 
   redis:
-    image: 'redis:4'
+    image: 'redis:8'
     env_file: .env
     networks:
       internal:
