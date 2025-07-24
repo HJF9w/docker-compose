@@ -9,7 +9,7 @@ services:
     tty: true
 
   snmp_trap:
-    image: 'zabbix/zabbix-snmptraps:alpine-5.4-latest'
+    image: 'zabbix/zabbix-snmptraps:alpine-7.4-latest'
     volumes:
       - '${basepath}snmptraps:/var/lib/zabbix/snmptraps'
       - '${basepath}mibs:/usr/share/snmp/mibs:ro'
