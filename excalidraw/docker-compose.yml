@@ -1,0 +1,14 @@
+---
+services:
+  app:
+    image: 'excalidraw/excalidraw:latest'
+##    ports:
+##      - '8080:80'
+    restart: unless-stopped
+    networks:
+      system_internal:
+
+networks:
+  system_internal:
+    external: true
+

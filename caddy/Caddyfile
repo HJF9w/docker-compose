@@ -69,4 +69,8 @@
 	handle @home {
 		reverse_proxy 10.0.42.123:8123
 	}
+        @excalidraw host excalidraw.ioui.eu
+        handle @excalidraw {
+                reverse_proxy excalidraw-app-1:80
+        }
 }
