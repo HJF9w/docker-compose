@@ -26,7 +26,7 @@ services:
       internal:
 
   db:
-    image: postgres:17.5-alpine3.22
+    image: postgres:17.6-alpine3.22
     environment:
       POSTGRES_DB: umami
       POSTGRES_USER: umami
