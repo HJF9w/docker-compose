@@ -10,7 +10,7 @@ services:
       - 'default'
 
   db:
-    image: 'postgres:17.5-alpine'
+    image: 'postgres:17.6-alpine'
     restart: 'unless-stopped'
     volumes:
       - '${basepath}/${COMPOSE_PROJECT_NAME}/db:/var/lib/postgresql/data:Z'
