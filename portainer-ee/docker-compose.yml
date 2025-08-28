@@ -1,6 +1,6 @@
 services:
   app:
-    image: "portainer/portainer-ee:2.33.0-20250811-alpine"
+    image: "portainer/portainer-ee:2.33.1-alpine"
     restart: always
     #ports:
     #  - "8000:8000"
