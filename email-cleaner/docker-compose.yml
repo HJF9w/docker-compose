@@ -1,0 +1,16 @@
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    environment:
+      - del_mail_script_imap_host=
+      - del_mail_script_imap_user=
+      - del_mail_script_imap_pass=
+      - del_mail_script_folder_name=INBOX
+      - del_mail_script_days=14
+      - del_mail_script_imap_ssl=true
+      # - del_mail_script_imap_port=993
+      - del_mail_script_debug=true
+      - TZ=Europe/Brussels
+      - CRON_SCHEDULE="4 1 * * *"
+      - DEBUG_CRON=1
