@@ -19,6 +19,25 @@ services:
     networks:
       - "system_internal"
 
+  scraper:
+    build: "./scraper/"
+    restart: "unless-stopped"
+    environment:
+      # Scheduling: run once and exit 0 if unset
+      CRON_SCHEDULE: "*/10 * * * *"
+      TZ: "Europe/Brussels"
+      INFLUX_URL: ""
+      INFLUX_TOKEN: ""
+      INFLUX_ORG: "org"
+      INFLUX_BUCKET: "wetter"
+      SMTP_HOST: ""
+      SMTP_PORT: "587"
+      SMTP_USE_TLS: "true"
+      SMTP_USER: ""
+      SMTP_PASS: ""
+      EMAIL_FROM: ""
+      EMAIL_TO: ""
+
 networks:
   system_internal:
     external: true
