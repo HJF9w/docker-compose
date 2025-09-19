@@ -13,8 +13,8 @@ COPY del_mail.py /usr/local/bin/del_mail.py
 RUN chmod +x /usr/local/bin/del_mail.py
 
 # Copy entrypoint
-COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # Ensure logfile exists
 RUN touch /var/log/cron.log && chmod 644 /var/log/cron.log
@@ -25,6 +25,6 @@ RUN touch /var/log/cron.log && chmod 644 /var/log/cron.log
 # RUN pip install --no-cache-dir -r /usr/src/app/requirements.txt
 
 # Expose nothing; container runs cron in foreground
-ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD []
 
