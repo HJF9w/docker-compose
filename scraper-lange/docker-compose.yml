@@ -1,0 +1,25 @@
+services:
+  scraper:
+    build: .
+    restart: "unless-stopped"
+    environment:
+      # Scheduling: run once and exit 0 if unset
+      CRON_SCHEDULE: ${CRON_SCHEDULE:-*/10 * * * *}
+      TZ: ${TZ:-Europe/Brussels}
+      INFLUX_URL: ${INFLUX_URL:-http://db:8086}
+      INFLUX_TOKEN: ${INFLUX_TOKEN:-}
+      INFLUX_ORG: ${INFLUX_ORG:-org}
+      INFLUX_BUCKET: ${INFLUX_BUCKET:-wetter}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USE_TLS: ${SMTP_USE_TLS:-true}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      EMAIL_FROM: ${EMAIL_FROM:-}
+      EMAIL_TO: ${EMAIL_TO:-}
+    networks:
+      grafana_internal:
+
+networks:
+  grafana_internal:
+    external: true
