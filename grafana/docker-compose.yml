@@ -18,9 +18,9 @@ services:
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/influxdb:/var/lib/influxdb2"
     networks:
       - "system_internal"
-      - "grafana_internal"
+      - "internal"
 
 networks:
-  grafana_internal:
+  internal:
   system_internal:
     external: true
