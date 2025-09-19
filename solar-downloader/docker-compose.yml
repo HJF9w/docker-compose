@@ -7,14 +7,13 @@ services:
       IMAGE_URL: "https://fam-lange.de/pic/solar.png" # direct image URL (used for the PNG download)
       OUTPUT_DIR: "/data" # where image files are written inside the container (mount this)
       PREFIX: "home" # optional prefix to add to filenames
-      #CRON_SCHEDULE: "30 23 * * *" # cron schedule (standard crontab format). Default is daily at 23:30
-      CRON_SCHEDULE: "* * * * *" # cron schedule (standard crontab format). Default is daily at 23:30
+      CRON_SCHEDULE: "30 23 * * *" # cron schedule (standard crontab format). Default is daily at 23:30
       TZ: "Europe/Brussels" # time zone for container (optional)
       RETRIES: "2" # how many retries
       RETRY_DELAY: "20" # retry every x seconds
     volumes:
-      - "./data:/data"                    # host ./data receives generated PNG files
-      - "./logs:/var/log/solar"           # optional logs if you want to capture more
+      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/images:/data"
+      #- "./logs:/var/log/solar"           # optional logs if you want to capture more
     logging:
       driver: "json-file"
       options:
