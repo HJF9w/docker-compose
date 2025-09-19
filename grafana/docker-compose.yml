@@ -22,7 +22,7 @@ services:
   scraper:
     build: "./scraper/"
     restart: "unless-stopped"
-    environment:
+#    environment:
       # Scheduling: run once and exit 0 if unset
 #      CRON_SCHEDULE: "*/10 * * * *"
 #      TZ: "Europe/Brussels"
