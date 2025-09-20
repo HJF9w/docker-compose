@@ -4,7 +4,7 @@ services:
     restart: unless-stopped
     environment:
       # If you want to run once and exit, set CRON_EXPR: "" (empty)
-      CRON_EXPR: ${CRON_EXPR:-0 6 * * *}
+      CRON_EXPR: ${CRON_EXPR:-}
       TZ: ${TZ:-Europe/Brussels}
       LATITUDE: ${LATITUDE:-}
       LONGITUDE: ${LONGITUDE:-}
