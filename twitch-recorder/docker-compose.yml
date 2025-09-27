@@ -1,0 +1,15 @@
+services:
+  app:
+    build: .
+    environment:
+      TZ: "Europe/Brussels"
+      CHANNELS: "F1NN5TER,linustech"
+      DEFAULT_POLL_INTERVAL: "300"         # seconds
+      SCHEDULE_WINDOWS: "Saturday:00:00-10:00:60"  # day:start-end:interval (comma-separated for multiple)
+      QUALITY: "best"
+      DISABLE_ADS: "true"
+      OUTPUT_DIR: "/data"
+    volumes:
+      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/data:/data"
+    restart: unless-stopped
+
