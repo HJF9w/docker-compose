@@ -1,7 +1,6 @@
 version: 2
 updates:
   - package-ecosystem: "docker-compose"
-    target-branch: "master"
     directories:
       - "/bind9"
       - "/bookstack"
@@ -41,21 +40,5 @@ updates:
       - "/wordpress"
       - "/xbrowsersync"
       - "/zabbix"
-    schedule:
-      interval: "daily"
-
-  - package-ecosystem: "docker-compose"
-    target-branch: "xenon"
-    directories:
-      - "bind9"
-      - "bookstack"
-      - "caddy"
-      - "grafana"
-      - "it-tools"
-      - "kuma"
-      - "pdf-tools"
-      - "portainer-ce"
-      - "portainer-ee"
-      - "watchtower"
     schedule:
       interval: "daily"
