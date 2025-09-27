@@ -1,5 +1,5 @@
 # Use Python 3.12 on Alpine as requested
-FROM python:3.12-alpine
+FROM python:3.13-alpine
 
 # metadata
 LABEL org.opencontainers.image.source="local" \
