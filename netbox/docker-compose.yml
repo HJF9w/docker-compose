@@ -35,7 +35,7 @@ services:
 
   # postgres
   postgres:
-    image: postgres:17.5-alpine
+    image: "18.0-alpine3.22"
     env_file: env/postgres.env
     volumes:
     - netbox-postgres-data:/var/lib/postgresql/data
