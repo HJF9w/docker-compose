@@ -6,6 +6,8 @@ services:
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/db:/var/lib/postgresql/data"
     env_file:
       - "./.env"
+    networks:
+      - "default"
 
   app:
     image: "vabene1111/recipes:2.2.7"
@@ -18,9 +20,11 @@ services:
     depends_on:
       - "db"
     networks:
+      - "default"
       - "system_internal"
 
 networks:
+  default:
   system_internal:
     external: true
 
