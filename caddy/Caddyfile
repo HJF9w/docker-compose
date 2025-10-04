@@ -1,207 +1,55 @@
-## # Uncomment this in addition with the import admin_redir statement allow access to the admin interface only from local networks
-## # (admin_redir) {
-## #        @admin {
-## #                path /admin*
-## #                not remote_ip private_ranges
-## #        }
-## #        redir @admin /
-## # }
-## 
-## speicher.ddns.net {
-##   log {
-##     level INFO
-##     output file {$LOG_FILE} {
-##       roll_size 10MB
-##       roll_keep 10
-##     }
-##   }
-## 
-##   # Uncomment this if you want to get a cert via ACME (Let's Encrypt or ZeroSSL).
-##   # tls {$EMAIL}
-## 
-##   # Or uncomment this if you're providing your own cert. You would also use this option
-##   # if you're running behind Cloudflare.
-##   # tls {$SSL_CERT_PATH} {$SSL_KEY_PATH}
-## 
-##   # This setting may have compatibility issues with some browsers
-##   # (e.g., attachment downloading on Firefox). Try disabling this
-##   # if you encounter issues.
-##   encode gzip
-## 
-##   # Uncomment to improve security (WARNING: only use if you understand the implications!)
-##   # If you want to use FIDO2 WebAuthn, set X-Frame-Options to "SAMEORIGIN" or the Browser will block those requests
-##   # header / {
-##   #	# Enable HTTP Strict Transport Security (HSTS)
-##   #	Strict-Transport-Security "max-age=31536000;"
-##   #	# Disable cross-site filter (XSS)
-##   #	X-XSS-Protection "0"
-##   #	# Disallow the site to be rendered within a frame (clickjacking protection)
-##   #	X-Frame-Options "DENY"
-##   #	# Prevent search engines from indexing (optional)
-##   #	X-Robots-Tag "noindex, nofollow"
-##   #	# Disallow sniffing of X-Content-Type-Options
-##   #	X-Content-Type-Options "nosniff"
-##   #	# Server name removing
-##   #	-Server
-##   #	# Remove X-Powered-By though this shouldn't be an issue, better opsec to remove
-##   #	-X-Powered-By
-##   #	# Remove Last-Modified because etag is the same and is as effective
-##   #	-Last-Modified
-##   # }
-## 
-##   # Uncomment to allow access to the admin interface only from local networks
-##   # import admin_redir
-## 
-##   # Proxy everything to Rocket
-##   # if located at a sub-path the reverse_proxy line will look like:
-##   #   reverse_proxy /subpath/* <SERVER>:80
-##   reverse_proxy vaultwarden_app_1:80 {
-##        # Send the true remote IP to Rocket, so that Vaultwarden can put this in the
-##        # log, so that fail2ban can ban the correct IP.
-##        header_up X-Real-IP {remote_host}
-##        # If you use Cloudlfare proxying, replace remote_host with http.request.header.Cf-Connecting-Ip
-##        # See https://developers.cloudflare.com/support/troubleshooting/restoring-visitor-ips/restoring-original-visitor-ips/
-##        # and https://caddy.community/t/forward-auth-copy-headers-value-not-replaced/16998/4
-##   }
-## }
+*.ioui.eu {
+	tls {
+		dns hetzner {env.HETZNER_DNS_TOKEN}
+		resolvers 1.1.1.1 # use Hetzner NS if dns validation fails 193.47.99.5
+	}
 
-#jet.ddns.net {
-#	@local {
-#        	remote_ip 87.128.0.0/0 # block ip's in this range
-#	}
-#	route @local {
-#		reverse_proxy jetddnsnet_app_1:8080
-#	}
-#	respond @local "Not allowed" 403
-#}
-#speicher.ddns.net {
-#	@local {
-#        	remote_ip 87.128.0.0/0 # block ip's in this range
-#	}
-#	route @local {
-#		reverse_proxy jetddnsnet_app_1:8080
-#	}
-#	respond @local "Not allowed" 403
-#}
-#o.ioui.eu {
-#		@local {
-#	        	remote_ip 87.128.0.0/0 # block ip's in this range
-#		}
-#		route @local {
-#			reverse_proxy jetddnsnet_app_1:8080
-#		}
-#		respond @local "Not allowed" 403
-#	}
-#
-ioui.eu {
-	reverse_proxy jetddnsnet-app-1
-	tls {
-		dns hetzner {env.HETZNER_DNS_TOKEN}
-	}
+        @portainer host portainer.ioui.eu
+        handle @portainer {
+                reverse_proxy system-app-1:9000
+        }
+
+        @vaultwarden host vaultwarden.ioui.eu
+        handle @vaultwarden {
+                reverse_proxy vaultwarden-app-1:80
+        }
+        
+        @searx host searx.ioui.eu
+        handle @searx {
+                reverse_proxy searx-app-1:8080
+        }
+
+        @rezepte host rezepte.ioui.eu
+        handle @rezepte {
+                reverse_proxy tandoor-app-1:8080
+        }
+
+        @nextcloud host nextcloud.ioui.eu
+        handle @nextcloud {
+                reverse_proxy nextcloud-app-1:80
+                redir /.well-known/carddav /remote.php/dav 301
+                redir /.well-known/caldav /remote.php/dav 301
+                redir /.well-known/webfinger /index.php/.well-known/webfinger 301
+                redir /.well-known/nodeinfo /index.php/.well-known/nodeinfo 301
+                tls {
+                        dns hetzner {env.HETZNER_DNS_TOKEN}
+                }
+                header / {
+                    # Enable HTTP Strict Transport Security (HSTS) to force clients to always
+                    # connect via HTTPS (do not use if only testing)
+                    # Strict-Transport-Security "max-age=31536000;"
+                    # Enable cross-site filter (XSS) and tell browser to block detected attacks
+                    X-XSS-Protection "1; mode=block"
+                    # Prevent some browsers from MIME-sniffing a response away from the declared Content-Type
+                    X-Content-Type-Options "nosniff"
+                    # Disallow the site to be rendered within a frame (clickjacking protection)
+                    X-Frame-Options "DENY"
+                    # Hide server header field
+                    -Server
+                    # Disable caching since https
+                    # The cache should not store anything about the client request or server response.
+                    Cache-Control "no-store"
+                    Pragma "no-cache"
+                }
+        }
 }
-#fritz.home.arpa {
-#	reverse_proxy 10.0.42.1:80
-#	tls internal
-#}
-#fritz7272.home.arpa {
-#	reverse_proxy 10.0.42.10:80
-#	tls internal
-#}
-#fritz7170.home.arpa {
-#	reverse_proxy 10.0.42.11:80
-#	tls internal
-#}
-#kuma.home.arpa {
-#	reverse_proxy kuma_app_1:3001
-#	tls internal
-#
-#}
-portainer.ioui.eu {
-	reverse_proxy system-app-1:9000
-	tls {
-		dns hetzner {env.HETZNER_DNS_TOKEN}
-	}
-}
-#pihole.home.arpa {
-#	redir / /admin/
-#	reverse_proxy pihole_app_1:80
-#	tls internal
-#}
-vaultwarden.ioui.eu {
-	reverse_proxy vaultwarden-app-1:80
-	tls {
-		dns hetzner {env.HETZNER_DNS_TOKEN}
-	}
-}
-#bookstack.home.arpa {
-#	reverse_proxy bookstack_app_1:8080
-#	tls internal
-#}
-nextcloud.ioui.eu {
-	reverse_proxy nextcloud-app-1:80
-	redir /.well-known/carddav /remote.php/dav 301
-	redir /.well-known/caldav /remote.php/dav 301
-	redir /.well-known/webfinger /index.php/.well-known/webfinger 301
-	redir /.well-known/nodeinfo /index.php/.well-known/nodeinfo 301
-	tls {
-		dns hetzner {env.HETZNER_DNS_TOKEN}
-	}
-	header / {
-	    # Enable HTTP Strict Transport Security (HSTS) to force clients to always
-	    # connect via HTTPS (do not use if only testing)
-	    # Strict-Transport-Security "max-age=31536000;"
-	    # Enable cross-site filter (XSS) and tell browser to block detected attacks
-	    X-XSS-Protection "1; mode=block"
-	    # Prevent some browsers from MIME-sniffing a response away from the declared Content-Type
-	    X-Content-Type-Options "nosniff"
-	    # Disallow the site to be rendered within a frame (clickjacking protection)
-	    X-Frame-Options "DENY"
-	    # Hide server header field
-	    -Server
-	    # Disable caching since https
-	    # The cache should not store anything about the client request or server response.
-	    Cache-Control "no-store"
-	    Pragma "no-cache"
-	}
-}
-#it-tools.home.arpa {
-#	reverse_proxy it-tools_app_1:80
-#	tls internal
-#}
-searx.ioui.eu {
-	reverse_proxy searx-app-1:8080
-	tls {
-		dns hetzner {env.HETZNER_DNS_TOKEN}
-	}
-}
-rezepte.ioui.eu {
-	reverse_proxy tandoor-app-1:80
-	tls {
-		dns hetzner {env.HETZNER_DNS_TOKEN}
-	}
-}
-#grafana.home.arpa {
-#	reverse_proxy grafana_app_1:3000
-#	tls internal
-#}
-#influxdb.home.arpa {
-#	reverse_proxy grafana_db_1:8086
-#	tls internal
-#}
-#test.home.arpa {
-#	reverse_proxy  jetddnsnet_umami_1:3000
-#	tls internal
-#}
-#pdf-tools.home.arpa {
-#	reverse_proxy pdf-tools_app_1:8080
-#	tls internal
-#}
-#invidious.home.arpa {
-#	reverse_proxy invidious_app_1:3000
-#	tls internal
-#}
-#fritz7390.home.arpa {
-#	reverse_proxy 10.0.42.12:80
-#	tls internal
-#}
-#
