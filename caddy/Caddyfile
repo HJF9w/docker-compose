@@ -9,47 +9,47 @@
                 reverse_proxy system-app-1:9000
         }
 
-        @vaultwarden host vaultwarden.ioui.eu
-        handle @vaultwarden {
-                reverse_proxy vaultwarden-app-1:80
-        }
-        
-        @searx host searx.ioui.eu
-        handle @searx {
-                reverse_proxy searx-app-1:8080
-        }
-
-        @rezepte host rezepte.ioui.eu
-        handle @rezepte {
-                reverse_proxy tandoor-app-1:8080
-        }
-
-        @nextcloud host nextcloud.ioui.eu
-        handle @nextcloud {
-                reverse_proxy nextcloud-app-1:80
-                redir /.well-known/carddav /remote.php/dav 301
-                redir /.well-known/caldav /remote.php/dav 301
-                redir /.well-known/webfinger /index.php/.well-known/webfinger 301
-                redir /.well-known/nodeinfo /index.php/.well-known/nodeinfo 301
-                tls {
-                        dns hetzner {env.HETZNER_DNS_TOKEN}
-                }
-                header / {
-                    # Enable HTTP Strict Transport Security (HSTS) to force clients to always
-                    # connect via HTTPS (do not use if only testing)
-                    # Strict-Transport-Security "max-age=31536000;"
-                    # Enable cross-site filter (XSS) and tell browser to block detected attacks
-                    X-XSS-Protection "1; mode=block"
-                    # Prevent some browsers from MIME-sniffing a response away from the declared Content-Type
-                    X-Content-Type-Options "nosniff"
-                    # Disallow the site to be rendered within a frame (clickjacking protection)
-                    X-Frame-Options "DENY"
-                    # Hide server header field
-                    -Server
-                    # Disable caching since https
-                    # The cache should not store anything about the client request or server response.
-                    Cache-Control "no-store"
-                    Pragma "no-cache"
-                }
-        }
+##        @vaultwarden host vaultwarden.ioui.eu
+##        handle @vaultwarden {
+##                reverse_proxy vaultwarden-app-1:80
+##        }
+##        
+##        @searx host searx.ioui.eu
+##        handle @searx {
+##                reverse_proxy searx-app-1:8080
+##        }
+##
+##        @rezepte host rezepte.ioui.eu
+##        handle @rezepte {
+##                reverse_proxy tandoor-app-1:8080
+##        }
+##
+##        @nextcloud host nextcloud.ioui.eu
+##        handle @nextcloud {
+##                reverse_proxy nextcloud-app-1:80
+##                redir /.well-known/carddav /remote.php/dav 301
+##                redir /.well-known/caldav /remote.php/dav 301
+##                redir /.well-known/webfinger /index.php/.well-known/webfinger 301
+##                redir /.well-known/nodeinfo /index.php/.well-known/nodeinfo 301
+##                tls {
+##                        dns hetzner {env.HETZNER_DNS_TOKEN}
+##                }
+##                header / {
+##                    # Enable HTTP Strict Transport Security (HSTS) to force clients to always
+##                    # connect via HTTPS (do not use if only testing)
+##                    # Strict-Transport-Security "max-age=31536000;"
+##                    # Enable cross-site filter (XSS) and tell browser to block detected attacks
+##                    X-XSS-Protection "1; mode=block"
+##                    # Prevent some browsers from MIME-sniffing a response away from the declared Content-Type
+##                    X-Content-Type-Options "nosniff"
+##                    # Disallow the site to be rendered within a frame (clickjacking protection)
+##                    X-Frame-Options "DENY"
+##                    # Hide server header field
+##                    -Server
+##                    # Disable caching since https
+##                    # The cache should not store anything about the client request or server response.
+##                    Cache-Control "no-store"
+##                    Pragma "no-cache"
+##                }
+##        }
 }
