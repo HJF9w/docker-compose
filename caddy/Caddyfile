@@ -9,21 +9,21 @@
                 reverse_proxy system-app-1:9000
         }
 
-##        @vaultwarden host vaultwarden.ioui.eu
-##        handle @vaultwarden {
-##                reverse_proxy vaultwarden-app-1:80
-##        }
-##        
-##        @searx host searx.ioui.eu
-##        handle @searx {
-##                reverse_proxy searx-app-1:8080
-##        }
-##
-##        @rezepte host rezepte.ioui.eu
-##        handle @rezepte {
-##                reverse_proxy tandoor-app-1:8080
-##        }
-##
+        @vaultwarden host vaultwarden.ioui.eu
+        handle @vaultwarden {
+                reverse_proxy vaultwarden-app-1:80
+        }
+        
+        @searx host searx.ioui.eu
+        handle @searx {
+                reverse_proxy searx-app-1:8080
+        }
+
+        @rezepte host rezepte.ioui.eu
+        handle @rezepte {
+                reverse_proxy tandoor-app-1:8080
+        }
+
 ##        @nextcloud host nextcloud.ioui.eu
 ##        handle @nextcloud {
 ##                reverse_proxy nextcloud-app-1:80
