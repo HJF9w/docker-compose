@@ -22,6 +22,15 @@
         @rezepte host rezepte.ioui.eu
         handle @rezepte {
                 reverse_proxy tandoor-app-1:8080
+                header / {
+                    # Strict-Transport-Security "max-age=31536000;"
+                    X-XSS-Protection "1; mode=block"
+                    X-Content-Type-Options "nosniff"
+                    X-Frame-Options "DENY"
+                    -Server
+                    Cache-Control "no-store"
+                    Pragma "no-cache"
+                }
         }
 
         @nextcloud host nextcloud.ioui.eu
