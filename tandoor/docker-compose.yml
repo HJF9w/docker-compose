@@ -1,39 +1,26 @@
-version: '3'
 services:
-  tandoor: ## Rezepte!
-    container_name: tandoor
-    image: 'vabene1111/recipes:tandoor-v1-20250922'
-    env_file:
-      - ./.env
-      - ./.envp
+  db:
+    image: "postgres:16-alpine3.22"
+    restart: "unless-stopped"
     volumes:
-      - '/mnt/data/docker/tandoor/staticfiles:/opt/recipes/staticfiles'
-      - '/mnt/data/docker/tandoor/mediafiles:/opt/recipes/mediafiles'
-    hostname: tandoor
-    restart: unless-stopped
-    dns:
-      - pihole
-      - 10.10.10.1
-    networks:
-      - internal
-      - tandoor-db
+      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/db:/var/lib/postgresql/data"
+    env_file:
+      - "./.env"
 
-  tandoor-db:
-    container_name: tandoor-db
-    image: 'postgres:18.0-alpine3.22'
+  app:
+    image: "vabene1111/recipes:2.2.7"
+    restart: "unless-stopped"
     env_file:
-      - ./.env
-      - ./.envp
+      - "./.env"
     volumes:
-      - '/mnt/data/docker/tandor-db/postgresql:/var/lib/postgresql/data'
-    hostname: tandoor-db
-    restart: unless-stopped
-    dns: 
-      - pihole
-      - 10.10.10.1
+      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/staticfiles:/opt/recipes/staticfiles"
+      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/mediafiles:/opt/recipes/mediafiles"
+    depends_on:
+      - "db"
     networks:
-      - internal
-    
+      - "system_internal"
+
 networks:
-  internal:
-    driver: bridge
+  system_internal:
+    external: true
+
