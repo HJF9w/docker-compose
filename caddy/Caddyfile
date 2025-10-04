@@ -42,7 +42,7 @@
             }
         }
         handle @rezepte {
-            reverse_proxy tandoor-app-1:8080 {
+            reverse_proxy tandoor-app-1:80 {
                 # send original Host to the upstream (like ProxyPreserveHost)
                 header_up Host {http.request.host}
 
