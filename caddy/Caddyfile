@@ -174,7 +174,7 @@ searx.ioui.eu {
 		dns hetzner {env.HETZNER_DNS_TOKEN}
 	}
 }
-tandoor.ioui.eu {
+rezepte.ioui.eu {
 	reverse_proxy tandoor-app-1:80
 	tls {
 		dns hetzner {env.HETZNER_DNS_TOKEN}
