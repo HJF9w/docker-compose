@@ -19,16 +19,49 @@
                 reverse_proxy searx-app-1:8080
         }
 
+##        @rezepte host rezepte.ioui.eu
+##        handle @rezepte {
+##                reverse_proxy tandoor-app-1:8080
+##                header / {
+##                    header_up Host {host}
+##                    header_up X-Real-IP {remote_host}
+##                    header_up X-Forwarded-For {remote_host}
+##                    header_up X-Forwarded-Proto {scheme}
+##                }
+##        }
+
+
+
         @rezepte host rezepte.ioui.eu
-        handle @rezepte {
-                reverse_proxy tandoor-app-1:8080
-                header / {
-                    header_up Host {host}
-                    header_up X-Real-IP {remote_host}
-                    header_up X-Forwarded-For {remote_host}
-                    header_up X-Forwarded-Proto {scheme}
-                }
+        @preflight method OPTIONS
+        handle @preflight {
+            respond "" 204 {
+                header Access-Control-Allow-Origin "*"
+                header Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+                header Access-Control-Allow-Headers "Authorization, Content-Type, X-Requested-With"
+            }
         }
+        handle @rezepte {
+            reverse_proxy tandoor-app-1:8080 {
+                # send original Host to the upstream (like ProxyPreserveHost)
+                header_up Host {http.request.host}
+
+                # tell upstream whether request was https or http
+                header_up X-Forwarded-Proto {http.request.scheme}
+
+                # client IP forwarding
+                header_up X-Forwarded-For {http.request.remote}
+                header_up X-Real-IP {http.request.remote}
+
+                # original host requested by client
+                header_up X-Forwarded-Host {http.request.host}
+            }
+        }
+        # Response headers for CORS (applies to responses from the reverse proxy)
+        header @rezepte Access-Control-Allow-Origin "*"
+        header @rezepte Access-Control-Allow-Methods "GET, POST, OPTIONS"
+        header @rezepte Access-Control-Allow-Headers "Authorization, Content-Type, X-Requested-With"
+
 
         @nextcloud host nextcloud.ioui.eu
         handle @nextcloud {
