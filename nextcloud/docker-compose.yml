@@ -24,7 +24,7 @@ services:
       default:
 
   app:
-    image: nextcloud:31.0-apache
+    image: nextcloud:32.0-apache
     restart: unless-stopped
     volumes:
       - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/app:/var/www/html
@@ -44,7 +44,7 @@ services:
       system_internal:
 
   cron:
-    image: nextcloud:31.0-apache
+    image: nextcloud:32.0-apache
     restart: unless-stopped
     volumes:
       - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/app:/var/www/html
