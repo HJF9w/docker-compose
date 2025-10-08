@@ -1,5 +1,5 @@
 # Use Alpine as base
-FROM python:3.13-alpine
+FROM python:3.14-alpine
 
 # Set environment variables
 ARG USERNAME=appuser
