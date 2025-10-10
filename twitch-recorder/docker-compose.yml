@@ -3,9 +3,9 @@ services:
     build: .
     environment:
       TZ: "Europe/Brussels"
-      CHANNELS: "${CHANNELS}:-pietsmiet,linustech"
-      DEFAULT_POLL_INTERVAL: "${DEFAULT_POLL_INTERVAL}:-300"         # seconds
-      SCHEDULE_WINDOWS: "${SCHEDULE_WINDOWS}:-Saturday:00:00-10:00:60"  # day:start-end:interval (comma-separated for multiple)
+      CHANNELS: ${CHANNELS}:-pietsmiet,linustech
+      DEFAULT_POLL_INTERVAL: ${DEFAULT_POLL_INTERVAL}:-300         # seconds
+      SCHEDULE_WINDOWS: ${SCHEDULE_WINDOWS}:-Saturday:00:00-10:00:60  # day:start-end:interval (comma-separated for multiple)
       QUALITY: "best"
       DISABLE_ADS: "false"
       OUTPUT_DIR: "/data"
