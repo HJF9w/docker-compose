@@ -2,7 +2,6 @@
 FROM python:3.14-alpine
 
 # Set environment variables
-ARG USERNAME=appuser
 ENV TZ=UTC \
     PIP_NO_CACHE_DIR=1 \
     PYTHONUNBUFFERED=1
@@ -17,16 +16,13 @@ RUN apk add --no-cache \
         && cp /usr/share/zoneinfo/$TZ /etc/localtime \
         && echo $TZ > /etc/timezone
 
-# Create non-root user
-RUN adduser -D -h /home/$USERNAME $USERNAME
-WORKDIR /home/$USERNAME
-USER $USERNAME
+WORKDIR /root
 
 # Install Streamlink
 RUN pip install --upgrade pip \
     && pip install streamlink schedule
 
-ENV PATH=/home/$USERNAME/.local/bin:$PATH
+ENV PATH=/root/.local/bin:$PATH
 
 # Copy the Python script
 COPY twitch_recorder.py .
