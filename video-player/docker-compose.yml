@@ -4,7 +4,7 @@ services:
     environment:
       TZ: "Europe/Brussels"
     volumes:
-      - "${BASEPATH}/twitch-recorder/data:/app/data:ro" ## Video Files from Twitch Recorder
+      - "${BASEPATH}/twitch-recorder/data:/app/data" ## Video Files from Twitch Recorder
     restart: unless-stopped
 ##    ports:
 ##      - "3000:3000"
