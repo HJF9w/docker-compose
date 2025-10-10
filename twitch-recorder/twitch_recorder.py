@@ -9,7 +9,7 @@ import shutil
 import json
 
 CHANNELS = os.environ.get("CHANNELS", "")
-CHANNEL_LIST = [c.strip() for c in CHANNELS.split(",") if c.strip()]
+CHANNEL_LIST = [c.strip() for c in CHANNELS.split(";") if c.strip()]
 
 DEFAULT_POLL_INTERVAL = int(os.environ.get("DEFAULT_POLL_INTERVAL", "300"))  # seconds
 SCHEDULE_WINDOWS = os.environ.get("SCHEDULE_WINDOWS", "")  # Format: Day:HH:MM-HH:MM:interval, comma-separated
