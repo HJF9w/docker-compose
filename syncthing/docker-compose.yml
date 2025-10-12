@@ -5,7 +5,7 @@ services:
     environment:
       - "PUID=1000"
       - "PGID=1000"
-      - "STGUIADDRESS=10.0.42.24:8384"
+      - "STGUIADDRESS=syncthing-app-1:8384"
     env_file:
       - ".env"
     volumes:
