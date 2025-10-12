@@ -59,4 +59,8 @@
                     Referrer-Policy "no-referrer"
                 }
         }
+        @twitch host twitch.ioui.eu
+        handle @twitch {
+                reverse_proxy video-player-app-1:3000
+        }
 }
