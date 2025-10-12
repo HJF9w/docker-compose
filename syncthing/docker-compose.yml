@@ -2,6 +2,7 @@
 services:
   app:
     image: "syncthing/syncthing:2.0"
+    hostname: "syncthing.ioui.eu"
     environment:
       - "PUID=1000"
       - "PGID=1000"
