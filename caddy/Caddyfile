@@ -65,10 +65,6 @@
 	handle @fritz7390 {
 		reverse_proxy 10.0.42.12:80
 	}
-	@home host home.ioui.eu
-	handle @home {
-		reverse_proxy 10.0.42.123:8123
-	}
         @syncthing host syncthing.ioui.eu
         handle @syncthing {
                 reverse_proxy syncthing-app-1:8384
