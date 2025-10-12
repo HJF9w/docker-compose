@@ -69,8 +69,4 @@
 	handle @home {
 		reverse_proxy 10.0.42.123:8123
 	}
-        @twitch host twitch.ioui.eu
-        handle @twitch {
-                reverse_proxy video-player-app-1:3000
-        }
 }
