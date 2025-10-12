@@ -19,6 +19,11 @@
                 reverse_proxy searx-app-1:8080
         }
 
+        @home host home.ioui.eu
+        handle @home {
+                reverse_proxy 10.0.42.123:8123
+        }
+
         @rezepte host rezepte.ioui.eu
         handle @rezepte {
                 reverse_proxy tandoor-app-1:80 ## !!! USE PORT 80, not 8080. Images won't load with 8080 !!! 
