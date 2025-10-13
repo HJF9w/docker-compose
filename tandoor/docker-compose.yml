@@ -2,7 +2,7 @@ version: '3'
 services:
   tandoor: ## Rezepte!
     container_name: tandoor
-    image: 'vabene1111/recipes:tandoor-v1-20251002'
+    image: 'vabene1111/recipes:tandoor-v1-20251010'
     env_file:
       - ./.env
       - ./.envp
