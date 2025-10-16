@@ -3,52 +3,15 @@ updates:
   - package-ecosystem: "docker-compose"
     target-branch: "master"
     directories:
-      - "/bind9"
-      - "/bookstack"
-      - "/caddy"
-      - "/code-server"
-      - "/compose"
-      - "/funkwhale"
-      - "/grafana"
-      - "/habormaster"
-      - "/heimdall"
-      - "/hetzner-ddns"
-      - "/homarr"
-      - "/invidious"
-      - "/it-tools"
-      - "/jellyfin"
-      - "/jet.ddns.net"
-      - "/kuma"
-      - "/netbox"
-      - "/nextcloud"
-      - "/nextcloud-aio"
-      - "/nginx-proxy-manager"
-      - "/paperless"
-      - "/paperless-ngx"
-      - "/pdf-tools"
-      - "/pihole"
-      - "/portainer-ce"
       - "/portainer-ee"
-      - "/pyload"
-      - "/sbw"
-      - "/searxng"
-      - "/statping-ng"
-      - "/tandoor"
-      - "/unbound"
-      - "/vaultwarden"
-      - "/viewtube"
-      - "/watchtower"
-      - "/wordpress"
-      - "/xbrowsersync"
-      - "/zabbix"
     schedule:
       interval: "daily"
 
+  ## Xenon 
   - package-ecosystem: "docker-compose"
     target-branch: "xenon"
     directories:
       - "/bind9"
-      - "/bookstack"
       - "/caddy"
       - "/email-cleaner"
       - "/grafana"
@@ -59,7 +22,7 @@ updates:
       - "/portainer-ee"
       - "/scraper-lange"
       - "/solar-downloader"
-      - "/twitch-recorder"
+      - "/syncthing"
       - "/watchtower"
       - "/weather-notify"
     schedule:
@@ -69,8 +32,27 @@ updates:
     target-branch: "xenon"
     directories:
       - "/email-cleaner"
-      - "scraper-lange"
-      - "solar-downloader"
-      - "twitch-recorder"
+      - "/scraper-lange"
+      - "/solar-downloader"
+      - "/weather-notify"
+    schedule:
+      interval: "daily"
+
+  ## Opal
+  - package-ecosystem: "docker-compose"
+    target-branch: "opal"
+    directories:
+      - "/searxng"
+      - "/tandoor"
+      - "/twitch-recorder"
+      - "/video-player"
+    schedule:
+      interval: "daily"
+
+  - package-ecosystem: "docker"
+    target-branch: "opal"
+    directories:
+      - "/twitch-recorder"
+      - "/video-player"
     schedule:
       interval: "daily"
