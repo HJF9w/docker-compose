@@ -1,6 +1,6 @@
 services:
   db:
-    image: "postgres:16-alpine3.22"
+    image: "postgres:18-alpine3.22"
     restart: "unless-stopped"
     volumes:
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/db:/var/lib/postgresql/data"
