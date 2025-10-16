@@ -1,5 +1,5 @@
 # Use Node LTS
-FROM node:18-alpine
+FROM node:24-alpine
 
 # Install ffmpeg for thumbnail generation (optional)
 RUN apk add --no-cache ffmpeg
