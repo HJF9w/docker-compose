@@ -1,0 +1,11 @@
+services:
+  app:
+    image: "ghcr.io/open-webui/open-webui:main"
+##    ports: ## not needet when using network mode host
+##      - "8080:8080"
+    network_mode: "host"
+    volumes:
+      - "/open-webui:/app/backend/data"
+    env_file:
+      - ".env"
+    restart: "unless-stopped"
