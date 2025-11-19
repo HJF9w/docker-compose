@@ -1,7 +1,7 @@
 services:
-  hetzner-ddns:
-    image: "filiparag/hetzner_ddns:latest-arm64"
+  app:
+    image: "filiparag/hetzner_ddns:1.0.0-arm64"
     restart: always
     volumes:
-      - "./hetzner_ddns.conf:/etc/hetzner_ddns.conf:ro"
+      - "./hetzner_ddns.json:/etc/hetzner_ddns.json:ro"
 
