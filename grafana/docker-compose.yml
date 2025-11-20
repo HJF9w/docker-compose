@@ -1,6 +1,6 @@
 services:
   app:
-    image: "grafana/grafana:latest"
+    image: "grafana/grafana:12.3"
     restart: "unless-stopped"
     user: "472"
     volumes:
@@ -11,7 +11,7 @@ services:
       - "system_internal"
 
   db:
-    image: "influxdb:latest"
+    image: "influxdb:2.7"
     ports:
       - '8086:8086'
     volumes:

@@ -1,6 +1,6 @@
 services:
   app:
-    image: "corentinth/it-tools:latest"
+    image: "sharevb/it-tools:2025.10.19"
     restart: unless-stopped
     networks:
       system_internal:

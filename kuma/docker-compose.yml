@@ -1,7 +1,7 @@
 services:
 
   app:
-    image: "louislam/uptime-kuma:latest"
+    image: "louislam/uptime-kuma:1.23.17-debian"
     volumes:
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/data:/app/data"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
