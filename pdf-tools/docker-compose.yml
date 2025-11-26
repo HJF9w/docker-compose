@@ -7,7 +7,7 @@ services:
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/extraConfigs:/configs"
 #      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/customFiles:/customFiles/"
     environment:
-      - SECURITY_ENABLELOGIN=true
+      - SECURITY_ENABLELOGIN=false
       - SECURITY_INITIALLOGIN_USERNAME=admin
       - SECURITY_INITIALLOGIN_PASSWORD=admin
       - SYSTEM_DEFAULTLOCALE=de_DE
