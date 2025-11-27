@@ -1,6 +1,6 @@
 services:
   app:
-    image: "portainer/portainer-ee:2.33.4"            ## opal is using the normal version, not alpine. last time I checkt you can't just switch between them.
+    image: "portainer/portainer-ee:2.33.5"            ## opal is using the normal version, not alpine. last time I checkt you can't just switch between them.
     restart: always
     #ports:
     #  - "8000:8000"
