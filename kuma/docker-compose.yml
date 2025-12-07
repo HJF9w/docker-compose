@@ -1,7 +1,7 @@
 services:
 
   app:
-    image: "louislam/uptime-kuma:1.23.17-debian"
+    image: "louislam/uptime-kuma:2.0.2"
     volumes:
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/data:/app/data"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
@@ -12,11 +12,26 @@ services:
     env_file:
       - .env
     networks:
+      default:
       system_internal:
       bookstack_default:
 
+  mysql:
+    image: "mysql:9.5-oraclelinux9"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: HEPGHL6w7RbPo7IfKZC2dZQObPKPqzMa
+      MYSQL_DATABASE: kuma
+      MYSQL_USER: kuma
+      MYSQL_PASSWORD: kuma
+    networks:
+      default:
+
 networks:
+  default:
   system_internal:
     external: true
   bookstack_default:
     external: true
+
+
