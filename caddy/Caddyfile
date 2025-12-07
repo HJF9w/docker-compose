@@ -4,69 +4,68 @@
 		resolvers 1.1.1.1 # use Hetzner NS if dns validation fails 193.47.99.5
 	}
 
-	@fritz host fritz.ioui.eu
-	handle @fritz {
-		reverse_proxy 10.0.42.1:80
-	}
-	@fritz7272 host fritz7272.ioui.eu
-	handle @fritz7272 {
-		reverse_proxy 10.0.42.10:80
-	}
-	@fritz7170 host fritz7170.ioui.eu
-	handle @fritz7170 {
-		reverse_proxy 10.0.42.11:80
-	}
-	@kuma host kuma.ioui.eu
-	handle @kuma {
-		reverse_proxy kuma_app_1:3001
-	}
-	@portainer-xenon host portainer-xenon.ioui.eu
-	handle @portainer-xenon {
-		reverse_proxy system_app_1:9000
-	}
-	@pihole host pihole.ioui.eu
-	handle @pihole {
-		redir / /admin/
-		reverse_proxy pihole_app_1:80
-	}
-	@bookstack host bookstack.ioui.eu
-	handle @bookstack {
-		reverse_proxy bookstack_app_1:8080
-	}
-	@it-tools host it-tools.ioui.eu
-	handle @it-tools {
-		reverse_proxy it-tools_app_1:80
-	}
-	@searx host searx.ioui.eu
-	handle @searx {
-		reverse_proxy searx_app_1:8080
-	}
-	@grafana host grafana.ioui.eu
-	handle @grafana {
-		reverse_proxy grafana_app_1:3000
-	}
-	@influxdb host influxdb.ioui.eu
-	handle @influxdb {
-		reverse_proxy grafana_db_1:8086
-	}
-	@test host test.ioui.eu
-	handle @test {
-		reverse_proxy  jetddnsnet_umami_1:3000
-	}
-	@pdf-tools host pdf-tools.ioui.eu
-	handle @pdf-tools {
-		reverse_proxy pdf-tools_app_1:8080
-	}
-	@invidious host invidious.ioui.eu
-	handle @invidious {
-		reverse_proxy invidious_app_1:3000
-	}
-	@fritz7390 host fritz7390.ioui.eu
-	handle @fritz7390 {
-		reverse_proxy 10.0.42.12:80
-	}
-	@home host home.ioui.eu
-	handle @home {
-		reverse_proxy 10.0.42.123:8123
-	}
+        @portainer host portainer.ioui.eu
+        handle @portainer {
+                reverse_proxy system-app-1:9000
+        }
+
+        @vaultwarden host vaultwarden.ioui.eu
+        handle @vaultwarden {
+                reverse_proxy vaultwarden-app-1:80
+        }
+        
+        @searx host searx.ioui.eu
+        handle @searx {
+                reverse_proxy searx-app-1:8080
+        }
+
+        @home host home.ioui.eu
+        handle @home {
+                reverse_proxy 10.0.42.123:8123
+        }
+
+        @rezepte host rezepte.ioui.eu
+        handle @rezepte {
+                reverse_proxy tandoor-app-1:80 ## !!! USE PORT 80, not 8080. Images won't load with 8080 !!! 
+                header / {
+                    header_up Host {host}
+                    header_up X-Real-IP {remote_host}
+                    header_up X-Forwarded-For {remote_host}
+                    header_up X-Forwarded-Proto {scheme}
+                }
+        }
+
+        @nextcloud host nextcloud.ioui.eu
+        handle @nextcloud {
+                reverse_proxy nextcloud-app-1:80
+                redir /.well-known/carddav /remote.php/dav 301
+                redir /.well-known/caldav /remote.php/dav 301
+                redir /.well-known/webfinger /index.php/.well-known/webfinger 301
+                redir /.well-known/nodeinfo /index.php/.well-known/nodeinfo 301
+                header / {
+                    # Enable HTTP Strict Transport Security (HSTS) to force clients to always
+                    # connect via HTTPS (do not use if only testing)
+                    Strict-Transport-Security "max-age=15552000; includeSubDomains; preload"
+                    # Enable cross-site filter (XSS) and tell browser to block detected attacks
+                    X-XSS-Protection "1; mode=block"
+                    # Prevent some browsers from MIME-sniffing a response away from the declared Content-Type
+                    X-Content-Type-Options "nosniff"
+                    # Disallow the site to be rendered within a frame (clickjacking protection)
+                    X-Frame-Options "DENY"
+                    # Hide server header field
+                    -Server
+                    # Disable caching since https
+                    # The cache should not store anything about the client request or server response.
+                    Cache-Control "no-store"
+                    Pragma "no-cache"
+                    X-Robots-Tag "noindex,nofollow"
+                    X-Download-Options "noopen"
+                    X-Permitted-Cross-Domain-Policies "none"
+                    Referrer-Policy "no-referrer"
+                }
+        }
+        @twitch host twitch.ioui.eu
+        handle @twitch {
+                reverse_proxy video-player-app-1:3000
+        }
 }

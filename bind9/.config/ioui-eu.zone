@@ -1,18 +1,53 @@
-$TTL 12h
-; https://bind9.readthedocs.io/en/stable/chapter3.html#setting-ttls
+$TTL 1m
+; -- https://bind9.readthedocs.io/en/stable/chapter3.html#setting-ttls
 
-$ORIGIN i.ioui.eu.
+$ORIGIN ioui.eu.
 
-@	IN	SOA	ns.i.ioui.eu. admin.i.ioui.eu. (
-				2024062912     ; serial
+@	IN	SOA	ns.ioui.eu. admin.ioui.eu. (
+				2025101221     ; serial
 				12h            ; refresh 12h
 				15m            ; retry 15m
 				1w             ; expire 3w
-				2h )           ; minimum 2h
+				1m )           ; minimum 2h
 
-		IN	NS	ns.i.ioui.eu.
-ns		IN	A	10.0.42.26
+		IN	NS	ns.ioui.eu.
+ns		IN	A	10.0.42.254
 
 ; -- Catch all
-*		IN	A	11.0.42.23
-hallo   IN  A   123.123.123.123
+*			IN	A	10.0.42.23
+
+; -- CNAME's for reverse proxy
+xenon-rp	IN	A	10.0.42.23
+opal-rp 	IN	A	10.0.42.225
+
+
+; -- Devices
+fritz7170	IN	A	10.0.42.11
+xenon		IN	A	10.0.42.20
+neon		IN	A	10.0.42.30
+titanite	IN	A	10.0.42.100
+opal		IN	A	10.0.42.224
+
+; -- my DNS Records
+pihole		IN	CNAME	xenon-rp
+bind		IN	A	10.0.42.26
+pikrellcam	IN	CNAME	neon
+cam			IN	CNAME	neon
+shop		IN	A	10.0.42.125
+
+; -- new opal
+vaultwarden	IN	CNAME	opal-rp
+nextcloud	IN	CNAME	opal-rp
+portainer	IN	CNAME	opal-rp
+searx		IN	CNAME	opal-rp
+rezepte         IN      CNAME   opal-rp
+twitch          IN      CNAME   opal-rp
+home            IN      CNAME   opal-rp
+
+;address	IN	A	10.0.0.1 ; easy Load Balancing
+;			IN	A	10.0.0.2
+;			IN	A	10.0.0.3
+
+@       60      IN      MX      10 mail
+mail    60      IN      A       91.2.110.40
+91.2.110.40		IN	PTR	mail

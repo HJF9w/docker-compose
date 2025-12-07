@@ -1,12 +1,10 @@
-version: '3'
-
 services:
   db:
-    image: mariadb:10.5
+    image: mariadb:12.0-noble
     command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
     restart: unless-stopped
     volumes:
-      - ${basepath}/${COMPOSE_PROJECT_NAME}/db:/var/lib/mysql
+      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/db:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=test
       - MYSQL_PASSWORD=test
@@ -18,7 +16,7 @@ services:
       default:
 
   redis:
-    image: redis:alpine
+    image: redis:8.2-alpine
     restart: unless-stopped
     depends_on:
       - db
@@ -26,19 +24,19 @@ services:
       default:
 
   app:
-    image: nextcloud:apache
+    image: nextcloud:32.0-apache
     restart: unless-stopped
     volumes:
-      - ${basepath}/${COMPOSE_PROJECT_NAME}/app:/var/www/html
+      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/app:/var/www/html
     environment:
       - MYSQL_HOST=db
       - REDIS_HOST=redis
       - MYSQL_PASSWORD=test
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
-      - NEXTCLOUD_TRUSTED_DOMAINS=localhost 127.0.0.1 127.0.1.1 nextcloud.home.arpa
+      - NEXTCLOUD_TRUSTED_DOMAINS=localhost 127.0.0.1 127.0.1.1 nextcloud.ioui.eu
       - OVERWRITEPROTOCOL=https
-        #- NC_DEFAULT_PHONE_REGION='DE' # or NEXTCLOUD_DEFAULT_PHONE_REGION this currently doesn't work, see https://github.com/nextcloud/docker/issues/1465 you need to manualy add "'default_phone_region' => 'DE'," to config/config.php
+      - NC_DEFAULT_PHONE_REGION='DE' # or NEXTCLOUD_DEFAULT_PHONE_REGION this currently doesn't work, see https://github.com/nextcloud/docker/issues/1465 you need to manualy add "'default_phone_region' => 'DE'," to config/config.php
     depends_on:
       - redis
     networks:
@@ -46,10 +44,10 @@ services:
       system_internal:
 
   cron:
-    image: nextcloud:apache
+    image: nextcloud:32.0-apache
     restart: unless-stopped
     volumes:
-      - ${basepath}/${COMPOSE_PROJECT_NAME}/app:/var/www/html
+      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/app:/var/www/html
     entrypoint: /cron.sh
     depends_on:
       - redis

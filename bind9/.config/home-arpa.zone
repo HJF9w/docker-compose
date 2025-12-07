@@ -1,4 +1,4 @@
-$TTL 12h
+$TTL 1m
 ; https://bind9.readthedocs.io/en/stable/chapter3.html#setting-ttls
 
 $ORIGIN home.arpa.
@@ -8,10 +8,10 @@ $ORIGIN home.arpa.
 				12h            ; refresh 12h
 				15m            ; retry 15m
 				1w             ; expire 3w
-				2h )           ; minimum 2h
+				1m )           ; minimum 2h
 
 		IN	NS	ns.home.arpa.
-ns		IN	A	10.0.42.26
+ns		IN	A	10.0.42.254
 
 ; -- Catch all
 *		IN	A	10.0.42.23
@@ -26,7 +26,10 @@ neon		IN	A	10.0.42.150
 pikrellcam	IN	CNAME	neon
 cam		IN	CNAME	neon
 shop		IN	A	10.0.42.125
+;new opal
 titanite	IN	A	10.0.42.100
+opal		IN	A	10.0.42.224
+vaultwarden	IN	A	10.0.42.225
 
 ;address	IN	A	10.0.0.1 ; easy Load Balancing
 ;		IN	A	10.0.0.2
