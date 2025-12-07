@@ -11,7 +11,7 @@ services:
     restart: always
     environment:
       UPTIME_KUMA_DB_TYPE: mariadb
-      UPTIME_KUMA_DB_HOSTNAME: mysql
+      UPTIME_KUMA_DB_HOSTNAME: mariadb
       UPTIME_KUMA_DB_PORT: 3306
       UPTIME_KUMA_DB_NAME: kuma
       UPTIME_KUMA_DB_USERNAME: kuma
@@ -23,14 +23,14 @@ services:
       system_internal:
       bookstack_default:
 
-  mysql:
-    image: "mysql:9.5-oraclelinux9"
+  mariadb:
+    image: "mariadb:12.1.2-noble"
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: HEPGHL6w7RbPo7IfKZC2dZQObPKPqzMa
-      MYSQL_DATABASE: kuma
-      MYSQL_USER: kuma
-      MYSQL_PASSWORD: kuma
+      MARIADB_ROOT_PASSWORD: HEPGHL6w7RbPo7IfKZC2dZQObPKPqzMa
+      MARIADB_DATABASE: kuma
+      MARIADB_USER: kuma
+      MARIADB_PASSWORD: kuma
     env_file:
       - .env
     volumes:
