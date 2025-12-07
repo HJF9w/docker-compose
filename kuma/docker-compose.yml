@@ -9,6 +9,13 @@ services:
  #      - "3001:3001"
     hostname: kuma.ioui.eu
     restart: always
+    environment:
+      UPTIME_KUMA_DB_TYPE: mariadb
+      UPTIME_KUMA_DB_HOSTNAME: mysql
+      UPTIME_KUMA_DB_PORT: 3306
+      UPTIME_KUMA_DB_NAME: kuma
+      UPTIME_KUMA_DB_USERNAME: kuma
+      UPTIME_KUMA_DB_PASSWORD: kuma
     env_file:
       - .env
     networks:
@@ -24,6 +31,10 @@ services:
       MYSQL_DATABASE: kuma
       MYSQL_USER: kuma
       MYSQL_PASSWORD: kuma
+    env_file:
+      - .env
+    volumes:
+      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/mysql:/var/lib/mysql"
     networks:
       default:
 
