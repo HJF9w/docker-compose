@@ -11,7 +11,7 @@ services:
       - "system_internal"
 
   db:
-    image: "influxdb:2.7"
+    image: "influxdb:2.8"
     ports:
       - '8086:8086'
     volumes:
