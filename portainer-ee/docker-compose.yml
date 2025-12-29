@@ -11,6 +11,7 @@ services:
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/compose:/data/compose/1"
     networks:
       mac_vlan:
+        mac_address: fe:b2:ee:3b:62:03
         ipv4_address: "${EXT_IPV4}"
       internal:
 
