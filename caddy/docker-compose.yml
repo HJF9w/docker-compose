@@ -17,10 +17,10 @@ services:
       interval: 1m
       retries: 1
       start_period: 10s
-    mac_address: fe:b2:ee:3b:62:04
     networks:
       system_mac_vlan:
         ipv4_address: "${EXT_IPV4}"
+        mac_address: fe:b2:ee:3b:62:04
       system_internal:
 
 networks:
