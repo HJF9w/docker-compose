@@ -120,8 +120,8 @@ except Exception:
 RAIN_THRESHOLD = 10
 WARM_TEMP = 14.0
 COLD_SUN_REQUIRED = 7.90 * 3600
-SKIP_DAYS = 15
-FORCE_DAYS = 25
+SKIP_DAYS = 9
+FORCE_DAYS = 14
 
 # SMTP auth - use SMTP_USER / SMTP_PASS per your request
 SMTP_USER = os.getenv("SMTP_USER") or os.getenv("emailUsername") or ""
