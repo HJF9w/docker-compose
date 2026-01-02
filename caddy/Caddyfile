@@ -23,7 +23,12 @@
 	}
 	@portainer-xenon host portainer-xenon.ioui.eu
 	handle @portainer-xenon {
-		reverse_proxy system-app-1:9000
+		reverse_proxy system-app-1:9443 {
+                      transport http {
+                          tls
+                          tls_insecure_skip_verify
+                      }
+                }
 	}
 	@pihole host pihole.ioui.eu
 	handle @pihole {
