@@ -2,6 +2,7 @@
 	tls {
 		dns hetzner {env.HETZNER_DNS_TOKEN}
 		resolvers 1.1.1.1 # use Hetzner NS if dns validation fails 193.47.99.5
+                propagation_delay 30s
 	}
 
         @portainer host portainer.ioui.eu
