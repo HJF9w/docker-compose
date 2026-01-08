@@ -43,22 +43,23 @@ updates:
   - package-ecosystem: "docker-compose"
     target-branch: "opal"
     directories:
-      - "/searxng"
-      - "/tandoor"
-      - "/twitch-recorder"
-      - "/video-player"
-      - "/vaultwarden"
       - "/bind9"
       - "/caddy"
       - "/hetzner-ddns"
+      - "/nextcloud"
+      - "/searxng"
+      - "/tandoor"
+      - "/twitch-recorder"
+      - "/vaultwarden"
+      - "/video-player"
     schedule:
       interval: "daily"
 
   - package-ecosystem: "docker"
     target-branch: "opal"
     directories:
+      - "/caddy"
       - "/twitch-recorder"
       - "/video-player"
-      - "/caddy"
     schedule:
       interval: "daily"
