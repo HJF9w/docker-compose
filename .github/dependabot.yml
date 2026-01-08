@@ -47,6 +47,7 @@ updates:
       - "/tandoor"
       - "/twitch-recorder"
       - "/video-player"
+      - "/vaultwarden"
     schedule:
       interval: "daily"
 
