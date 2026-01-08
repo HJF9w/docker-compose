@@ -48,6 +48,7 @@ updates:
       - "/twitch-recorder"
       - "/video-player"
       - "/vaultwarden"
+      - "/bind9"
     schedule:
       interval: "daily"
 
