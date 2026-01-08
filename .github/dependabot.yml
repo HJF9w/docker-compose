@@ -49,6 +49,7 @@ updates:
       - "/video-player"
       - "/vaultwarden"
       - "/bind9"
+      - "/caddy"
     schedule:
       interval: "daily"
 
@@ -57,5 +58,6 @@ updates:
     directories:
       - "/twitch-recorder"
       - "/video-player"
+      - "/caddy"
     schedule:
       interval: "daily"
