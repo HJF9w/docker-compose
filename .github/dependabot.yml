@@ -50,6 +50,7 @@ updates:
       - "/vaultwarden"
       - "/bind9"
       - "/caddy"
+      - "/hetzner-ddns"
     schedule:
       interval: "daily"
 
