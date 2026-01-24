@@ -1,6 +1,6 @@
 services:
   db:
-    image: mariadb:12.0-noble
+    image: mariadb:12.1-noble
     command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
     restart: unless-stopped
     volumes:
@@ -16,7 +16,7 @@ services:
       default:
 
   redis:
-    image: redis:8.2-alpine
+    image: redis:8.4-alpine
     restart: unless-stopped
     depends_on:
       - db
