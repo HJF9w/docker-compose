@@ -1,6 +1,7 @@
 services:
   app:
-    image: "filiparag/hetzner_ddns:1.0.0-arm64"
+    image: "filiparag/hetzner_ddns:1.0.1"
+    #image: "filiparag/hetzner_ddns:1.0.1-arm64"
     restart: always
     volumes:
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/hetzner_ddns.json:/etc/hetzner_ddns.json:ro"
