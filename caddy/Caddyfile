@@ -10,7 +10,7 @@
                 reverse_proxy system-app-1:9000
         }
 
-        @vaultwarden host tmp-vaultwarden.ioui.eu
+        @vaultwarden host vaultwarden.ioui.eu
         handle @vaultwarden {
                 reverse_proxy vaultwarden-app-1:80
         }
