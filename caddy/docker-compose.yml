@@ -18,6 +18,7 @@ services:
     networks:
       system_mac_vlan:
         ipv4_address: "${EXT_IPV4}"
+        mac_address: "86:D0:BD:81:3B:92"
       system_internal:
 
 networks:
