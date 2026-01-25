@@ -4,7 +4,7 @@ $TTL 1m
 $ORIGIN ioui.eu.
 
 @	IN	SOA	ns.ioui.eu. admin.ioui.eu. (
-				2025101221     ; serial
+				2026012510     ; serial
 				12h            ; refresh 12h
 				15m            ; retry 15m
 				1w             ; expire 3w
@@ -37,6 +37,7 @@ shop		IN	A	10.0.42.125
 
 ; -- new opal
 vaultwarden	IN	CNAME	opal-rp
+tmp-vaultwarden IN      CNAME   opal-rp
 nextcloud	IN	CNAME	opal-rp
 portainer	IN	CNAME	opal-rp
 searx		IN	CNAME	opal-rp
