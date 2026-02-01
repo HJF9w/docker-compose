@@ -68,7 +68,7 @@
 
         @n8n host n8n.ioui.eu
         handle @n8n {
-                reverse_proxy n8n-app-1:5678
+                reverse_proxy n8n-app-1:443
         }
 
         @twitch host twitch.ioui.eu
