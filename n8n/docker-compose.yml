@@ -31,7 +31,7 @@ services:
       - POSTGRES_USER
       - POSTGRES_PASSWORD
     volumes:
-      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/db:/var/lib/postgresql/data"
+      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/db:/var/lib/postgresql"
     networks:
       internal:
     healthcheck:
