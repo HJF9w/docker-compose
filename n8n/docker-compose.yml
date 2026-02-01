@@ -14,6 +14,8 @@ services:
       - DB_POSTGRESDB_USER=${POSTGRES_USER}
       - DB_POSTGRESDB_PASSWORD=${POSTGRES_PASSWORD}
       - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
+      - GENERIC_TIMEZONE=Europe/Brussels
+      - N8N_DEFAULT_LOCALE=en-GB
     volumes:
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/data:/home/node/.n8n"
     networks:
