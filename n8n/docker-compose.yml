@@ -16,6 +16,7 @@ services:
       - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
       - GENERIC_TIMEZONE=Europe/Brussels
       - N8N_DEFAULT_LOCALE=en-GB
+      - N8N_RESTRICT_FILE_ACCESS_TO=/shared;/home/node/.n8n
     volumes:
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/data:/home/node/.n8n"
     networks:
