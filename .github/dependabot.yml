@@ -47,6 +47,7 @@ updates:
       - "/caddy"
       - "/hetzner-ddns"
       - "/nextcloud"
+      - "/n8n"
       - "/searxng"
       - "/tandoor"
       - "/twitch-recorder"
