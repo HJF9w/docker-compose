@@ -24,7 +24,7 @@ services:
       bookstack_default:
 
   mariadb:
-    image: "mariadb:12.1.2-noble"
+    image: "mariadb:12.2.2-noble"
     restart: always
     environment:
       MARIADB_ROOT_PASSWORD: HEPGHL6w7RbPo7IfKZC2dZQObPKPqzMa
