@@ -2,6 +2,8 @@ services:
   app:
     image: "portainer/portainer-ee:2.39.0-alpine"
     restart: always
+    environment:
+      - TRUSTED_ORIGINS=portainer-xenon.ioui.eu
     #ports:
     #  - "8000:8000"
     #  - "9000:9000"
