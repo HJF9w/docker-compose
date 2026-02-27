@@ -5,6 +5,8 @@ services:
     #ports:
     #  - "8000:8000"
     #  - "9000:9000"
+    environment: 
+      TRUSTED_ORIGINS: portainer.ioui.eu
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/data:/data"
