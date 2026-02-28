@@ -17,6 +17,8 @@ services:
       SMTP_PASS: ${SMTP_PASS:-}
       EMAIL_FROM: ${EMAIL_FROM:-}
       EMAIL_TO: ${EMAIL_TO:-}
+      NEON_EXT_SENSOR_URL: ${NEON_EXT_SENSOR_URL:-}
+      NEON_CPU_SENSOR_URL: ${NEON_CPU_SENSOR_URL:-}
     networks:
       grafana_internal:
 

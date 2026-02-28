@@ -50,6 +50,8 @@ def build_args_from_env():
         ("SMTP_PASS", "--smtp-pass"),
         ("EMAIL_FROM", "--email-from"),
         ("EMAIL_TO", "--email-to"),
+        ("NEON_EXT_SENSOR_URL", "--neon-ext-sensor-url"),
+        ("NEON_CPU_SENSOR_URL", "--neon-cpu-sensor-url"),
     ]
     for envk, flag in mapping:
         v = env.get(envk)

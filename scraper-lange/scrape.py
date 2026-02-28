@@ -103,6 +103,20 @@ def parse_solar(soup):
     data["totalenergy"] = re.sub(r'[^\d\.]', '', energy_raw)
     return data
 
+def parse_neon_ext_temp(text):
+    # expect exactly "extTempSensor=XX.XX" (allowing optional minus sign)
+    m = re.match(r"^extTempSensor=(-?\d+\.?\d*)$", text.strip())
+    if not m:
+        raise ValueError(f"Unexpected sensor response: {text[:100]}")
+    return m.group(1)
+
+def parse_neon_cpu_temp(text):
+    # expect exactly "cpuTemp=XX.X" (allowing optional minus sign)
+    m = re.match(r"^cpuTemp=(-?\d+\.?\d*)$", text.strip())
+    if not m:
+        raise ValueError(f"Unexpected sensor response: {text[:100]}")
+    return m.group(1)
+
 def write_metric(write_api, bucket, org, key, value, timestamp=None):
     point = Point(key).field("value", float(value))
     if timestamp:
@@ -124,6 +138,8 @@ def main():
     p.add_argument("--smtp-pass")
     p.add_argument("--email-from",   required=True)
     p.add_argument("--email-to",     required=True)
+    p.add_argument("--neon-ext-sensor-url")
+    p.add_argument("--neon-cpu-sensor-url")
     args = p.parse_args()
 
     client = InfluxDBClient(
@@ -160,6 +176,26 @@ def main():
     except Exception as e:
         send_error_email(args, "Solar Scrape Error", str(e))
         solar_data = {}
+
+    # neon external sensor
+    if args.neon_ext_sensor_url:
+        try:
+            resp = requests.get(args.neon_ext_sensor_url, timeout=10)
+            resp.raise_for_status()
+            sensor_val = parse_neon_ext_temp(resp.text)
+            write_metric(write_api, args.influx_bucket, args.influx_org, "neonExtTempSensor", sensor_val)
+        except Exception as e:
+            send_error_email(args, "Sensor Scrape Error", str(e))
+
+    # neon cpu sensor
+    if args.neon_cpu_sensor_url:
+        try:
+            resp = requests.get(args.neon_cpu_sensor_url, timeout=10)
+            resp.raise_for_status()
+            sensor_val = parse_neon_cpu_temp(resp.text)
+            write_metric(write_api, args.influx_bucket, args.influx_org, "neonCPUTempSensor", sensor_val)
+        except Exception as e:
+            send_error_email(args, "Sensor Scrape Error", str(e))
 
     # write all but solar totalenergy
     for k, v in {**fam_data, **peg_data, **solar_data}.items():
