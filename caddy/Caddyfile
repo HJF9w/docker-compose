@@ -43,10 +43,10 @@
                 redir /.well-known/caldav /remote.php/dav 301
                 redir /.well-known/webfinger /index.php/.well-known/webfinger 301
                 redir /.well-known/nodeinfo /index.php/.well-known/nodeinfo 301
+                header Strict-Transport-Security "max-age=31536000;"
                 header / {
                     # Enable HTTP Strict Transport Security (HSTS) to force clients to always
                     # connect via HTTPS (do not use if only testing)
-                    Strict-Transport-Security "max-age=15552000"
                     Strict-Transport-Security "max-age=15552000; includeSubDomains; preload"
                     # Enable cross-site filter (XSS) and tell browser to block detected attacks
                     X-XSS-Protection "1; mode=block"
