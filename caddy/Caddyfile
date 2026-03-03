@@ -76,4 +76,16 @@
         handle @twitch {
                 reverse_proxy video-player-app-1:3000
         }
+        @nc host nc.ioui.eu
+        handle @nc {
+          reverse_proxy nc-web-1:80 {
+              header_up Host {host}
+              header_up X-Real-IP {remote_host}
+              header_up X-Forwarded-For {remote_host}
+              header_up X-Forwarded-Proto {scheme}
+          }
+          redir /.well-known/carddav /remote.php/dav 301
+          redir /.well-known/caldav /remote.php/dav 301
+          header Strict-Transport-Security "max-age=15552000;"
+        }
 }
