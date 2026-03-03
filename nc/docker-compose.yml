@@ -26,7 +26,7 @@ services:
     volumes:
       - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/html:/var/www/html
       # Custom PHP config if needed, usually fine out of box for FPM
-      - ./php-custom.ini:/usr/local/etc/php/conf.d/nextcloud.ini:ro
+      # - ./php-custom.ini:/usr/local/etc/php/conf.d/nextcloud.ini:ro
     environment:
       - POSTGRES_HOST=db
       - POSTGRES_DB=${POSTGRES_DB}
