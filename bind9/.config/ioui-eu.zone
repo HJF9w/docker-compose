@@ -4,7 +4,7 @@ $TTL 1m
 $ORIGIN ioui.eu.
 
 @	IN	SOA	ns.ioui.eu. admin.ioui.eu. (
-				2026020109     ; serial
+				202603031245   ; serial
 				12h            ; refresh 12h
 				15m            ; retry 15m
 				1w             ; expire 3w
@@ -44,6 +44,7 @@ rezepte         IN      CNAME   opal-rp
 twitch          IN      CNAME   opal-rp
 home            IN      CNAME   opal-rp
 n8n             IN      CNAME   opal-rp
+nc              IN      CNAME   opal-rp
 
 ;address	IN	A	10.0.0.1 ; easy Load Balancing
 ;			IN	A	10.0.0.2
