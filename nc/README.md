@@ -1,3 +1,7 @@
+docker exec -u www-data nc-app-1 php occ config:system:set enabledPreviewProviders --value='["OC\\Preview\\Imaginary", "OC\\Preview\\JPEG", "OC\\Preview\\PNG", "OC\\Preview\\GIF", "OC\\Preview\\BMP", "OC\\Preview\\XBitmap", "OC\\Preview\\MarkDown", "OC\\Preview\\MP3", "OC\\Preview\\TXT"]'
+
+
+docker exec -u www-data nc-app-1 php occ config:system:set preview_imaginary_url --value="http://imaginary:9000"
 # Nextcloud Docker Stack (FPM + Nginx + Postgres + Redis)
 
 This stack uses the `nextcloud:fpm-alpine` image for performance, coupled with a dedicated Nginx container for serving static files and handling FastCGI.
