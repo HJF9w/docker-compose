@@ -78,7 +78,7 @@
         }
         @nc host nc.ioui.eu
         handle @nc {
-          reverse_proxy nc-web-1:80 {
+          reverse_proxy nc-app-1:80 {
               header_up Host {host}
               header_up X-Real-IP {remote_host}
               header_up X-Forwarded-For {remote_host}
