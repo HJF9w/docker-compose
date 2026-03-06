@@ -44,3 +44,4 @@ Go to Administration settings > Basic Settings > Email server and setup and test
 Go to Administration settings > Security > Two-Factor Authentication and enable "Enforce two-factor authentication"
 Go to Administration settings > Overview > Security & setup warnings and check for any problems
 
+Go through apps, and disable what isn't required like (AppAPI).
