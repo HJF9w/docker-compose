@@ -1,0 +1,28 @@
+services:
+  downloader:
+    build: ./downloader
+    restart: unless-stopped
+    volumes:
+      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/data/raw:/data/raw
+    env_file: .env
+
+  scraper:
+    build: ./scraper
+    restart: unless-stopped
+    env_file: .env
+
+  processor:
+    build: ./processor
+    restart: unless-stopped
+    volumes:
+      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/data/raw:/data/raw
+      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/data/processed:/data/processed
+    env_file: .env
+
+  timelapse:
+    build: ./timelapse
+    restart: unless-stopped
+    volumes:
+      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/data/processed:/data/processed
+      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/data/videos:/data/videos
+    env_file: .env
