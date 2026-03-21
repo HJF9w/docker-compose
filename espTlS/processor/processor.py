@@ -14,11 +14,12 @@ INFLUX_TOKEN = os.getenv('INFLUX_TOKEN')
 INFLUX_ORG = os.getenv('INFLUX_ORG')
 INFLUX_BUCKET = os.getenv('INFLUX_BUCKET')
 
+print(f"Processor starting. Raw: {RAW_DIR}, Processed: {PROCESSED_DIR}")
+
 client = InfluxDBClient(url=INFLUX_URL, token=INFLUX_TOKEN, org=INFLUX_ORG)
 query_api = client.query_api()
 
 def get_metadata_from_filename(filename):
-    # Example: 20260321_120000_daytime.jpg
     parts = filename.split('_')
     dt_str = parts[0] + parts[1]
     dt = datetime.strptime(dt_str, '%Y%m%d%H%M%S')
@@ -26,7 +27,6 @@ def get_metadata_from_filename(filename):
     return dt, mode
 
 def get_influx_data(image_time):
-    # Query for the closest data within 10 minutes
     start = image_time - timedelta(minutes=10)
     stop = image_time + timedelta(minutes=10)
     
@@ -48,16 +48,17 @@ def get_influx_data(image_time):
         return {}
 
 def process_set(files):
-    # files is a list of filenames
     if not files: return
     
     output_name = files[0].replace('.jpg', '_processed.jpg')
     output_path = os.path.join(PROCESSED_DIR, output_name)
+    print(f"Processing set: {files}")
     
     # 1. Fuse if multiple
     if len(files) > 1:
         input_paths = [os.path.join(RAW_DIR, f) for f in files]
         fused_tmp = "/tmp/fused.jpg"
+        print(f"Executing: enfuse --output={fused_tmp} {files}")
         subprocess.run(['enfuse', '--output=' + fused_tmp] + input_paths, check=True)
         img = Image.open(fused_tmp)
     else:
@@ -65,9 +66,8 @@ def process_set(files):
     
     # 2. Overlay Metadata
     draw = ImageDraw.Draw(img)
-    # Use a basic font
     try:
-        font = ImageFont.truetype("/usr/share/fonts/ttf-dejavu/DejaVuSans.ttf", 20)
+        font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 20)
     except:
         font = ImageFont.load_default()
         
@@ -75,12 +75,10 @@ def process_set(files):
     influx_data = get_influx_data(main_time)
     
     text_lines = []
-    # Add timestamps for all combined files
     for f in files:
         dt, _ = get_metadata_from_filename(f)
         text_lines.append(dt.strftime('%Y-%m-%d %H:%M:%S'))
     
-    # Add status info
     if influx_data:
         text_lines.append(f"CPU: {influx_data.get('temp_cpu', 'N/A')}°C")
         text_lines.append(f"Ext: {influx_data.get('temp_ext', 'N/A')}°C")
@@ -88,13 +86,12 @@ def process_set(files):
     
     y_offset = img.height - (len(text_lines) * 25) - 10
     for line in text_lines:
-        # Draw shadow for readability
         draw.text((img.width - 250 + 2, y_offset + 2), line, font=font, fill="black")
         draw.text((img.width - 250, y_offset), line, font=font, fill="white")
         y_offset += 25
         
     img.save(output_path, "JPEG", quality=90)
-    print(f"Processed: {output_name}")
+    print(f"Success: {output_name}")
     
     # 3. Cleanup raw
     for f in files:
@@ -117,7 +114,7 @@ def run_processor():
             cleanup_processed()
             continue
             
-        # Grouping logic
+        print(f"Raw directory scan: {len(all_files)} files found")
         current_set = []
         first_file = all_files[0]
         dt, mode = get_metadata_from_filename(first_file)
@@ -126,7 +123,6 @@ def run_processor():
         if mode == 'night': target = 3
         elif mode == 'sunset' or mode == 'sunrise': target = 2
         
-        # Look for consecutive files within 60s
         current_set.append(first_file)
         last_dt = dt
         
@@ -142,12 +138,11 @@ def run_processor():
         if len(current_set) == target:
             process_set(current_set)
         else:
-            # Orphan check
             if (datetime.now() - dt).total_seconds() > 600:
-                print(f"Deleting orphan: {first_file}")
+                print(f"Deleting orphan image (exceeded 10m): {first_file}")
                 os.remove(os.path.join(RAW_DIR, first_file))
             else:
-                # Wait for more images
+                print(f"Waiting for set to complete. Current set: {len(current_set)}/{target} (First: {first_file})")
                 time.sleep(10)
         
         time.sleep(1)
