@@ -19,14 +19,14 @@ def scrape():
         r.raise_for_status()
         data = r.json()
         
-        point = Point("esp32cam_status") 
-            .tag("host", "esp32-cam-1") 
-            .field("temp_cpu", float(data['temp_cpu'])) 
-            .field("temp_ext", float(data['temp_ext'])) 
-            .field("wifi_rssi", int(data['wifi_rssi'])) 
-            .field("storage_percent", float(data['storage_percent'])) 
-            .field("aec", int(data['aec'])) 
-            .field("agc", int(data['agc'])) 
+        point = Point("esp32cam_status") \
+            .tag("host", "esp32-cam-1") \
+            .field("temp_cpu", float(data['temp_cpu'])) \
+            .field("temp_ext", float(data['temp_ext'])) \
+            .field("wifi_rssi", int(data['wifi_rssi'])) \
+            .field("storage_percent", float(data['storage_percent'])) \
+            .field("aec", int(data['aec'])) \
+            .field("agc", int(data['agc'])) \
             .field("sun_elevation", float(data['sun_elevation']))
         
         write_api.write(bucket=BUCKET, org=ORG, record=point)

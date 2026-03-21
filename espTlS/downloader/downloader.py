@@ -14,8 +14,7 @@ def get_synced_files():
 
 def add_synced_file(filename):
     with open(SYNCED_FILE, 'a') as f:
-        f.write(filename + '
-')
+        f.write(filename + '\n')
 
 def download_files():
     try:
