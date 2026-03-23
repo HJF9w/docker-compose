@@ -53,6 +53,7 @@ updates:
       - "/twitch-recorder"
       - "/vaultwarden"
       - "/video-player"
+      - "/espTlS"
     schedule:
       interval: "daily"
 
@@ -62,5 +63,9 @@ updates:
       - "/caddy"
       - "/twitch-recorder"
       - "/video-player"
+      - "/espTlS/downloader"
+      - "/espTlS/processor"
+      - "/espTlS/scraper"
+      - "/espTlS/timelapse"
     schedule:
       interval: "daily"
