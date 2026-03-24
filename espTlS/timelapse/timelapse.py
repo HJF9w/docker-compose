@@ -22,7 +22,7 @@ def create_timelapse():
     with open(concat_file, 'w') as f:
         for filename in files:
             f.write(f"file '{os.path.join(PROCESSED_DIR, filename)}'\n")
-            f.write(f"duration 0.1\n") # 10 fps
+            f.write(f"duration 0.03333\n") # 10 fps
 
     output_video = os.path.join(VIDEO_DIR, f"{yesterday}_timelapse.mp4")
     
