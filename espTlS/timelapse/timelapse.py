@@ -55,7 +55,7 @@ if __name__ == "__main__":
     while True:
         # Check every hour if it's 1 AM
         now = datetime.now()
-        if now.hour == 1:
+        if now.hour == 11:
             create_timelapse()
             # Wait 23 hours to not run multiple times at 1 AM
             time.sleep(23 * 3600)
