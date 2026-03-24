@@ -1,6 +1,6 @@
 services:
   app:
-    image: "n8nio/n8n:2.12.3"
+    image: "n8nio/n8n:2.13.2"
     restart: unless-stopped
     environment:
       - N8N_HOST
