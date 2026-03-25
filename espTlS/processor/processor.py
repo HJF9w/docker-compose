@@ -2,7 +2,7 @@ import os
 import time
 import subprocess
 import requests
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from influxdb_client import InfluxDBClient
 from PIL import Image, ImageDraw, ImageFont
 
@@ -24,14 +24,14 @@ def get_metadata_from_filename(filename):
     dt_str = parts[0] + parts[1]
     dt = datetime.strptime(dt_str, '%Y%m%d%H%M%S')
     # dt is naive local time (matching ESP/Container TZ)
+    # We attach local timezone info so astimezone(timezone.utc) works correctly
+    dt = dt.astimezone().replace(tzinfo=None).astimezone() 
     mode = parts[2].split('.')[0]
     return dt, mode
 
 def get_influx_data(image_time):
-    # Convert local image_time to UTC for InfluxDB query
-    # astimezone() without args uses system local timezone
-    local_tz = datetime.now().astimezone().tzinfo
-    image_time_utc = image_time.replace(tzinfo=local_tz).astimezone(timedelta(0))
+    # image_time is aware local time
+    image_time_utc = image_time.astimezone(timezone.utc)
     
     start = image_time_utc - timedelta(minutes=10)
     stop = image_time_utc + timedelta(minutes=10)
@@ -64,7 +64,6 @@ def process_set(files):
     if len(files) > 1:
         input_paths = [os.path.join(RAW_DIR, f) for f in files]
         fused_tmp = "/tmp/fused.jpg"
-        # Fix: Use input_paths instead of files list in subprocess
         print(f"Executing: enfuse --output={fused_tmp} {' '.join(input_paths)}")
         subprocess.run(['enfuse', '--output=' + fused_tmp] + input_paths, check=True)
         img = Image.open(fused_tmp)
@@ -153,7 +152,8 @@ def run_processor():
             process_set(current_set)
         else:
             # Check age using local time (since filename is local)
-            age = (datetime.now() - dt).total_seconds()
+            now = datetime.now().astimezone()
+            age = (now - dt).total_seconds()
             if age > 600:
                 print(f"Processing incomplete set (orphan, age {int(age)}s): {current_set}")
                 process_set(current_set)
@@ -163,7 +163,6 @@ def run_processor():
                 time.sleep(5)
         
         time.sleep(1)
-
 
 if __name__ == "__main__":
     run_processor()
