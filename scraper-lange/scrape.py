@@ -2,9 +2,10 @@
 import argparse
 import re
 import sys
+import time
 import smtplib
 from email.message import EmailMessage
-from datetime import datetime, date, time, timezone
+from datetime import datetime, date, time as dt_time, timezone
 
 import requests
 from bs4 import BeautifulSoup
@@ -25,6 +26,17 @@ def send_error_email(args, subject, body):
             smtp.send_message(msg)
     except Exception as e:
         print(f"Failed to send error email: {e}", file=sys.stderr)
+
+def run_with_retries(args, subject, func, default=None, body_prefix=""):
+    for i in range(3):
+        try:
+            return func()
+        except Exception as e:
+            if i < 2:
+                time.sleep(5)
+            else:
+                send_error_email(args, subject, f"{body_prefix}{e}")
+                return default
 
 def fetch_soup(session, url):
     resp = session.get(url, timeout=10)
@@ -154,66 +166,52 @@ def main():
     sess_sol  = requests.Session()
 
     # weather
-    try:
-        fam = fetch_soup(sess_wx, "https://fam-lange.de/wetter.php")
-        fam_data = parse_fam_lange(fam)
-    except Exception as e:
-        send_error_email(args, "Fam-Lange Weather Error", str(e))
-        fam_data = {}
+    fam_data = run_with_retries(args, "Fam-Lange Weather Error",
+                                lambda: parse_fam_lange(fetch_soup(sess_wx, "https://fam-lange.de/wetter.php")),
+                                default={})
 
     # water
-    try:
-        peg = fetch_soup(sess_peg, "https://www.pegelonline.wsv.de/gast/stammdaten?pegelnr=501060")
-        peg_data = parse_pegelonline(peg)
-    except Exception as e:
-        send_error_email(args, "PegelOnline Error", str(e))
-        peg_data = {}
+    peg_data = run_with_retries(args, "PegelOnline Error",
+                                lambda: parse_pegelonline(fetch_soup(sess_peg, "https://www.pegelonline.wsv.de/gast/stammdaten?pegelnr=501060")),
+                                default={})
 
     # solar
-    try:
-        sol = fetch_soup(sess_sol, "https://fam-lange.de/solar.php")
-        solar_data = parse_solar(sol)
-    except Exception as e:
-        send_error_email(args, "Solar Scrape Error", str(e))
-        solar_data = {}
+    solar_data = run_with_retries(args, "Solar Scrape Error",
+                                  lambda: parse_solar(fetch_soup(sess_sol, "https://fam-lange.de/solar.php")),
+                                  default={})
 
     # neon external sensor
     if args.neon_ext_sensor_url:
-        try:
+        def scrape_neon_ext():
             resp = requests.get(args.neon_ext_sensor_url, timeout=10)
             resp.raise_for_status()
             sensor_val = parse_neon_ext_temp(resp.text)
             write_metric(write_api, args.influx_bucket, args.influx_org, "neonExtTempSensor", sensor_val)
-        except Exception as e:
-            send_error_email(args, "Sensor Scrape Error", str(e))
+        run_with_retries(args, "Sensor Scrape Error", scrape_neon_ext)
 
     # neon cpu sensor
     if args.neon_cpu_sensor_url:
-        try:
+        def scrape_neon_cpu():
             resp = requests.get(args.neon_cpu_sensor_url, timeout=10)
             resp.raise_for_status()
             sensor_val = parse_neon_cpu_temp(resp.text)
             write_metric(write_api, args.influx_bucket, args.influx_org, "neonCPUTempSensor", sensor_val)
-        except Exception as e:
-            send_error_email(args, "Sensor Scrape Error", str(e))
+        run_with_retries(args, "Sensor Scrape Error", scrape_neon_cpu)
 
     # write all but solar totalenergy
     for k, v in {**fam_data, **peg_data, **solar_data}.items():
         if k == "totalenergy":
             continue
-        try:
-            write_metric(write_api, args.influx_bucket, args.influx_org, k, v)
-        except Exception as e:
-            send_error_email(args, "InfluxDB Write Error", f"{k}={v}: {e}")
+        run_with_retries(args, "InfluxDB Write Error",
+                         lambda: write_metric(write_api, args.influx_bucket, args.influx_org, k, v),
+                         body_prefix=f"{k}={v}: ")
 
     # write solar totalenergy at 12:00 UTC
     if "totalenergy" in solar_data:
-        try:
-            noon = datetime.combine(date.today(), time(12, 0, 0), tzinfo=timezone.utc)
-            # Pass the timezone-aware datetime object (noon) instead of an invalid string.
-            write_metric(write_api, args.influx_bucket, args.influx_org, "totalenergy", solar_data["totalenergy"], timestamp=noon)
-        except Exception as e:
-            send_error_email(args, "InfluxDB Write Error", f"totalenergy={solar_data['totalenergy']}: {e}")
+        noon = datetime.combine(date.today(), dt_time(12, 0, 0), tzinfo=timezone.utc)
+        run_with_retries(args, "InfluxDB Write Error",
+                         lambda: write_metric(write_api, args.influx_bucket, args.influx_org, "totalenergy", solar_data["totalenergy"], timestamp=noon),
+                         body_prefix=f"totalenergy={solar_data['totalenergy']}: ")
 
     write_api.close()
     client.close()
