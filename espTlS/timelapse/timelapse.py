@@ -27,9 +27,6 @@ def create_timelapse():
     output_video = os.path.join(VIDEO_DIR, f"{yesterday}_timelapse.mp4")
     
     # FFmpeg command
-    # -crf 26: Good quality/size balance
-    # -preset slow: Better compression
-    # -vf "format=yuv420p": Ensure compatibility
     cmd = [
         'ffmpeg', '-y',
         '-f', 'concat', '-safe', '0',
@@ -52,12 +49,21 @@ def create_timelapse():
 
 if __name__ == "__main__":
     os.makedirs(VIDEO_DIR, exist_ok=True)
+    
+    run_immediately = os.getenv('RUN_IMMEDIATELY', 'false').lower() in ('true', '1', 't')
+    run_hour = int(os.getenv('RUN_HOUR', '11'))
+    
+    if run_immediately:
+        print("RUN_IMMEDIATELY is set, starting now...")
+        create_timelapse()
+
+    print(f"Scheduler started. Will run daily at {run_hour}:00")
     while True:
-        # Check every hour if it's 1 AM
         now = datetime.now()
-        if now.hour == 11:
+        if now.hour == run_hour:
             create_timelapse()
-            # Wait 23 hours to not run multiple times at 1 AM
-            time.sleep(23 * 3600)
+            # Wait until next hour to avoid re-triggering in the same hour
+            print(f"Task finished at {now.strftime('%H:%M:%S')}. Sleeping until next hour...")
+            time.sleep(3600)
         else:
-            time.sleep(1800)
+            time.sleep(600) # Check every 10 minutes
