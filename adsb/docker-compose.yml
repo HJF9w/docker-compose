@@ -73,6 +73,7 @@ services:
       - INFLUXDBV2_URL=${INFLUX_URL}
       - INFLUXDBV2_TOKEN=${INFLUX_TOKEN}
       - INFLUXDBV2_BUCKET=${INFLUX_BUCKET}
+      - INFLUXDBV2_ORG=${INFLUX_ORG}
       - PROMETHEUS_ENABLE=true
     volumes:
       - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/ultrafeeder/globe_history:/var/globe_history
