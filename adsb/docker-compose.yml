@@ -1,0 +1,271 @@
+version: '3.8'
+services:
+  # ----------------------------------------------------------------------
+  # THE CORE HUB: Ultrafeeder
+  # ----------------------------------------------------------------------
+  ultrafeeder:
+    # Using the telegraf tag to enable InfluxDB exporting
+    image: ghcr.io/sdr-enthusiasts/docker-adsb-ultrafeeder:telegraf
+    container_name: ultrafeeder
+    hostname: ultrafeeder
+    restart: always
+    device_cgroup_rules:
+      - 'c 189:* rwm'
+    ports:
+      - 8080:80               # tar1090 map UI
+      - 9273-9274:9273-9274   # Prometheus stats interface
+    environment:
+      - LOGLEVEL=error
+      - TZ=${FEEDER_TZ}
+      - READSB_DEVICE_TYPE=rtlsdr
+      - READSB_RTLSDR_DEVICE=${ADSB_SDR_SERIAL}
+      - READSB_RTLSDR_PPM=${ADSB_SDR_PPM}
+      - READSB_LAT=${FEEDER_LAT}
+      - READSB_LON=${FEEDER_LONG}
+      - READSB_ALT=${FEEDER_ALT_M}m
+      - READSB_RX_LOCATION_ACCURACY=2
+      - READSB_STATS_RANGE=true
+      # Unified ADSB & MLAT community feed configs:
+      - ULTRAFEEDER_CONFIG=
+          adsb,feed.adsb.fi,30004,beast_reduce_plus_out;
+          adsb,in.adsb.lol,30004,beast_reduce_plus_out;
+          adsb,feed.airplanes.live,30004,beast_reduce_plus_out;
+          adsb,feed.planespotters.net,30004,beast_reduce_plus_out;
+          adsb,feed.theairtraffic.com,30004,beast_reduce_plus_out;
+          adsb,data.avdelphi.com,24999,beast_reduce_plus_out;
+          adsb,skyfeed.hpradar.com,30004,beast_reduce_plus_out;
+          adsb,feed.radarplane.com,30001,beast_reduce_plus_out;
+          adsb,dati.flyitalyadsb.com,4905,beast_reduce_plus_out;
+          adsb,feed1.adsbexchange.com,30004,beast_reduce_plus_out,uuid=${ULTRAFEEDER_UUID};
+          mlat,feed.adsb.fi,31090,39000;
+          mlat,in.adsb.lol,31090,39001;
+          mlat,feed.airplanes.live,31090,39002;
+          mlat,mlat.planespotters.net,31090,39003;
+          mlat,feed.theairtraffic.com,31090,39004;
+          mlat,skyfeed.hpradar.com,31090,39005;
+          mlat,feed.radarplane.com,31090,39006;
+          mlat,dati.flyitalyadsb.com,30100,39007;
+          mlat,feed.adsbexchange.com,31090,39008,uuid=${ULTRAFEEDER_UUID};
+          mlathub,piaware,30105,beast_in;
+          mlathub,airnavradar,30105,beast_in;
+          mlathub,radarvirtuel,30105,beast_in;
+          mlathub,planewatch,30105,beast_in;
+      - UUID=${ULTRAFEEDER_UUID}
+      - MLAT_USER=${FEEDER_NAME}
+      - UPDATE_TAR1090=true
+      - TAR1090_DEFAULTCENTERLAT=${FEEDER_LAT}
+      - TAR1090_DEFAULTCENTERLON=${FEEDER_LONG}
+      - TAR1090_MESSAGERATEINTITLE=true
+      - TAR1090_PAGETITLE=${FEEDER_NAME}
+      - TAR1090_PLANECOUNTINTITLE=true
+      - TAR1090_ENABLE_AC_DB=true
+      - TAR1090_FLIGHTAWARELINKS=true
+      - HEYWHATSTHAT_PANORAMA_ID=${FEEDER_HEYWHATSTHAT_ID}
+      - HEYWHATSTHAT_ALTS=${FEEDER_HEYWHATSTHAT_ALTS}
+      - TAR1090_SITESHOW=true
+      - TAR1090_RANGE_OUTLINE_COLORED_BY_ALTITUDE=true
+      - TAR1090_RANGE_OUTLINE_WIDTH=2.0
+      - TAR1090_RANGERINGSDISTANCES=50,100,150,200
+      - TAR1090_RANGERINGSCOLORS='#1A237E','#0D47A1','#42A5F5','#64B5F6'
+      - TAR1090_USEROUTEAPI=true
+      - GRAPHS1090_DARKMODE=true
+      # InfluxDB exporting
+      - INFLUXDBV2_URL=${INFLUX_URL}
+      - INFLUXDBV2_TOKEN=${INFLUX_TOKEN}
+      - INFLUXDBV2_BUCKET=${INFLUX_BUCKET}
+      - PROMETHEUS_ENABLE=true
+    volumes:
+      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/ultrafeeder/globe_history:/var/globe_history
+      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/ultrafeeder/graphs1090:/var/lib/collectd
+      - /proc/diskstats:/proc/diskstats:ro
+      - /dev/bus/usb:/dev/bus/usb
+    tmpfs:
+      - /run:exec,size=256M
+      - /tmp:size=128M
+      - /var/log:size=32M
+
+  # ----------------------------------------------------------------------
+  # COMMERCIAL & OTHER ADS-B FEEDERS
+  # ----------------------------------------------------------------------
+  piaware:
+    image: ghcr.io/sdr-enthusiasts/docker-piaware
+    container_name: piaware
+    hostname: piaware
+    restart: always
+    ports:
+      - 8081:8080
+      - 8088:80
+    environment:
+      - BEASTHOST=ultrafeeder
+      - LAT=${FEEDER_LAT}
+      - LONG=${FEEDER_LONG}
+      - TZ=${FEEDER_TZ}
+      - FEEDER_ID=${PIAWARE_FEEDER_ID}
+    tmpfs:
+      - /run:exec,size=64M
+      - /var/log
+
+  fr24:
+    image: ghcr.io/sdr-enthusiasts/docker-flightradar24
+    container_name: fr24
+    hostname: fr24
+    restart: always
+    ports:
+      - 8754:8754
+    environment:
+      - BEASTHOST=ultrafeeder
+      - TZ=${FEEDER_TZ}
+      - FR24KEY=${FR24_SHARING_KEY}
+    tmpfs:
+      - /var/log
+
+  pfclient:
+    image: ghcr.io/sdr-enthusiasts/docker-planefinder:latest
+    container_name: pfclient
+    restart: always
+    ports:
+      - 8084:30053
+    environment:
+      - BEASTHOST=ultrafeeder
+      - LAT=${FEEDER_LAT}
+      - LONG=${FEEDER_LONG}
+      - TZ=${FEEDER_TZ}
+      - SHARECODE=${PLANEFINDER_SHARECODE}
+
+  airnavradar:
+    image: ghcr.io/sdr-enthusiasts/docker-airnavradar
+    container_name: airnavradar
+    hostname: airnavradar
+    restart: always
+    environment:
+      - BEASTHOST=ultrafeeder
+      - LAT=${FEEDER_LAT}
+      - LONG=${FEEDER_LONG}
+      - ALT=${FEEDER_ALT_M}
+      - TZ=${FEEDER_TZ}
+      - SHARING_KEY=${AIRNAVRADAR_SHARING_KEY}
+    tmpfs:
+      - /run:exec,size=64M
+      - /var/log
+
+  radarvirtuel:
+    image: ghcr.io/sdr-enthusiasts/docker-radarvirtuel
+    container_name: radarvirtuel
+    hostname: radarvirtuel
+    restart: always
+    environment:
+      - FEEDER_KEY=${RV_KEY}
+      - SOURCE_HOST=ultrafeeder:30002
+      - RV_SERVER=mg22.adsbnetwork.com:50050
+      - LAT=${FEEDER_LAT}
+      - LON=${FEEDER_LONG}
+      - ALT=${FEEDER_ALT_M}m
+      - MLAT_SERVER=mlat.adsbnetwork.com:50000
+      - MLAT_HOST=ultrafeeder:30005
+      - MLAT_INPUT_TYPE=auto
+      - VERBOSE=ON
+    tmpfs:
+      - /tmp:rw,nosuid,nodev,noexec,relatime,size=128M
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+
+  planewatch:
+    image: ghcr.io/plane-watch/docker-plane-watch
+    container_name: planewatch
+    hostname: planewatch
+    restart: always
+    environment:
+      - BEASTHOST=ultrafeeder
+      - TZ=${FEEDER_TZ}
+      - API_KEY=${PLANEWATCH_KEY}
+      - DEBUG_LOGGING=true
+      - LAT=${FEEDER_LAT}
+      - LONG=${FEEDER_LONG}
+      - ALT=${FEEDER_ALT_FT}ft
+    tmpfs:
+      - /run:exec,size=64M
+      - /var/log
+
+  adsbhub:
+    image: ghcr.io/sdr-enthusiasts/docker-adsbhub
+    container_name: adsbhub
+    restart: always
+    environment:
+      - TZ=${FEEDER_TZ}
+      - SBSHOST=ultrafeeder
+      - CLIENTKEY=${ADSBHUB_STATION_KEY}
+
+  # ----------------------------------------------------------------------
+  # VISUALIZATION
+  # ----------------------------------------------------------------------
+  planefence:
+    image: ghcr.io/sdr-enthusiasts/docker-planefence
+    container_name: planefence
+    hostname: planefence
+    restart: always
+    ports:
+      - 8083:80
+    environment:
+      - TZ=${FEEDER_TZ}
+    volumes:
+      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/planefence/config:/usr/share/planefence/persist
+      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/planefence/html:/usr/share/planefence/html
+    tmpfs:
+      - /run:rw,nosuid,nodev,exec,relatime,size=256M
+      - /tmp:rw,nosuid,nodev,noexec,relatime,size=128M
+
+##  screenshot: ## Requires Pi 4 to run well
+##    image: ghcr.io/kx1t/screenshot
+##    container_name: screenshot
+##    hostname: screenshot
+##    restart: always
+##    shm_size: 1gb
+##    environment:
+##      - MAP_ARGS=zoom=11.5&hideSidebar&hideButtons&mapDim=0.2&monochromeMarkers=ff0000&outlineColor=505050&iconScale=1.5&enableLabels&extendedLabels=2&trackLabels
+##      - LOAD_SLEEP_TIME=25
+##      - BASE_URL=http://tar1090
+##      - DISABLE_SHM=true
+##      - MAXTIME=60
+
+  vrs:
+    image: ghcr.io/sdr-enthusiasts/vrs:dev
+    container_name: vrs
+    hostname: vrs
+    restart: always
+    ports:
+       - 8091:8080
+       - 49000-49099:49000-49099
+    environment:
+       - VRS_ADMIN_USERNAME=${VRS_ADMIN_USERNAME}
+       - VRS_ADMIN_PASSWORD=${VRS_ADMIN_PASSWORD}
+       - VRS_CULTURE=en-GB
+       - VRS_DB_UPDATE_POLICY_FULLAUTO=yes
+       - VRS_DB_UPDATE_WITH_VACUUM=yes
+       - VRS_DB_UPDATE_BACKUP_UNCOMPRESSED=yes
+    tmpfs:
+       - /tmp:rw,nosuid,nodev,noexec,relatime,size=128M
+    volumes:
+       - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/vrs:/root/.local/share/VirtualRadar
+       - /etc/localtime:/etc/localtime:ro
+       - /etc/timezone:/etc/timezone:ro
+
+  vnstat:
+    image: vergoh/vnstat
+    container_name: vnstat
+    restart: always
+    network_mode: "host"
+    volumes:
+       - /etc/localtime:/etc/localtime:ro
+       - /etc/timezone:/etc/timezone:ro
+       - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/vnstat:/var/lib/vnstat
+    environment:
+       - HTTP_PORT=8685
+       - HTTP_BIND=*
+       - HTTP_LOG=/dev/stdout
+       - LARGE_FONTS=1
+       - CACHE_TIME=1
+       - RATE_UNIT=0
+       - PAGE_REFRESH=0
+       - SERVER_NAME="ADSB Station IO Stats"
+
