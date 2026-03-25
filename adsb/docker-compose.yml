@@ -211,8 +211,8 @@ services:
     environment:
       - TZ=${FEEDER_TZ}
     volumes:
-      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/planefence/config:/usr/share/planefence/persist
-      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/planefence/html:/usr/share/planefence/html
+      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/planefence/config:/usr/share/planefence/persist:z
+      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/planefence/html:/usr/share/planefence/html:z
     tmpfs:
       - /run:rw,nosuid,nodev,exec,relatime,size=256M
       - /tmp:rw,nosuid,nodev,noexec,relatime,size=128M
