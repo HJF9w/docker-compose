@@ -230,27 +230,27 @@ services:
 ##      - DISABLE_SHM=true
 ##      - MAXTIME=60
 
-  vrs:
-    image: ghcr.io/sdr-enthusiasts/vrs:dev
-    container_name: vrs
-    hostname: vrs
-    restart: always
-    ports:
-       - 8091:8080
-       - 49000-49099:49000-49099
-    environment:
-       - VRS_ADMIN_USERNAME=${VRS_ADMIN_USERNAME}
-       - VRS_ADMIN_PASSWORD=${VRS_ADMIN_PASSWORD}
-       - VRS_CULTURE=en-GB
-       - VRS_DB_UPDATE_POLICY_FULLAUTO=yes
-       - VRS_DB_UPDATE_WITH_VACUUM=yes
-       - VRS_DB_UPDATE_BACKUP_UNCOMPRESSED=yes
-    tmpfs:
-       - /tmp:rw,nosuid,nodev,noexec,relatime,size=128M
-    volumes:
-       - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/vrs:/root/.local/share/VirtualRadar
-       - /etc/localtime:/etc/localtime:ro
-       - /etc/timezone:/etc/timezone:ro
+##  vrs: ## Is hard crashing on creation
+##    image: ghcr.io/sdr-enthusiasts/vrs:dev
+##    container_name: vrs
+##    hostname: vrs
+##    restart: always
+##    ports:
+##       - 8091:8080
+##       - 49000-49099:49000-49099
+##    environment:
+##       - VRS_ADMIN_USERNAME=${VRS_ADMIN_USERNAME}
+##       - VRS_ADMIN_PASSWORD=${VRS_ADMIN_PASSWORD}
+##       - VRS_CULTURE=en-GB
+##       - VRS_DB_UPDATE_POLICY_FULLAUTO=yes
+##       - VRS_DB_UPDATE_WITH_VACUUM=yes
+##       - VRS_DB_UPDATE_BACKUP_UNCOMPRESSED=yes
+##    tmpfs:
+##       - /tmp:rw,nosuid,nodev,noexec,relatime,size=128M
+##    volumes:
+##       - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/vrs:/root/.local/share/VirtualRadar
+##       - /etc/localtime:/etc/localtime:ro
+##       - /etc/timezone:/etc/timezone:ro
 
   vnstat:
     image: vergoh/vnstat
