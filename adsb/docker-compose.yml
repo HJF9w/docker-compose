@@ -25,6 +25,7 @@ services:
       - READSB_ALT=${FEEDER_ALT_M}m
       - READSB_RX_LOCATION_ACCURACY=2
       - READSB_STATS_RANGE=true
+      - READSB_GAIN=auto
       # Unified ADSB & MLAT community feed configs:
       - ULTRAFEEDER_CONFIG=
           adsb,feed.adsb.fi,30004,beast_reduce_plus_out;
@@ -149,27 +150,27 @@ services:
       - /run:exec,size=64M
       - /var/log
 
-  radarvirtuel:
-    image: ghcr.io/sdr-enthusiasts/docker-radarvirtuel
-    container_name: radarvirtuel
-    hostname: radarvirtuel
-    restart: always
-    environment:
-      - FEEDER_KEY=${RV_KEY}
-      - SOURCE_HOST=ultrafeeder:30002
-      - RV_SERVER=mg22.adsbnetwork.com:50050
-      - LAT=${FEEDER_LAT}
-      - LON=${FEEDER_LONG}
-      - ALT=${FEEDER_ALT_M}m
-      - MLAT_SERVER=mlat.adsbnetwork.com:50000
-      - MLAT_HOST=ultrafeeder:30005
-      - MLAT_INPUT_TYPE=auto
-      - VERBOSE=ON
-    tmpfs:
-      - /tmp:rw,nosuid,nodev,noexec,relatime,size=128M
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - /etc/timezone:/etc/timezone:ro
+##  radarvirtuel: ## Want manual signup via email. Website not working.
+##    image: ghcr.io/sdr-enthusiasts/docker-radarvirtuel
+##    container_name: radarvirtuel
+##    hostname: radarvirtuel
+##    restart: always
+##    environment:
+##      - FEEDER_KEY=${RV_KEY}
+##      - SOURCE_HOST=ultrafeeder:30002
+##      - RV_SERVER=mg22.adsbnetwork.com:50050
+##      - LAT=${FEEDER_LAT}
+##      - LON=${FEEDER_LONG}
+##      - ALT=${FEEDER_ALT_M}m
+##      - MLAT_SERVER=mlat.adsbnetwork.com:50000
+##      - MLAT_HOST=ultrafeeder:30005
+##      - MLAT_INPUT_TYPE=auto
+##      - VERBOSE=ON
+##    tmpfs:
+##      - /tmp:rw,nosuid,nodev,noexec,relatime,size=128M
+##    volumes:
+##      - /etc/localtime:/etc/localtime:ro
+##      - /etc/timezone:/etc/timezone:ro
 
   planewatch:
     image: ghcr.io/plane-watch/docker-plane-watch
