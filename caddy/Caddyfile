@@ -81,7 +81,14 @@
           redir /.well-known/caldav /remote.php/dav 301
           header Strict-Transport-Security "max-age=15552000;"
         }
+}
 
+*.adsb.ioui.eu {
+	tls {
+		dns hetzner {env.HETZNER_DNS_TOKEN}
+		resolvers 1.1.1.1 # use Hetzner NS if dns validation fails 193.47.99.5
+                propagation_delay 30s
+	}
         @piaware host piaware.adsb.ioui.eu
         handle @piaware {
             reverse_proxy piaware:8080
