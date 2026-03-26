@@ -20,7 +20,7 @@ services:
         ipv4_address: "${EXT_IPV4}"
         mac_address: "86:D0:BD:81:3B:92"
       system_internal:
-      caddy_to_adsb:
+      to_adsb:
 
 networks:
   system_internal:
