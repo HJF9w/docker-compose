@@ -22,20 +22,25 @@ def scrape():
         r = requests.get(f'http://{ESP_IP}/status', timeout=10)
         r.raise_for_status()
         data = r.json()
-        print(f"[{ts}] Status fetched from ESP. RSSI: {data['wifi_rssi']}")
+        print(f"[{ts}] Status fetched from ESP. RSSI: {data.get('wifi_rssi', 'N/A')}")
         
-        point = Point("esp32cam_status") \
-            .tag("host", "esp32-cam-1") \
-            .field("temp_cpu", float(data['temp_cpu'])) \
-            .field("temp_ext", float(data['temp_ext'])) \
-            .field("wifi_rssi", int(data['wifi_rssi'])) \
-            .field("storage_percent", float(data['storage_percent'])) \
-            .field("aec", int(data['aec'])) \
-            .field("agc", int(data['agc'])) \
-            .field("sun_elevation", float(data['sun_elevation']))
+        point = Point("esp32cam_status").tag("host", "esp32-cam-1")
+        
+        # Tags: Categorical data
+        for tag_key in ["mode", "wifi_ssid", "wifi_ip", "sd_mounted", "running"]:
+            if tag_key in data:
+                point.tag(tag_key, str(data[tag_key]))
+        
+        # Fields: All data points
+        for key, value in data.items():
+            if isinstance(value, (int, float, bool)):
+                point.field(key, value)
+            else:
+                # String fields (last_file, time_str, etc)
+                point.field(key, str(value))
         
         write_api.write(bucket=BUCKET, org=ORG, record=point)
-        print(f"[{ts}] Metrics written to InfluxDB bucket '{BUCKET}'")
+        print(f"[{ts}] All {len(data)} metrics written to InfluxDB")
     except Exception as e:
         print(f"[{ts}] Scraper error: {e}")
 
