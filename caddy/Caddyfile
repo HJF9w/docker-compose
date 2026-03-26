@@ -95,7 +95,7 @@
         }
         @piaware-status host piaware-status.adsb.ioui.eu
         handle @piaware-status {
-            reverse_proxy piaware-status:80
+            reverse_proxy piaware:80
         }
         @planefinder host planefinder.adsb.ioui.eu
         handle @planefinder {
@@ -115,6 +115,6 @@
         }
         @vnstat host vnstat.adsb.ioui.eu
         handle @vnstat {
-            reverse_proxy vnstat:adsb.ioui.eu:8685
+            reverse_proxy adsb.ioui.eu:8685
         }
 }
