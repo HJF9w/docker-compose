@@ -27,5 +27,5 @@ networks:
     external: true
   system_mac_vlan:
     external: true
-  caddy_to_adsb:
+  to_adsb:
 
