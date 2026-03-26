@@ -83,31 +83,31 @@
         }
 
         @piaware.adsb host piaware.adsb.ioui.eu
-        handle @piaware {
+        handle @piaware.adsb {
             reverse_proxy piaware:8080
         }
         @piaware-status.adsb host piaware-status.adsb.ioui.eu
-        handle @piaware-status {
+        handle @piaware-status.adsb {
             reverse_proxy piaware-status:80
         }
         @planefinder.adsb host planefinder.adsb.ioui.eu
-        handle @planefinder {
+        handle @planefinder.adsb {
             reverse_proxy pfclient:30053
         }
         @planefence.adsb host planefence.adsb.ioui.eu
-        handle @planefence {
+        handle @planefence.adsb {
             reverse_proxy planefence:80
         }
         @vrs.adsb host vrs.adsb.ioui.eu
-        handle @vrs {
+        handle @vrs.adsb {
             reverse_proxy vrs:8080
         }
         @tar1090.adsb host tar1090.adsb.ioui.eu
-        handle @tar1090 {
+        handle @tar1090.adsb {
             reverse_proxy adsb.ioui.eu:8080
         }
         @vnstat.adsb host vnstat.adsb.ioui.eu
-        handle @vnstat {
+        handle @vnstat.adsb {
             reverse_proxy vnstat:adsb.ioui.eu:8685
         }
 }
