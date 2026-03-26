@@ -3,7 +3,7 @@ services:
   # COMMERCIAL & OTHER ADS-B FEEDERS
   # ----------------------------------------------------------------------
   piaware:
-    image: ghcr.io/sdr-enthusiasts/docker-piaware:v9.0.1
+    image: ghcr.io/sdr-enthusiasts/docker-piaware:latest-build-652
     container_name: piaware
     hostname: piaware
     restart: unless-stopped
@@ -22,7 +22,7 @@ services:
       - /var/log
 
   fr24:
-    image: ghcr.io/sdr-enthusiasts/docker-flightradar24:v1.0.34
+    image: ghcr.io/sdr-enthusiasts/docker-flightradar24:latest-build-843
     container_name: fr24
     hostname: fr24
     restart: unless-stopped
@@ -34,7 +34,7 @@ services:
       - /var/log
 
   pfclient:
-    image: ghcr.io/sdr-enthusiasts/docker-planefinder:v5.0.162
+    image: ghcr.io/sdr-enthusiasts/docker-planefinder:latest-build-528
     container_name: pfclient
     restart: unless-stopped
     networks:
@@ -49,7 +49,7 @@ services:
       - SHARECODE=${PLANEFINDER_SHARECODE}
 
   airnavradar:
-    image: ghcr.io/sdr-enthusiasts/docker-airnavradar:v1.0.1
+    image: ghcr.io/sdr-enthusiasts/docker-airnavradar:latest-build-867
     container_name: airnavradar
     hostname: airnavradar
     restart: unless-stopped
@@ -65,7 +65,7 @@ services:
       - /var/log
 
   planewatch:
-    image: ghcr.io/plane-watch/docker-plane-watch:v1.5.0
+    image: ghcr.io/plane-watch/docker-plane-watch:v0.0.6
     container_name: planewatch
     hostname: planewatch
     restart: unless-stopped
@@ -82,7 +82,7 @@ services:
       - /var/log
 
   adsbhub:
-    image: ghcr.io/sdr-enthusiasts/docker-adsbhub:v1.1.0
+    image: ghcr.io/sdr-enthusiasts/docker-adsbhub:latest-build-517
     container_name: adsbhub
     restart: unless-stopped
     environment:
@@ -94,7 +94,7 @@ services:
   # VISUALIZATION
   # ----------------------------------------------------------------------
   planefence:
-    image: ghcr.io/sdr-enthusiasts/docker-planefence:v8.2.3
+    image: ghcr.io/sdr-enthusiasts/docker-planefence:latest-build-1180
     container_name: planefence
     hostname: planefence
     restart: unless-stopped
@@ -114,7 +114,7 @@ services:
       - /tmp:rw,nosuid,nodev,noexec,relatime,size=128M
 
   vrs:
-    image: ghcr.io/sdr-enthusiasts/vrs:v3.1.2
+    image: ghcr.io/sdr-enthusiasts/vrs:dev
     container_name: vrs
     hostname: vrs
     restart: unless-stopped
