@@ -150,7 +150,7 @@ services:
       - /run:exec,size=64M
       - /var/log
 
-##  radarvirtuel: ## Want manual signup via email. Website not working.
+##  radarvirtuel: ## Want manual signup via email, address not reachable. Website not working.
 ##    image: ghcr.io/sdr-enthusiasts/docker-radarvirtuel
 ##    container_name: radarvirtuel
 ##    hostname: radarvirtuel
@@ -202,7 +202,7 @@ services:
   # VISUALIZATION
   # ----------------------------------------------------------------------
   planefence:
-    image: ghcr.io/sdr-enthusiasts/docker-planefence:latest-build-1050
+    image: ghcr.io/sdr-enthusiasts/docker-planefence
     container_name: planefence
     hostname: planefence
     restart: always
@@ -217,7 +217,7 @@ services:
       - /run:rw,nosuid,nodev,exec,relatime,size=256M
       - /tmp:rw,nosuid,nodev,noexec,relatime,size=128M
 
-##  screenshot: ## Requires Pi 4 to run well
+##  screenshot: ## Requires powerfull system (Pi 5) to run well (maybe run on seperate system in the future)
 ##    image: ghcr.io/kx1t/screenshot
 ##    container_name: screenshot
 ##    hostname: screenshot
@@ -230,27 +230,27 @@ services:
 ##      - DISABLE_SHM=true
 ##      - MAXTIME=60
 
-##  vrs: ## Is hard crashing on creation
-##    image: ghcr.io/sdr-enthusiasts/vrs:dev
-##    container_name: vrs
-##    hostname: vrs
-##    restart: always
-##    ports:
-##       - 8091:8080
-##       - 49000-49099:49000-49099
-##    environment:
-##       - VRS_ADMIN_USERNAME=${VRS_ADMIN_USERNAME}
-##       - VRS_ADMIN_PASSWORD=${VRS_ADMIN_PASSWORD}
-##       - VRS_CULTURE=en-GB
-##       - VRS_DB_UPDATE_POLICY_FULLAUTO=yes
-##       - VRS_DB_UPDATE_WITH_VACUUM=yes
-##       - VRS_DB_UPDATE_BACKUP_UNCOMPRESSED=yes
-##    tmpfs:
-##       - /tmp:rw,nosuid,nodev,noexec,relatime,size=128M
-##    volumes:
-##       - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/vrs:/root/.local/share/VirtualRadar
-##       - /etc/localtime:/etc/localtime:ro
-##       - /etc/timezone:/etc/timezone:ro
+  vrs:
+    image: ghcr.io/sdr-enthusiasts/vrs:dev
+    container_name: vrs
+    hostname: vrs
+    restart: always
+    ports:
+       - 8091:8080
+       - 49000-49099:49000-49099
+    environment:
+       - VRS_ADMIN_USERNAME=${VRS_ADMIN_USERNAME}
+       - VRS_ADMIN_PASSWORD=${VRS_ADMIN_PASSWORD}
+       - VRS_CULTURE=en-GB
+       - VRS_DB_UPDATE_POLICY_FULLAUTO=yes
+       - VRS_DB_UPDATE_WITH_VACUUM=yes
+       - VRS_DB_UPDATE_BACKUP_UNCOMPRESSED=yes
+    tmpfs:
+       - /tmp:rw,nosuid,nodev,noexec,relatime,size=128M
+    volumes:
+       - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/vrs:/root/.local/share/VirtualRadar
+       - /etc/localtime:/etc/localtime:ro
+       - /etc/timezone:/etc/timezone:ro
 
   vnstat:
     image: vergoh/vnstat
