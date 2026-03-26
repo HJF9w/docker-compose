@@ -109,6 +109,10 @@
         handle @vrs {
             reverse_proxy vrs:8080
         }
+        @fr24 host fr24.adsb.ioui.eu
+        handle @fr24 {
+          reverse_proxy fr24:8754
+        }
         @tar1090 host tar1090.adsb.ioui.eu
         handle @tar1090 {
             reverse_proxy adsb.ioui.eu:8080
