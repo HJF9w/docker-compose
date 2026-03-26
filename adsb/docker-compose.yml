@@ -84,7 +84,7 @@ services:
       - /var/log:size=32M
 
   vnstat:
-    image: vergoh/vnstat:2.12
+    image: vergoh/vnstat:2.13
     container_name: vnstat
     restart: unless-stopped
     network_mode: "host"
