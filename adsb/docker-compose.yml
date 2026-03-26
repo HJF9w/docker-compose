@@ -1,0 +1,143 @@
+services:
+  # ----------------------------------------------------------------------
+  # COMMERCIAL & OTHER ADS-B FEEDERS
+  # ----------------------------------------------------------------------
+  piaware:
+    image: ghcr.io/sdr-enthusiasts/docker-piaware:v9.0.1
+    container_name: piaware
+    hostname: piaware
+    restart: unless-stopped
+    networks:
+      - caddy_to_adsb
+      - default
+    # Removed ports 8081 & 8088 to route via Caddy
+    environment:
+      - BEASTHOST=${PI_IP}
+      - LAT=${FEEDER_LAT}
+      - LONG=${FEEDER_LONG}
+      - TZ=${FEEDER_TZ}
+      - FEEDER_ID=${PIAWARE_FEEDER_ID}
+    tmpfs:
+      - /run:exec,size=64M
+      - /var/log
+
+  fr24:
+    image: ghcr.io/sdr-enthusiasts/docker-flightradar24:v1.0.34
+    container_name: fr24
+    hostname: fr24
+    restart: unless-stopped
+    environment:
+      - BEASTHOST=${PI_IP}
+      - TZ=${FEEDER_TZ}
+      - FR24KEY=${FR24_SHARING_KEY}
+    tmpfs:
+      - /var/log
+
+  pfclient:
+    image: ghcr.io/sdr-enthusiasts/docker-planefinder:v5.0.162
+    container_name: pfclient
+    restart: unless-stopped
+    networks:
+      - caddy_to_adsb
+      - default
+    # Removed port 8084 to route via Caddy
+    environment:
+      - BEASTHOST=${PI_IP}
+      - LAT=${FEEDER_LAT}
+      - LONG=${FEEDER_LONG}
+      - TZ=${FEEDER_TZ}
+      - SHARECODE=${PLANEFINDER_SHARECODE}
+
+  airnavradar:
+    image: ghcr.io/sdr-enthusiasts/docker-airnavradar:v1.0.1
+    container_name: airnavradar
+    hostname: airnavradar
+    restart: unless-stopped
+    environment:
+      - BEASTHOST=${PI_IP}
+      - LAT=${FEEDER_LAT}
+      - LONG=${FEEDER_LONG}
+      - ALT=${FEEDER_ALT_M}
+      - TZ=${FEEDER_TZ}
+      - SHARING_KEY=${AIRNAVRADAR_SHARING_KEY}
+    tmpfs:
+      - /run:exec,size=64M
+      - /var/log
+
+  planewatch:
+    image: ghcr.io/plane-watch/docker-plane-watch:v1.5.0
+    container_name: planewatch
+    hostname: planewatch
+    restart: unless-stopped
+    environment:
+      - BEASTHOST=${PI_IP}
+      - TZ=${FEEDER_TZ}
+      - API_KEY=${PLANEWATCH_KEY}
+      - DEBUG_LOGGING=true
+      - LAT=${FEEDER_LAT}
+      - LONG=${FEEDER_LONG}
+      - ALT=${FEEDER_ALT_FT}ft
+    tmpfs:
+      - /run:exec,size=64M
+      - /var/log
+
+  adsbhub:
+    image: ghcr.io/sdr-enthusiasts/docker-adsbhub:v1.1.0
+    container_name: adsbhub
+    restart: unless-stopped
+    environment:
+      - TZ=${FEEDER_TZ}
+      - SBSHOST=${PI_IP}
+      - CLIENTKEY=${ADSBHUB_STATION_KEY}
+
+  # ----------------------------------------------------------------------
+  # VISUALIZATION
+  # ----------------------------------------------------------------------
+  planefence:
+    image: ghcr.io/sdr-enthusiasts/docker-planefence:v8.2.3
+    container_name: planefence
+    hostname: planefence
+    restart: unless-stopped
+    networks:
+      - caddy_to_adsb
+      - default
+    # Removed port 8083 to route via Caddy
+    environment:
+      - TZ=${FEEDER_TZ}
+      # Planefence needs to know where to pull the JSON data from
+      - URL_TAR1090=http://${PI_IP}:8080
+    volumes:
+      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/planefence/config:/usr/share/planefence/persist:z
+      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/planefence/html:/usr/share/planefence/html:z
+    tmpfs:
+      - /run:rw,nosuid,nodev,exec,relatime,size=256M
+      - /tmp:rw,nosuid,nodev,noexec,relatime,size=128M
+
+  vrs:
+    image: ghcr.io/sdr-enthusiasts/vrs:v3.1.2
+    container_name: vrs
+    hostname: vrs
+    restart: unless-stopped
+    networks:
+      - caddy_to_adsb
+      - default
+    ports:
+       # Kept external data push ports if needed, but web port 8091 is removed
+       - 49000-49099:49000-49099
+    environment:
+       - VRS_ADMIN_USERNAME=${VRS_ADMIN_USERNAME}
+       - VRS_ADMIN_PASSWORD=${VRS_ADMIN_PASSWORD}
+       - VRS_CULTURE=en-GB
+       - VRS_DB_UPDATE_POLICY_FULLAUTO=yes
+       - VRS_DB_UPDATE_WITH_VACUUM=yes
+       - VRS_DB_UPDATE_BACKUP_UNCOMPRESSED=yes
+    tmpfs:
+       - /tmp:rw,nosuid,nodev,noexec,relatime,size=128M
+    volumes:
+       - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/vrs:/root/.local/share/VirtualRadar
+       - /etc/localtime:/etc/localtime:ro
+       - /etc/timezone:/etc/timezone:ro
+
+networks:
+  caddy_to_adsb:
+    external: true
