@@ -26,6 +26,9 @@ services:
     container_name: fr24
     hostname: fr24
     restart: unless-stopped
+    networks:
+      - caddy_to_adsb
+      - default
     environment:
       - BEASTHOST=${PI_IP}
       - TZ=${FEEDER_TZ}
