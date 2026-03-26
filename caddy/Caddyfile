@@ -82,32 +82,32 @@
           header Strict-Transport-Security "max-age=15552000;"
         }
 
-        @piaware.adsb host piaware.adsb.ioui.eu
-        handle @piaware.adsb {
+        @piaware host piaware.adsb.ioui.eu
+        handle @piaware {
             reverse_proxy piaware:8080
         }
-        @piaware-status.adsb host piaware-status.adsb.ioui.eu
-        handle @piaware-status.adsb {
+        @piaware-status host piaware-status.adsb.ioui.eu
+        handle @piaware-status {
             reverse_proxy piaware-status:80
         }
-        @planefinder.adsb host planefinder.adsb.ioui.eu
-        handle @planefinder.adsb {
+        @planefinder host planefinder.adsb.ioui.eu
+        handle @planefinder {
             reverse_proxy pfclient:30053
         }
-        @planefence.adsb host planefence.adsb.ioui.eu
-        handle @planefence.adsb {
+        @planefence host planefence.adsb.ioui.eu
+        handle @planefence {
             reverse_proxy planefence:80
         }
-        @vrs.adsb host vrs.adsb.ioui.eu
-        handle @vrs.adsb {
+        @vrs host vrs.adsb.ioui.eu
+        handle @vrs {
             reverse_proxy vrs:8080
         }
-        @tar1090.adsb host tar1090.adsb.ioui.eu
-        handle @tar1090.adsb {
+        @tar1090 host tar1090.adsb.ioui.eu
+        handle @tar1090 {
             reverse_proxy adsb.ioui.eu:8080
         }
-        @vnstat.adsb host vnstat.adsb.ioui.eu
-        handle @vnstat.adsb {
+        @vnstat host vnstat.adsb.ioui.eu
+        handle @vnstat {
             reverse_proxy vnstat:adsb.ioui.eu:8685
         }
 }
