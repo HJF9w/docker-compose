@@ -86,14 +86,14 @@ services:
       - /run:exec,size=64M
       - /var/log
 
-  adsbhub:
-    image: ghcr.io/sdr-enthusiasts/docker-adsbhub:latest-build-517
-    container_name: adsbhub
-    restart: unless-stopped
-    environment:
-      - TZ=${FEEDER_TZ}
-      - SBSHOST=${PI_IP}
-      - CLIENTKEY=${ADSBHUB_STATION_KEY}
+##  adsbhub: ## Website not working, couldn't get key
+##    image: ghcr.io/sdr-enthusiasts/docker-adsbhub:latest-build-517
+##    container_name: adsbhub
+##    restart: unless-stopped
+##    environment:
+##      - TZ=${FEEDER_TZ}
+##      - SBSHOST=${PI_IP}
+##      - CLIENTKEY=${ADSBHUB_STATION_KEY}
 
   # ----------------------------------------------------------------------
   # VISUALIZATION
