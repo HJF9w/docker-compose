@@ -145,15 +145,28 @@ services:
   # ----------------------------------------------------------------------
   # LINK DASHBOARD
   # ----------------------------------------------------------------------
+##  dashboard:
+##    image: b4bz/homer:v25.11.1
+##    container_name: dashboard
+##    restart: unless-stopped
+##    networks:
+##      - caddy_to_adsb
+##    volumes:
+##      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/dashboard/assets:/www/assets:z
+##      - ./config.yml:/www/assets/config.yml:z
+
+  # ----------------------------------------------------------------------
+  # TOPOLOGY DASHBOARD
+  # ----------------------------------------------------------------------
   dashboard:
-    image: b4bz/homer:v25.11.1
+    image: nginx:1.29-alpine3.23
     container_name: dashboard
     restart: unless-stopped
     networks:
       - caddy_to_adsb
     volumes:
-      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/dashboard/assets:/www/assets:z
-      - ./config.yml:/www/assets/config.yml:z
+      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/topology:/usr/share/nginx/html:z
+      - ./index.html:/usr/share/nginx/html/html.html:z
 
 networks:
   caddy_to_adsb:
