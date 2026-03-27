@@ -63,6 +63,8 @@ services:
       - ALT=${FEEDER_ALT_M}
       - TZ=${FEEDER_TZ}
       - SHARING_KEY=${AIRNAVRADAR_SHARING_KEY}
+    volumes: 
+      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/airnavradar:/sys/class/thermal:z
     tmpfs:
       - /run:exec,size=64M
       - /var/log
