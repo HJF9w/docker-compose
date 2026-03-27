@@ -8,9 +8,11 @@ services:
     restart: unless-stopped
     networks:
       - caddy_to_adsb
+    environment:
+      - LOCAL_DOMAIN=${LOCAL_DOMAIN}
+      - NGINX_ENVSUBST_OUTPUT_DIR=/usr/share/nginx/html
     volumes:
-      ##- ${BASEPATH}/${COMPOSE_PROJECT_NAME}/topology:/usr/share/nginx/html:z
-      - ./index.html:/usr/share/nginx/html/index.html:z
+      - ./index.html.template:/etc/nginx/templates/index.html.template:z
 
 networks:
   caddy_to_adsb:
