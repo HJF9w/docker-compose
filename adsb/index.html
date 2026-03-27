@@ -10,21 +10,17 @@
     
     <style>
         :root {
-            --bg: #0b1120; /* Darkest blue */
-            --card-bg: rgba(30, 41, 59, 0.9); /* Semi-transparent dark gray */
-            --card-border: #334155; /* Medium gray border */
-            --text-main: #f8fafc; /* Almost white */
-            --text-sub: #94a3b8; /* Light gray for subtitles */
-            --accent-hover: #0ea5e9; /* Bright blue for accents */
-            --line-idle: rgba(100, 116, 139, 0.25); /* Faint gray line */
-            --line-active: #0ea5e9; /* Bright blue active line */
+            --bg: #0b1120;
+            --card-bg: rgba(30, 41, 59, 0.9);
+            --card-border: #334155;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --accent-hover: #38bdf8;
+            --line-idle: rgba(100, 116, 139, 0.25);
+            --line-active: #0ea5e9;
         }
 
-        * { 
-            box-sizing: border-box; 
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; }
 
         body {
             margin: 0;
@@ -34,9 +30,6 @@
             font-family: 'Segoe UI', system-ui, sans-serif;
             min-height: 100vh;
             overflow-x: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
         }
 
         /* SVG Canvas for drawing flowchart lines */
@@ -46,7 +39,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none; /* Allows mouse events to pass through to elements below */
+            pointer-events: none;
             z-index: 1;
         }
 
@@ -55,16 +48,14 @@
             stroke: var(--line-idle);
             stroke-width: 2px;
             transition: stroke 0.3s, stroke-width 0.3s, opacity 0.3s;
-            pointer-events: none; /* Lines themselves are not interactive */
         }
 
         .line.active {
             stroke: var(--line-active);
             stroke-width: 3px;
-            stroke-dasharray: 8 6; /* Creates the "flowing" animation */
+            stroke-dasharray: 8 6;
             animation: flow 0.6s linear infinite;
-            z-index: 100; /* Ensure active lines are on top */
-            opacity: 1 !important;
+            z-index: 100;
         }
 
         @keyframes flow {
@@ -73,10 +64,9 @@
 
         /* Dashboard Layout */
         .wrapper {
-            position: relative; /* Needed for absolute positioning of canvas */
-            z-index: 2; /* Ensures content is above the canvas */
+            position: relative;
+            z-index: 2;
             padding: 40px 20px;
-            width: 100%;
             max-width: 1600px;
             margin: 0 auto;
         }
@@ -86,38 +76,33 @@
             margin-bottom: 60px;
         }
         .header h1 { margin: 0; font-size: 2.5rem; color: #fff; }
-        .header p { color: var(--text-sub); font-size: 1.1rem; }
+        .header p { color: var(--text-sub); }
 
-        /* Flexbox for columns, with generous spacing for lines */
         .dashboard {
             display: flex;
             flex-direction: row;
             justify-content: space-between;
-            gap: 80px; /* Increased gap for more space */
-            position: relative;
-            z-index: 2;
+            gap: 120px; /* Provides wide space for flowchart curves */
         }
 
         .col {
             display: flex;
             flex-direction: column;
-            justify-content: center; /* Center nodes vertically within column */
-            align-items: center; /* Center nodes horizontally */
+            justify-content: center; /* Vertically centers the nodes */
             gap: 20px;
             flex: 1;
-            min-width: 250px; /* Minimum width to prevent collapse */
+            max-width: 350px;
         }
 
         .col-title {
             text-align: center;
-            font-size: 1rem;
+            font-size: 1.1rem;
             text-transform: uppercase;
             letter-spacing: 1.5px;
             color: var(--text-sub);
             border-bottom: 2px solid var(--card-border);
             padding-bottom: 10px;
             margin-bottom: 10px;
-            width: 100%; /* Take full width */
         }
 
         /* Card Styling */
@@ -126,62 +111,54 @@
             align-items: center;
             gap: 15px;
             background: var(--card-bg);
-            backdrop-filter: blur(10px); /* Adds depth */
             padding: 15px;
             border-radius: 12px;
             border: 1px solid var(--card-border);
             text-decoration: none;
             color: var(--text-main);
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2);
-            position: relative; /* Crucial for line connections */
-            z-index: 10; /* Ensure cards are above lines by default */
-            width: 100%; /* Make cards fill column width */
-            max-width: 350px; /* Max width for cards */
+            position: relative;
         }
 
         .card:hover {
-            transform: translateY(-5px) scale(1.03); /* Slight lift and scale */
+            transform: scale(1.05);
             border-color: var(--accent-hover);
-            background: rgba(30, 41, 59, 1); /* Fully opaque on hover */
+            background: rgba(30, 41, 59, 1);
             box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3);
-            z-index: 20; /* Bring hovered card to the very front */
+            z-index: 10;
         }
 
         .card img {
-            width: 40px;
-            height: 40px;
+            width: 38px;
+            height: 38px;
             border-radius: 8px;
             object-fit: contain;
             background: white;
-            padding: 4px;
-            flex-shrink: 0; /* Prevent image from shrinking */
+            padding: 3px;
         }
 
         .card i.icon {
-            font-size: 28px;
-            width: 40px; /* Consistent size with image */
+            font-size: 26px;
+            width: 38px;
             text-align: center;
             color: #cbd5e1;
-            flex-shrink: 0;
         }
 
-        .info { display: flex; flex-direction: column; flex-grow: 1; /* Allow text to take available space */ }
-        .title { font-size: 1.1rem; font-weight: 600; line-height: 1.3; }
-        .subtitle { font-size: 0.8rem; color: var(--text-sub); margin-top: 2px; word-break: break-word; } /* Ensure long URLs wrap */
+        .info { display: flex; flex-direction: column; }
+        .title { font-size: 1.1rem; font-weight: 600; }
+        .subtitle { font-size: 0.8rem; color: var(--text-sub); margin-top: 2px;}
 
         .separator {
             height: 20px;
             border-bottom: 1px dashed var(--card-border);
-            margin-top: 20px;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
             text-align: center;
-            width: 100%;
         }
         .separator span {
             background: var(--bg);
             padding: 0 10px;
-            font-size: 0.7rem;
+            font-size: 0.8rem;
             color: #64748b;
             position: relative;
             top: 10px;
@@ -192,41 +169,30 @@
             .dashboard {
                 flex-direction: column;
                 align-items: center;
-                gap: 80px; /* Increase gap when stacked */
+                gap: 80px;
             }
-            .col {
-                max-width: 90%; /* Allow cards to be wider on mobile */
-                align-items: center; /* Ensure centered layout */
-            }
-            .card { 
-                padding: 20px; 
-                gap: 20px; 
-                width: 100%; /* Cards take full width of column */
-                max-width: 450px; /* Max width for cards on mobile */
-            }
-            .title { font-size: 1.3rem; }
-            .subtitle { font-size: 0.95rem; }
+            .col { max-width: 100%; width: 90%; }
+            .card { padding: 20px; gap: 20px; }
+            .title { font-size: 1.4rem; }
+            .subtitle { font-size: 1rem; }
             .card img, .card i.icon { width: 50px; height: 50px; font-size: 34px; }
-            .header { margin-bottom: 40px; }
-            .header h1 { font-size: 2rem; }
-            .header p { font-size: 1rem; }
         }
     </style>
 </head>
 <body>
 
-    <!-- SVG Canvas for drawing flowchart lines -->
+    <!-- Canvas for SVG Flowchart Lines -->
     <svg id="canvas-container"></svg>
 
     <div class="wrapper">
         <div class="header">
-            <h1>ADS-B Data Flow</h1>
-            <p>Hover over any card to highlight its data path.</p>
+            <h1>ADS-B Flowchart</h1>
+            <p>Hover over any card to trace the live data flow.</p>
         </div>
 
         <div class="dashboard">
             
-            <!-- COLUMN 1: SOURCE HARDWARE -->
+            <!-- COLUMN 1: Hardware Hub -->
             <div class="col" id="col-hub">
                 <div class="col-title"><i class="fa-solid fa-microchip"></i> Source Hardware</div>
                 
@@ -242,14 +208,14 @@
                     <i class="icon fa-solid fa-network-wired" style="color: #a78bfa;"></i>
                     <div class="info">
                         <span class="title">vnStat</span>
-                        <span class="subtitle">Pi Hardware IO</span>
+                        <span class="subtitle">Hardware Network IO</span>
                     </div>
                 </a>
             </div>
 
-            <!-- COLUMN 2: SERVER PROCESSORS & FEEDERS -->
+            <!-- COLUMN 2: Internal Processors -->
             <div class="col" id="col-proc">
-                <div class="col-title"><i class="fa-solid fa-server"></i> Server Processors</div>
+                <div class="col-title"><i class="fa-solid fa-server"></i> Local Render & Feeders</div>
                 
                 <a href="https://tar1090.sub.example.org/" target="_blank" class="card" id="tar">
                     <i class="icon fa-solid fa-map-location-dot" style="color: #60a5fa;"></i>
@@ -270,7 +236,7 @@
                 <div class="separator"><span>SERVER DOCKERS</span></div>
 
                 <a href="https://piaware.sub.example.org/" target="_blank" class="card" id="piaware">
-                    <img src="https://icon.horse/icon/flightaware.com" alt="FA Logo">
+                    <img src="https://icon.horse/icon/flightaware.com" alt="FA">
                     <div class="info">
                         <span class="title">PiAware Local</span>
                         <span class="subtitle">piaware.sub.example.org</span>
@@ -286,7 +252,7 @@
                 </a>
 
                 <a href="https://fr24.sub.example.org/" target="_blank" class="card" id="fr24">
-                    <img src="https://icon.horse/icon/flightradar24.com" alt="FR24 Logo">
+                    <img src="https://icon.horse/icon/flightradar24.com" alt="FR24">
                     <div class="info">
                         <span class="title">FR24 Local</span>
                         <span class="subtitle">fr24.sub.example.org</span>
@@ -294,7 +260,7 @@
                 </a>
 
                 <a href="https://planefinder.sub.example.org/" target="_blank" class="card" id="pf">
-                    <img src="https://icon.horse/icon/planefinder.net" alt="PF Logo">
+                    <img src="https://icon.horse/icon/planefinder.net" alt="PF">
                     <div class="info">
                         <span class="title">PlaneFinder Local</span>
                         <span class="subtitle">planefinder.sub.example.org</span>
@@ -302,7 +268,7 @@
                 </a>
             </div>
 
-            <!-- COLUMN 3: PUBLIC NETWORKS & COMMUNITY FEEDS -->
+            <!-- COLUMN 3: Cloud -->
             <div class="col" id="col-cloud">
                 <div class="col-title"><i class="fa-solid fa-cloud"></i> Public Networks</div>
                 
@@ -315,7 +281,7 @@
                 </a>
 
                 <a href="https://www.flightaware.com/" target="_blank" class="card" id="fa">
-                    <img src="https://icon.horse/icon/flightaware.com" alt="FA Logo">
+                    <img src="https://icon.horse/icon/flightaware.com" alt="FA">
                     <div class="info">
                         <span class="title">FlightAware</span>
                         <span class="subtitle">flightaware.com</span>
@@ -323,7 +289,7 @@
                 </a>
 
                 <a href="https://www.flightradar24.com/" target="_blank" class="card" id="fr24cloud">
-                    <img src="https://icon.horse/icon/flightradar24.com" alt="FR24 Logo">
+                    <img src="https://icon.horse/icon/flightradar24.com" alt="FR24">
                     <div class="info">
                         <span class="title">FlightRadar24</span>
                         <span class="subtitle">flightradar24.com</span>
@@ -331,7 +297,7 @@
                 </a>
 
                 <a href="https://planefinder.net/" target="_blank" class="card" id="pfcloud">
-                    <img src="https://icon.horse/icon/planefinder.net" alt="PF Logo">
+                    <img src="https://icon.horse/icon/planefinder.net" alt="PF">
                     <div class="info">
                         <span class="title">PlaneFinder Net</span>
                         <span class="subtitle">planefinder.net</span>
@@ -341,7 +307,7 @@
                 <div class="separator"><span>COMMUNITY DIRECT FEEDS</span></div>
 
                 <a href="https://account.adsbexchange.com/" target="_blank" class="card" id="adsbx">
-                    <img src="https://icon.horse/icon/adsbexchange.com" alt="ADSBX Logo">
+                    <img src="https://icon.horse/icon/adsbexchange.com" alt="ADSBX">
                     <div class="info">
                         <span class="title">ADS-B Exchange</span>
                         <span class="subtitle">adsbexchange.com</span>
@@ -349,7 +315,7 @@
                 </a>
 
                 <a href="https://adsb.fi/" target="_blank" class="card" id="adsbfi">
-                    <img src="https://icon.horse/icon/adsb.fi" alt="FI Logo">
+                    <img src="https://icon.horse/icon/adsb.fi" alt="FI">
                     <div class="info">
                         <span class="title">adsb.fi</span>
                         <span class="subtitle">adsb.fi</span>
@@ -357,7 +323,7 @@
                 </a>
 
                 <a href="https://airplanes.live/" target="_blank" class="card" id="airplanes">
-                    <img src="https://icon.horse/icon/airplanes.live" alt="AL Logo">
+                    <img src="https://icon.horse/icon/airplanes.live" alt="AL">
                     <div class="info">
                         <span class="title">airplanes.live</span>
                         <span class="subtitle">airplanes.live</span>
@@ -365,154 +331,150 @@
                 </a>
 
                 <a href="https://www.adsbhub.org/" target="_blank" class="card" id="adsbhub">
-                    <img src="https://icon.horse/icon/adsbhub.org" alt="HUB Logo">
+                    <img src="https://icon.horse/icon/adsbhub.org" alt="HUB">
                     <div class="info">
                         <span class="title">ADS-B Hub</span>
                         <span class="subtitle">adsbhub.org</span>
                     </div>
                 </a>
+
             </div>
         </div>
     </div>
 
     <!-- NATIVE VANILLA JS ENGINE - NO DEPENDENCIES -->
     <script>
-        // Define all flowchart connections with `from` and `to` IDs
-        const connections = [
-            { from: 'uf', to: 'tar' },
-            { from: 'uf', to: 'graphs' },
-            { from: 'uf', to: 'vnstat' }, // Added vnstat connection
+    // Define all flowchart connections
+    const connections = [
+        { from: 'uf', to: 'tar' },
+        { from: 'uf', to: 'graphs' },
+        { from: 'uf', to: 'piaware' },
+        { from: 'uf', to: 'fr24' },
+        { from: 'uf', to: 'pf' },
+        { from: 'piaware', to: 'piawarestat' },
+        { from: 'piaware', to: 'fa' },
+        { from: 'fr24', to: 'fr24cloud' },
+        { from: 'pf', to: 'pfcloud' },
+        { from: 'tar', to: 'planefence' },
+        { from: 'uf', to: 'adsbx' },
+        { from: 'uf', to: 'adsbfi' },
+        { from: 'uf', to: 'airplanes' },
+        { from: 'uf', to: 'adsbhub' }
+    ];
 
-            { from: 'uf', to: 'piaware' },
-            { from: 'uf', to: 'fr24' },
-            { from: 'uf', to: 'pf' },
-            
-            { from: 'piaware', to: 'piawarestat' }, // PiAware local to its status
-            { from: 'piaware', to: 'fa' },         // PiAware local to FlightAware cloud
+    function drawLines() {
+        const svg = document.getElementById('canvas-container');
+        svg.innerHTML = ''; 
+        
+        svg.style.height = document.documentElement.scrollHeight + 'px';
+        const isMobile = window.innerWidth <= 1024;
 
-            { from: 'fr24', to: 'fr24cloud' },    // FR24 local to FR24 cloud
+        const colProc = document.getElementById('col-proc');
+        let colProcRect = colProc ? colProc.getBoundingClientRect() : null;
 
-            { from: 'pf', to: 'pfcloud' },        // PF local to PF cloud
+        connections.forEach(conn => {
+            const el1 = document.getElementById(conn.from);
+            const el2 = document.getElementById(conn.to);
+            if (!el1 || !el2) return;
 
-            { from: 'tar', to: 'planefence' },    // tar1090 map to PlaneFence logs
-
-            { from: 'uf', to: 'adsbx' },
-            { from: 'uf', to: 'adsbfi' },
-            { from: 'uf', to: 'airplanes' },
-            { from: 'uf', to: 'adsbhub' }
-        ];
-
-        function drawLines() {
-            const svg = document.getElementById('canvas-container');
-            svg.innerHTML = ''; // Clear previous lines
-            
-            // Dynamically set SVG height to cover full page scroll height
-            svg.style.height = document.documentElement.scrollHeight + 'px';
-            svg.style.width = '100%'; // Ensure SVG spans full width
-
-            const isMobile = window.innerWidth <= 1024;
+            const rect1 = el1.getBoundingClientRect();
+            const rect2 = el2.getBoundingClientRect();
             const scrollX = window.scrollX;
             const scrollY = window.scrollY;
 
-            connections.forEach(conn => {
-                const el1 = document.getElementById(conn.from);
-                const el2 = document.getElementById(conn.to);
-                if (!el1 || !el2) return; // Skip if element not found
+            let x1, y1, x2, y2, cp1x, cp1y, cp2x, cp2y;
 
-                const rect1 = el1.getBoundingClientRect();
-                const rect2 = el2.getBoundingClientRect();
-
-                let x1, y1, x2, y2, cp1x, cp1y, cp2x, cp2y;
-
-                if (isMobile) {
-                    // --- Mobile: Vertical Flow (Bottom to Top) ---
-                    x1 = rect1.left + rect1.width / 2 + scrollX;
-                    y1 = rect1.bottom + scrollY;
-                    x2 = rect2.left + rect2.width / 2 + scrollX;
-                    y2 = rect2.top + scrollY;
-                    
-                    // Control points for a smooth curve
-                    const curveDist = Math.abs(y2 - y1) * 0.4;
-                    cp1x = x1; cp1y = y1 + curveDist;
-                    cp2x = x2; cp2y = y2 - curveDist;
-                } else {
-                    // --- Desktop: Horizontal Flow (Right to Left) ---
-                    x1 = rect1.right + scrollX;
-                    y1 = rect1.top + rect1.height / 2 + scrollY;
-                    x2 = rect2.left + scrollX;
-                    y2 = rect2.top + rect2.height / 2 + scrollY;
-                    
-                    // Control points for a smooth curve
-                    const curveDist = Math.abs(x2 - x1) * 0.4;
-                    cp1x = x1 + curveDist; cp1y = y1;
-                    cp2x = x2 - curveDist; cp2y = y2;
-                }
-
-                // Create SVG path element for the Bezier curve
-                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                path.setAttribute('d', `M ${x1} ${y1} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${x2} ${y2}`);
-                path.setAttribute('class', `line line-from-${conn.from} line-to-${conn.to}`);
-                path.dataset.from = conn.from;
-                path.dataset.to = conn.to;
-                svg.appendChild(path);
-            });
-        }
-
-        // --- Recursive Hover Tracking System ---
-        function highlightPath(nodeId, direction) {
-            connections.forEach(conn => {
-                let pathElement = null;
-
-                // Check for forward connection (nodeId -> conn.to)
-                if (direction === 'forward' && conn.from === nodeId) {
-                    pathElement = document.querySelector(`.line-from-${conn.from}.line-to-${conn.to}`);
-                    if (pathElement) {
-                        pathElement.classList.add('active');
-                        highlightPath(conn.to, 'forward'); // Recurse to next node in path
-                    }
-                } 
-                // Check for backward connection (conn.from -> nodeId)
-                else if (direction === 'backward' && conn.to === nodeId) {
-                    pathElement = document.querySelector(`.line-from-${conn.from}.line-to-${conn.to}`);
-                    if (pathElement) {
-                        pathElement.classList.add('active');
-                        highlightPath(conn.from, 'backward'); // Recurse to previous node in path
-                    }
-                }
-            });
-        }
-
-        // Event listeners for hover effects on cards
-        document.querySelectorAll('.card').forEach(card => {
-            card.addEventListener('mouseenter', () => {
-                // Dim all lines first to make active ones stand out
-                document.querySelectorAll('.line').forEach(l => {
-                    l.style.opacity = '0.1';
-                    l.classList.remove('active'); // Ensure no stale 'active' classes
-                });
+            if (isMobile) {
+                // Mobile Top-to-Bottom
+                x1 = rect1.left + rect1.width / 2 + scrollX;
+                y1 = rect1.bottom + scrollY;
+                x2 = rect2.left + rect2.width / 2 + scrollX;
+                y2 = rect2.top + scrollY;
                 
-                // Highlight the entire path related to the hovered card
-                highlightPath(card.id, 'forward');
-                highlightPath(card.id, 'backward');
-            });
+                const distance = Math.abs(y2 - y1) * 0.4;
+                cp1x = x1; cp1y = y1 + distance;
+                cp2x = x2; cp2y = y2 - distance;
+            } else {
+                // Desktop Left-to-Right
+                x1 = rect1.right + scrollX;
+                y1 = rect1.top + rect1.height / 2 + scrollY;
+                x2 = rect2.left + scrollX;
+                y2 = rect2.top + rect2.height / 2 + scrollY;
 
-            card.addEventListener('mouseleave', () => {
-                // Reset all lines to their default state
-                document.querySelectorAll('.line').forEach(l => {
-                    l.classList.remove('active');
-                    l.style.opacity = '1';
-                });
-            });
+                // Check if the line skips Column 2 to go directly to Column 3
+                const isLongJump = colProcRect && (rect1.right < colProcRect.left && rect2.left > colProcRect.right);
+
+                if (isLongJump) {
+                    // Deep dip under Column 2 to bypass all middle buttons
+                    const dipY = colProcRect.bottom + scrollY + 40; 
+                    
+                    // Route perfectly down the center of the open gutters
+                    cp1x = x1 + (colProcRect.left - x1) / 2;
+                    cp1y = dipY;
+                    cp2x = colProcRect.right + (x2 - colProcRect.right) / 2;
+                    cp2y = dipY;
+                } else {
+                    // Standard adjacent curve
+                    const distance = Math.abs(x2 - x1) * 0.5;
+                    cp1x = x1 + distance;
+                    cp1y = y1;
+                    cp2x = x2 - distance;
+                    cp2y = y2;
+                }
+            }
+
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            path.setAttribute('d', `M ${x1} ${y1} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${x2} ${y2}`);
+            path.setAttribute('class', `line line-from-${conn.from} line-to-${conn.to}`);
+            path.dataset.from = conn.from;
+            path.dataset.to = conn.to;
+            svg.appendChild(path);
+        });
+    }
+
+    // --- Hover Tracking System ---
+    function highlightPaths(nodeId, direction) {
+        connections.forEach(conn => {
+            if (direction === 'forward' && conn.from === nodeId) {
+                const path = document.querySelector(`.line-from-${conn.from}.line-to-${conn.to}`);
+                if (path) path.classList.add('active');
+                highlightPaths(conn.to, 'forward');
+            }
+            if (direction === 'backward' && conn.to === nodeId) {
+                const path = document.querySelector(`.line-from-${conn.from}.line-to-${conn.to}`);
+                if (path) path.classList.add('active');
+                highlightPaths(conn.from, 'backward');
+            }
+        });
+    }
+
+    document.querySelectorAll('.card').forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            document.querySelectorAll('.line').forEach(l => l.style.opacity = '0.1');
+            highlightPaths(card.id, 'forward');
+            highlightPaths(card.id, 'backward');
         });
 
-        // Initialize drawing and handle window resize/scroll events
-        window.addEventListener('load', () => setTimeout(drawLines, 100)); // Delay slightly for rendering
-        let resizeTimer;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(drawLines, 100); // Debounce resize calls
+        card.addEventListener('mouseleave', () => {
+            document.querySelectorAll('.line').forEach(l => {
+                l.classList.remove('active');
+                l.style.opacity = '1';
+            });
         });
-        window.addEventListener('scroll', drawLines); // Redraw lines on scroll to keep them attached
-    </script>
+    });
+
+    window.addEventListener('load', () => setTimeout(drawLines, 200));
+    
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(drawLines, 200);
+    });
+
+    window.addEventListener('scroll', () => {
+        // Redraw lines to ensure they track correctly during vertical scrolls
+        drawLines(); 
+    });
+  </script>
 </body>
 </html>
