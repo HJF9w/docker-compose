@@ -8,446 +8,453 @@
     <!-- FontAwesome for UI Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- LeaderLine for Drawing Interactive Data Flow Connections -->
-    <script src="https://cdn.jsdelivr.net/npm/leader-line-new@1.1.9/leader-line.min.js"></script>
-
     <style>
         :root {
             --bg: #0b1120;
-            --card-bg: rgba(30, 41, 59, 0.8);
+            --card-bg: rgba(30, 41, 59, 0.9);
             --card-border: #334155;
             --text-main: #f8fafc;
             --text-sub: #94a3b8;
             --accent-hover: #38bdf8;
-            --line-idle: rgba(148, 163, 184, 0.25);
-            --line-active: rgba(56, 189, 248, 0.9);
+            --line-idle: rgba(100, 116, 139, 0.25);
+            --line-active: #0ea5e9;
         }
+
+        * { box-sizing: border-box; }
 
         body {
             margin: 0;
-            padding: 40px 20px;
-            background: radial-gradient(circle at top, #1e293b, var(--bg));
+            background: var(--bg);
+            background-image: radial-gradient(circle at top, #1e293b, var(--bg));
             color: var(--text-main);
             font-family: 'Segoe UI', system-ui, sans-serif;
             min-height: 100vh;
             overflow-x: hidden;
         }
 
-        .header {
-            text-align: center;
-            margin-bottom: 50px;
-            z-index: 10;
-            position: relative;
+        /* SVG Canvas for drawing flowchart lines */
+        #canvas-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
         }
 
-        .header h1 { margin: 0; font-size: 2.5rem; color: #fff; }
-        .header p { color: var(--text-sub); font-size: 1.1rem; }
+        .line {
+            fill: none;
+            stroke: var(--line-idle);
+            stroke-width: 2px;
+            transition: stroke 0.3s, stroke-width 0.3s, opacity 0.3s;
+        }
 
-        /* The Main Desktop Layout */
+        .line.active {
+            stroke: var(--line-active);
+            stroke-width: 3px;
+            stroke-dasharray: 8 6;
+            animation: flow 0.6s linear infinite;
+            z-index: 100;
+        }
+
+        @keyframes flow {
+            to { stroke-dashoffset: -14; }
+        }
+
+        /* Dashboard Layout */
+        .wrapper {
+            position: relative;
+            z-index: 2;
+            padding: 40px 20px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        .header h1 { margin: 0; font-size: 2.5rem; color: #fff; }
+        .header p { color: var(--text-sub); }
+
         .dashboard {
             display: flex;
             flex-direction: row;
             justify-content: space-between;
-            max-width: 1500px;
-            margin: 0 auto;
-            gap: 40px;
-            position: relative;
-            z-index: 2;
+            gap: 120px; /* Provides wide space for flowchart curves */
         }
 
-        .column {
-            flex: 1;
+        .col {
             display: flex;
             flex-direction: column;
+            justify-content: center; /* Vertically centers the nodes */
             gap: 20px;
-            max-width: 400px;
-            width: 100%;
+            flex: 1;
+            max-width: 350px;
         }
 
-        .column h2 {
+        .col-title {
+            text-align: center;
             font-size: 1.1rem;
             text-transform: uppercase;
             letter-spacing: 1.5px;
             color: var(--text-sub);
             border-bottom: 2px solid var(--card-border);
             padding-bottom: 10px;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
         }
 
-        .sub-category {
-            margin-top: 20px;
-            margin-bottom: 5px;
-            font-size: 0.9rem;
-            color: #64748b;
-            text-transform: uppercase;
-        }
-
-        /* Responsive Card Styling */
+        /* Card Styling */
         .card {
             display: flex;
             align-items: center;
-            gap: 18px;
+            gap: 15px;
             background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            padding: 16px 20px;
+            padding: 15px;
             border-radius: 12px;
             border: 1px solid var(--card-border);
             text-decoration: none;
             color: var(--text-main);
-            transition: all 0.3s ease;
-            position: relative;
+            transition: all 0.2s ease;
             box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2);
-            z-index: 2;
+            position: relative;
         }
 
         .card:hover {
-            transform: translateY(-5px);
+            transform: scale(1.05);
             border-color: var(--accent-hover);
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3);
             background: rgba(30, 41, 59, 1);
-            z-index: 20;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3);
+            z-index: 10;
         }
 
         .card img {
-            width: 36px;
-            height: 36px;
-            border-radius: 6px;
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
             object-fit: contain;
-            background: white; /* helps logos with transparent dark text */
-            padding: 2px;
+            background: white;
+            padding: 3px;
         }
 
         .card i.icon {
-            font-size: 28px;
-            width: 36px;
+            font-size: 26px;
+            width: 38px;
             text-align: center;
             color: #cbd5e1;
         }
 
         .info { display: flex; flex-direction: column; }
-        .title { font-size: 1.25rem; font-weight: 600; }
-        .subtitle { font-size: 0.85rem; color: var(--text-sub); margin-top: 3px; word-break: break-all;}
+        .title { font-size: 1.1rem; font-weight: 600; }
+        .subtitle { font-size: 0.8rem; color: var(--text-sub); margin-top: 2px;}
+
+        .separator {
+            height: 20px;
+            border-bottom: 1px dashed var(--card-border);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .separator span {
+            background: var(--bg);
+            padding: 0 10px;
+            font-size: 0.8rem;
+            color: #64748b;
+            position: relative;
+            top: 10px;
+        }
 
         /* Mobile Adjustments */
         @media (max-width: 1024px) {
             .dashboard {
                 flex-direction: column;
                 align-items: center;
-                gap: 60px;
+                gap: 80px;
             }
-            .column { max-width: 100%; width: 90%; }
-            .card { padding: 20px; }
+            .col { max-width: 100%; width: 90%; }
+            .card { padding: 20px; gap: 20px; }
             .title { font-size: 1.4rem; }
             .subtitle { font-size: 1rem; }
-            .card img, .card i.icon { width: 44px; height: 44px; font-size: 34px; }
+            .card img, .card i.icon { width: 50px; height: 50px; font-size: 34px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h1>ADS-B Tracking Hub</h1>
-        <p>Hover over any card to view its data flow connections.</p>
-    </div>
+    <!-- Canvas for SVG Flowchart Lines -->
+    <svg id="canvas-container"></svg>
 
-    <div class="dashboard" id="dashboard">
-        
-        <!-- COLUMN 1: RASPBERRY PI HUB -->
-        <div class="column">
-            <h2><i class="fa-solid fa-microchip"></i> Hardware Hub</h2>
-            
-            <!-- data-targets defines which IDs this node sends data to -->
-            <a href="#" class="card" id="ultrafeeder" data-targets="tar1090,graphs,piaware,fr24,pf,anr,pw,adsbx,adsbfi,airplanes,adsblol,adsbhub">
-                <i class="icon fa-solid fa-satellite-dish" style="color: #34d399;"></i>
-                <div class="info">
-                    <span class="title">Ultrafeeder</span>
-                    <span class="subtitle">Core Decoder & Multiplexer</span>
-                </div>
-            </a>
-
-            <a href="https://tar1090.sub.example.org/" target="_blank" class="card" id="tar1090" data-targets="planefence">
-                <i class="icon fa-solid fa-map-location-dot" style="color: #60a5fa;"></i>
-                <div class="info">
-                    <span class="title">tar1090 Map</span>
-                    <span class="subtitle">tar1090.sub.example.org</span>
-                </div>
-            </a>
-
-            <a href="https://tar1090.sub.example.org/graphs1090/" target="_blank" class="card" id="graphs">
-                <i class="icon fa-solid fa-chart-line" style="color: #fbbf24;"></i>
-                <div class="info">
-                    <span class="title">graphs1090</span>
-                    <span class="subtitle">Receiver Performance</span>
-                </div>
-            </a>
-
-            <a href="https://vnstat.sub.example.org/" target="_blank" class="card" id="vnstat">
-                <i class="icon fa-solid fa-network-wired" style="color: #a78bfa;"></i>
-                <div class="info">
-                    <span class="title">vnStat</span>
-                    <span class="subtitle">vnstat.sub.example.org</span>
-                </div>
-            </a>
+    <div class="wrapper">
+        <div class="header">
+            <h1>ADS-B Flowchart</h1>
+            <p>Hover over any card to trace the live data flow.</p>
         </div>
 
-        <!-- COLUMN 2: LOCAL SERVER -->
-        <div class="column">
-            <h2><i class="fa-solid fa-server"></i> Server Stack</h2>
+        <div class="dashboard">
             
-            <a href="https://piaware.sub.example.org/" target="_blank" class="card" id="piaware" data-targets="cloud_fa">
-                <img src="https://icon.horse/icon/flightaware.com" alt="FA">
-                <div class="info">
-                    <span class="title">PiAware Local</span>
-                    <span class="subtitle">piaware.sub.example.org</span>
-                </div>
-            </a>
+            <!-- COLUMN 1: Hardware Hub -->
+            <div class="col" id="col-hub">
+                <div class="col-title"><i class="fa-solid fa-microchip"></i> Source Hardware</div>
+                
+                <a href="#" class="card" id="uf">
+                    <i class="icon fa-solid fa-satellite-dish" style="color: #34d399;"></i>
+                    <div class="info">
+                        <span class="title">Ultrafeeder</span>
+                        <span class="subtitle">Raspberry Pi Decoder</span>
+                    </div>
+                </a>
 
-            <a href="https://piaware-status.sub.example.org/" target="_blank" class="card" id="piawarestat">
-                <i class="icon fa-solid fa-heart-pulse" style="color: #f43f5e;"></i>
-                <div class="info">
-                    <span class="title">PiAware Status</span>
-                    <span class="subtitle">piaware-status.sub.example.org</span>
-                </div>
-            </a>
+                <a href="https://vnstat.sub.example.org/" target="_blank" class="card" id="vnstat">
+                    <i class="icon fa-solid fa-network-wired" style="color: #a78bfa;"></i>
+                    <div class="info">
+                        <span class="title">vnStat</span>
+                        <span class="subtitle">Hardware Network IO</span>
+                    </div>
+                </a>
+            </div>
 
-            <a href="https://fr24.sub.example.org/" target="_blank" class="card" id="fr24" data-targets="cloud_fr24">
-                <img src="https://icon.horse/icon/flightradar24.com" alt="FR24">
-                <div class="info">
-                    <span class="title">FR24 Local</span>
-                    <span class="subtitle">fr24.sub.example.org</span>
-                </div>
-            </a>
+            <!-- COLUMN 2: Internal Processors -->
+            <div class="col" id="col-proc">
+                <div class="col-title"><i class="fa-solid fa-server"></i> Local Render & Feeders</div>
+                
+                <a href="https://tar1090.sub.example.org/" target="_blank" class="card" id="tar">
+                    <i class="icon fa-solid fa-map-location-dot" style="color: #60a5fa;"></i>
+                    <div class="info">
+                        <span class="title">tar1090 Map</span>
+                        <span class="subtitle">tar1090.sub.example.org</span>
+                    </div>
+                </a>
 
-            <a href="https://planefinder.sub.example.org/" target="_blank" class="card" id="pf" data-targets="cloud_pf">
-                <img src="https://icon.horse/icon/planefinder.net" alt="PF">
-                <div class="info">
-                    <span class="title">PlaneFinder Local</span>
-                    <span class="subtitle">planefinder.sub.example.org</span>
-                </div>
-            </a>
+                <a href="https://tar1090.sub.example.org/graphs1090/" target="_blank" class="card" id="graphs">
+                    <i class="icon fa-solid fa-chart-line" style="color: #fbbf24;"></i>
+                    <div class="info">
+                        <span class="title">graphs1090</span>
+                        <span class="subtitle">Antenna Statistics</span>
+                    </div>
+                </a>
 
-            <a href="#" class="card" id="anr" data-targets="cloud_anr">
-                <img src="https://icon.horse/icon/airnavradar.com" alt="ANR">
-                <div class="info">
-                    <span class="title">AirNav Local</span>
-                    <span class="subtitle">Background Service</span>
-                </div>
-            </a>
+                <div class="separator"><span>SERVER DOCKERS</span></div>
 
-            <a href="#" class="card" id="pw" data-targets="cloud_pw">
-                <img src="https://icon.horse/icon/plane.watch" alt="PW">
-                <div class="info">
-                    <span class="title">PlaneWatch Local</span>
-                    <span class="subtitle">Background Service</span>
-                </div>
-            </a>
+                <a href="https://piaware.sub.example.org/" target="_blank" class="card" id="piaware">
+                    <img src="https://icon.horse/icon/flightaware.com" alt="FA">
+                    <div class="info">
+                        <span class="title">PiAware Local</span>
+                        <span class="subtitle">piaware.sub.example.org</span>
+                    </div>
+                </a>
 
-            <a href="https://planefence.sub.example.org/" target="_blank" class="card" id="planefence">
-                <i class="icon fa-solid fa-shield-halved" style="color: #22d3ee;"></i>
-                <div class="info">
-                    <span class="title">PlaneFence</span>
-                    <span class="subtitle">planefence.sub.example.org</span>
-                </div>
-            </a>
-        </div>
+                <a href="https://piaware-status.sub.example.org/" target="_blank" class="card" id="piawarestat">
+                    <i class="icon fa-solid fa-heart-pulse" style="color: #f43f5e;"></i>
+                    <div class="info">
+                        <span class="title">PiAware Status</span>
+                        <span class="subtitle">Health Monitor</span>
+                    </div>
+                </a>
 
-        <!-- COLUMN 3: CLOUD WEB -->
-        <div class="column">
-            <h2><i class="fa-solid fa-globe"></i> Web Output</h2>
-            
-            <div class="sub-category">Commercial Networks</div>
-            
-            <a href="https://www.flightaware.com/" target="_blank" class="card" id="cloud_fa">
-                <img src="https://icon.horse/icon/flightaware.com" alt="FA">
-                <div class="info">
-                    <span class="title">FlightAware</span>
-                    <span class="subtitle">flightaware.com</span>
-                </div>
-            </a>
+                <a href="https://fr24.sub.example.org/" target="_blank" class="card" id="fr24">
+                    <img src="https://icon.horse/icon/flightradar24.com" alt="FR24">
+                    <div class="info">
+                        <span class="title">FR24 Local</span>
+                        <span class="subtitle">fr24.sub.example.org</span>
+                    </div>
+                </a>
 
-            <a href="https://www.flightradar24.com/" target="_blank" class="card" id="cloud_fr24">
-                <img src="https://icon.horse/icon/flightradar24.com" alt="FR24">
-                <div class="info">
-                    <span class="title">FlightRadar24</span>
-                    <span class="subtitle">flightradar24.com</span>
-                </div>
-            </a>
+                <a href="https://planefinder.sub.example.org/" target="_blank" class="card" id="pf">
+                    <img src="https://icon.horse/icon/planefinder.net" alt="PF">
+                    <div class="info">
+                        <span class="title">PlaneFinder Local</span>
+                        <span class="subtitle">planefinder.sub.example.org</span>
+                    </div>
+                </a>
+            </div>
 
-            <a href="https://planefinder.net/" target="_blank" class="card" id="cloud_pf">
-                <img src="https://icon.horse/icon/planefinder.net" alt="PF">
-                <div class="info">
-                    <span class="title">PlaneFinder</span>
-                    <span class="subtitle">planefinder.net</span>
-                </div>
-            </a>
+            <!-- COLUMN 3: Cloud -->
+            <div class="col" id="col-cloud">
+                <div class="col-title"><i class="fa-solid fa-cloud"></i> Public Networks</div>
+                
+                <a href="https://planefence.sub.example.org/" target="_blank" class="card" id="planefence">
+                    <i class="icon fa-solid fa-shield-halved" style="color: #22d3ee;"></i>
+                    <div class="info">
+                        <span class="title">PlaneFence Logs</span>
+                        <span class="subtitle">planefence.sub.example.org</span>
+                    </div>
+                </a>
 
-            <a href="https://www.airnavradar.com/" target="_blank" class="card" id="cloud_anr">
-                <img src="https://icon.horse/icon/airnavradar.com" alt="ANR">
-                <div class="info">
-                    <span class="title">AirNav Radar</span>
-                    <span class="subtitle">airnavradar.com</span>
-                </div>
-            </a>
+                <a href="https://www.flightaware.com/" target="_blank" class="card" id="fa">
+                    <img src="https://icon.horse/icon/flightaware.com" alt="FA">
+                    <div class="info">
+                        <span class="title">FlightAware</span>
+                        <span class="subtitle">flightaware.com</span>
+                    </div>
+                </a>
 
-            <a href="https://atc.plane.watch/" target="_blank" class="card" id="cloud_pw">
-                <img src="https://icon.horse/icon/plane.watch" alt="PW">
-                <div class="info">
-                    <span class="title">Plane.Watch</span>
-                    <span class="subtitle">atc.plane.watch</span>
-                </div>
-            </a>
+                <a href="https://www.flightradar24.com/" target="_blank" class="card" id="fr24cloud">
+                    <img src="https://icon.horse/icon/flightradar24.com" alt="FR24">
+                    <div class="info">
+                        <span class="title">FlightRadar24</span>
+                        <span class="subtitle">flightradar24.com</span>
+                    </div>
+                </a>
 
-            <div class="sub-category">Community Aggregators</div>
+                <a href="https://planefinder.net/" target="_blank" class="card" id="pfcloud">
+                    <img src="https://icon.horse/icon/planefinder.net" alt="PF">
+                    <div class="info">
+                        <span class="title">PlaneFinder Net</span>
+                        <span class="subtitle">planefinder.net</span>
+                    </div>
+                </a>
 
-            <a href="https://account.adsbexchange.com/" target="_blank" class="card" id="adsbx">
-                <img src="https://icon.horse/icon/adsbexchange.com" alt="ADSBX">
-                <div class="info">
-                    <span class="title">ADS-B Exchange</span>
-                    <span class="subtitle">account.adsbexchange.com</span>
-                </div>
-            </a>
+                <div class="separator"><span>COMMUNITY DIRECT FEEDS</span></div>
 
-            <a href="https://www.adsbhub.org/" target="_blank" class="card" id="adsbhub">
-                <img src="https://icon.horse/icon/adsbhub.org" alt="HUB">
-                <div class="info">
-                    <span class="title">ADS-B Hub</span>
-                    <span class="subtitle">adsbhub.org</span>
-                </div>
-            </a>
+                <a href="https://account.adsbexchange.com/" target="_blank" class="card" id="adsbx">
+                    <img src="https://icon.horse/icon/adsbexchange.com" alt="ADSBX">
+                    <div class="info">
+                        <span class="title">ADS-B Exchange</span>
+                        <span class="subtitle">adsbexchange.com</span>
+                    </div>
+                </a>
 
-            <a href="https://adsb.fi/" target="_blank" class="card" id="adsbfi">
-                <img src="https://icon.horse/icon/adsb.fi" alt="FI">
-                <div class="info">
-                    <span class="title">adsb.fi</span>
-                    <span class="subtitle">adsb.fi</span>
-                </div>
-            </a>
+                <a href="https://adsb.fi/" target="_blank" class="card" id="adsbfi">
+                    <img src="https://icon.horse/icon/adsb.fi" alt="FI">
+                    <div class="info">
+                        <span class="title">adsb.fi</span>
+                        <span class="subtitle">adsb.fi</span>
+                    </div>
+                </a>
 
-            <a href="https://airplanes.live/" target="_blank" class="card" id="airplanes">
-                <img src="https://icon.horse/icon/airplanes.live" alt="AL">
-                <div class="info">
-                    <span class="title">airplanes.live</span>
-                    <span class="subtitle">airplanes.live</span>
-                </div>
-            </a>
+                <a href="https://airplanes.live/" target="_blank" class="card" id="airplanes">
+                    <img src="https://icon.horse/icon/airplanes.live" alt="AL">
+                    <div class="info">
+                        <span class="title">airplanes.live</span>
+                        <span class="subtitle">airplanes.live</span>
+                    </div>
+                </a>
 
-            <a href="https://adsb.lol/" target="_blank" class="card" id="adsblol">
-                <img src="https://icon.horse/icon/adsb.lol" alt="LOL">
-                <div class="info">
-                    <span class="title">adsb.lol</span>
-                    <span class="subtitle">adsb.lol</span>
-                </div>
-            </a>
+                <a href="https://www.adsbhub.org/" target="_blank" class="card" id="adsbhub">
+                    <img src="https://icon.horse/icon/adsbhub.org" alt="HUB">
+                    <div class="info">
+                        <span class="title">ADS-B Hub</span>
+                        <span class="subtitle">adsbhub.org</span>
+                    </div>
+                </a>
 
+            </div>
         </div>
     </div>
 
+    <!-- NATIVE VANILLA JS ENGINE - NO DEPENDENCIES -->
     <script>
-        let lineObjects =[];
+        // Define all flowchart connections
+        const connections =[
+            { from: 'uf', to: 'tar' },
+            { from: 'uf', to: 'graphs' },
+            { from: 'uf', to: 'piaware' },
+            { from: 'uf', to: 'fr24' },
+            { from: 'uf', to: 'pf' },
+            { from: 'piaware', to: 'piawarestat' },
+            { from: 'piaware', to: 'fa' },
+            { from: 'fr24', to: 'fr24cloud' },
+            { from: 'pf', to: 'pfcloud' },
+            { from: 'tar', to: 'planefence' },
+            { from: 'uf', to: 'adsbx' },
+            { from: 'uf', to: 'adsbfi' },
+            { from: 'uf', to: 'airplanes' },
+            { from: 'uf', to: 'adsbhub' }
+        ];
 
         function drawLines() {
-            // Remove existing lines on resize
-            lineObjects.forEach(l => l.line.remove());
-            lineObjects =
-const sources = document.querySelectorAll('[data-targets]');
+            const svg = document.getElementById('canvas-container');
+            svg.innerHTML = ''; 
             
-            // Default styling for the drawn connections
-            const lineOptions = {
-                color: 'rgba(148, 163, 184, 0.15)', // Idle line color
-                size: 3,
-                path: 'fluid',
-                startSocket: 'right',
-                endSocket: 'left',
-                dropShadow: true,
-                hide: true // Start hidden to animate them in
-            };
+            // Extend SVG height to cover full page
+            svg.style.height = document.documentElement.scrollHeight + 'px';
+            const isMobile = window.innerWidth <= 1024;
 
-            // If we are on mobile (stacked layout), the lines should flow top-to-bottom instead of left-to-right
-            if (window.innerWidth <= 1024) {
-                lineOptions.startSocket = 'bottom';
-                lineOptions.endSocket = 'top';
-            }
+            connections.forEach(conn => {
+                const el1 = document.getElementById(conn.from);
+                const el2 = document.getElementById(conn.to);
+                if (!el1 || !el2) return;
 
-            sources.forEach(source => {
-                const targets = source.getAttribute('data-targets').split(',');
-                
-                targets.forEach(targetId => {
-                    const targetEl = document.getElementById(targetId.trim());
-                    if (targetEl) {
-                        const line = new LeaderLine(source, targetEl, lineOptions);
-                        
-                        lineObjects.push({
-                            sourceId: source.id,
-                            targetId: targetEl.id,
-                            line: line
-                        });
-                        
-                        // Fade/draw the lines in nicely on load
-                        line.show('draw', {duration: 800, timing: 'ease-out'});
-                    }
-                });
+                const rect1 = el1.getBoundingClientRect();
+                const rect2 = el2.getBoundingClientRect();
+                const scrollX = window.scrollX;
+                const scrollY = window.scrollY;
+
+                let x1, y1, x2, y2, cp1x, cp1y, cp2x, cp2y;
+
+                if (isMobile) {
+                    // Draw lines from Bottom to Top (Mobile Portrait)
+                    x1 = rect1.left + rect1.width / 2 + scrollX;
+                    y1 = rect1.bottom + scrollY;
+                    x2 = rect2.left + rect2.width / 2 + scrollX;
+                    y2 = rect2.top + scrollY;
+                    
+                    const distance = Math.abs(y2 - y1) * 0.4;
+                    cp1x = x1; cp1y = y1 + distance;
+                    cp2x = x2; cp2y = y2 - distance;
+                } else {
+                    // Draw lines from Right to Left (Desktop Landscape)
+                    x1 = rect1.right + scrollX;
+                    y1 = rect1.top + rect1.height / 2 + scrollY;
+                    x2 = rect2.left + scrollX;
+                    y2 = rect2.top + rect2.height / 2 + scrollY;
+                    
+                    const distance = Math.abs(x2 - x1) * 0.5;
+                    cp1x = x1 + distance; cp1y = y1;
+                    cp2x = x2 - distance; cp2y = y2;
+                }
+
+                // Draw Bezier Curve
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                path.setAttribute('d', `M ${x1} ${y1} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${x2} ${y2}`);
+                path.setAttribute('class', `line line-from-${conn.from} line-to-${conn.to}`);
+                path.dataset.from = conn.from;
+                path.dataset.to = conn.to;
+                svg.appendChild(path);
             });
         }
 
-        // Set up the Hover Interactions
-        const cards = document.querySelectorAll('.card');
-        
-        cards.forEach(card => {
+        // --- Recursive Hover Tracking System ---
+        function highlightPaths(nodeId, direction) {
+            connections.forEach(conn => {
+                if (direction === 'forward' && conn.from === nodeId) {
+                    const path = document.querySelector(`.line-from-${conn.from}.line-to-${conn.to}`);
+                    if(path) path.classList.add('active');
+                    highlightPaths(conn.to, 'forward');
+                }
+                if (direction === 'backward' && conn.to === nodeId) {
+                    const path = document.querySelector(`.line-from-${conn.from}.line-to-${conn.to}`);
+                    if(path) path.classList.add('active');
+                    highlightPaths(conn.from, 'backward');
+                }
+            });
+        }
+
+        document.querySelectorAll('.card').forEach(card => {
             card.addEventListener('mouseenter', () => {
-                // 1. Dim all lines to make the active ones pop
-                lineObjects.forEach(obj => {
-                    obj.line.setOptions({
-                        color: 'rgba(148, 163, 184, 0.05)',
-                        size: 2,
-                        zIndex: 1,
-                        dash: false
-                    });
-                });
-                
-                // 2. Highlight lines connected to the hovered card
-                lineObjects.forEach(obj => {
-                    if (obj.sourceId === card.id || obj.targetId === card.id) {
-                        obj.line.setOptions({
-                            color: 'rgba(56, 189, 248, 0.9)', // Bright blue
-                            size: 4,
-                            zIndex: 100,
-                            dash: {animation: true} // Creates a "flowing data" effect
-                        });
-                    }
-                });
+                // Dim all lines first
+                document.querySelectorAll('.line').forEach(l => l.style.opacity = '0.1');
+                // Recursively light up the path for the hovered card
+                highlightPaths(card.id, 'forward');
+                highlightPaths(card.id, 'backward');
             });
 
             card.addEventListener('mouseleave', () => {
-                // Reset all lines back to normal when the mouse leaves
-                lineObjects.forEach(obj => {
-                    obj.line.setOptions({
-                        color: 'rgba(148, 163, 184, 0.15)',
-                        size: 3,
-                        zIndex: 1,
-                        dash: false
-                    });
+                // Reset everything to normal
+                document.querySelectorAll('.line').forEach(l => {
+                    l.classList.remove('active');
+                    l.style.opacity = '1';
                 });
             });
         });
 
-        // Initialize drawing after a short delay so fonts and images finish loading (prevents misaligned lines)
-        window.addEventListener('load', () => {
-            setTimeout(drawLines, 200);
-        });
-
-        // LeaderLine needs to recalculate positions if the window is resized
+        // Initialize and handle window changes
+        window.addEventListener('load', () => setTimeout(drawLines, 100));
         let resizeTimer;
         window.addEventListener('resize', () => {
             clearTimeout(resizeTimer);
-            // Debounce the resize so it doesn't lag
-            resizeTimer = setTimeout(drawLines, 200);
+            resizeTimer = setTimeout(drawLines, 100);
         });
-        
-        // Reposition lines if the user scrolls down the page
-        window.addEventListener('scroll', () => {
-            lineObjects.forEach(obj => obj.line.position());
-        });
-
     </script>
 </body>
 </html>
