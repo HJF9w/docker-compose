@@ -9,7 +9,7 @@ services:
     networks:
       - caddy_to_adsb
     volumes:
-      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/topology:/usr/share/nginx/html:z
+      ##- ${BASEPATH}/${COMPOSE_PROJECT_NAME}/topology:/usr/share/nginx/html:z
       - ./index.html:/usr/share/nginx/html/index.html:z
 
 networks:
