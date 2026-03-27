@@ -156,6 +156,13 @@
                         <span class="subtitle">No GUI</span>
                     </div>
                 </a>
+                <a href="#" target="_blank" class="card" id="rv">
+                    <img src="https://icon.horse/icon/radarvirtuel.com" alt="RV">
+                    <div class="info">
+                        <span class="title">RadarVirtuel</span>
+                        <span class="subtitle">No GUI</span>
+                    </div>
+                </a>
             </div>
 
             <!-- COLUMN 3: Cloud -->
@@ -203,6 +210,13 @@
                         <span class="subtitle">atc.plane.watch</span>
                     </div>
                 </a>
+                <a href="https://www.radarvirtuel.com/" target="_blank" class="card" id="radarvirtuelcloud">
+                    <img src="https://icon.horse/icon/radarvirtuel.com" alt="RV">
+                    <div class="info">
+                        <span class="title">RadarVirtuel</span>
+                        <span class="subtitle">radarvirtuel.com</span>
+                    </div>
+                </a>
                 <div class="separator"><span>COMMUNITY DIRECT FEEDS</span></div>
                 <a href="https://account.adsbexchange.com/" target="_blank" class="card" id="adsbx">
                     <img src="https://icon.horse/icon/adsbexchange.com" alt="ADSBX">
@@ -225,6 +239,55 @@
                         <span class="subtitle">airplanes.live</span>
                     </div>
                 </a>
+                <a href="https://adsb.lol/" target="_blank" class="card" id="adsblol">
+                    <img src="https://icon.horse/icon/adsb.lol" alt="LOL">
+                    <div class="info">
+                        <span class="title">adsb.lol</span>
+                        <span class="subtitle">adsb.lol</span>
+                    </div>
+                </a>
+                <a href="https://www.planespotters.net/" target="_blank" class="card" id="planespotters">
+                    <img src="https://icon.horse/icon/planespotters.net" alt="PS">
+                    <div class="info">
+                        <span class="title">Planespotters</span>
+                        <span class="subtitle">planespotters.net</span>
+                    </div>
+                </a>
+                <a href="https://theairtraffic.com/" target="_blank" class="card" id="theairtraffic">
+                    <img src="https://icon.horse/icon/theairtraffic.com" alt="TAT">
+                    <div class="info">
+                        <span class="title">TheAirTraffic</span>
+                        <span class="subtitle">theairtraffic.com</span>
+                    </div>
+                </a>
+                <a href="https://avdelphi.com/" target="_blank" class="card" id="avdelphi">
+                    <img src="https://icon.horse/icon/avdelphi.com" alt="AVD">
+                    <div class="info">
+                        <span class="title">AvDelphi</span>
+                        <span class="subtitle">avdelphi.com</span>
+                    </div>
+                </a>
+                <a href="https://hpradar.com/" target="_blank" class="card" id="hpradar">
+                    <img src="https://icon.horse/icon/hpradar.com" alt="HPR">
+                    <div class="info">
+                        <span class="title">HP Radar</span>
+                        <span class="subtitle">hpradar.com</span>
+                    </div>
+                </a>
+                <a href="https://radarplane.com/" target="_blank" class="card" id="radarplane">
+                    <img src="https://icon.horse/icon/radarplane.com" alt="RP">
+                    <div class="info">
+                        <span class="title">RadarPlane</span>
+                        <span class="subtitle">radarplane.com</span>
+                    </div>
+                </a>
+                <a href="https://flyitalyadsb.com/" target="_blank" class="card" id="flyitalyadsb">
+                    <img src="https://icon.horse/icon/flyitalyadsb.com" alt="FIA">
+                    <div class="info">
+                        <span class="title">FlyItalyADSB</span>
+                        <span class="subtitle">flyitalyadsb.com</span>
+                    </div>
+                </a>
                 <a href="https://www.adsbhub.org/setting.php" target="_blank" class="card" id="adsbhub">
                     <img src="https://icon.horse/icon/adsbhub.org" alt="HUB">
                     <div class="info">
@@ -244,7 +307,14 @@
             { from: 'piaware', to: 'piawarestat' }, { from: 'fr24', to: 'fr24cloud' },
             { from: 'pf', to: 'pfcloud' }, { from: 'tar', to: 'planefence' },
             { from: 'uf', to: 'adsbx', bypass: true }, { from: 'uf', to: 'adsbfi', bypass: true },
-            { from: 'uf', to: 'airplanes', bypass: true }, { from: 'uf', to: 'adsbhub', bypass: true }, { from: 'plw', to: 'planewatch', bypass: true }, { from: 'uf', to: 'plw', bypass: true }, { from: 'uf', to: 'anr', bypass: true }, { from: 'anr', to: 'airnavradar', bypass: true }
+            { from: 'uf', to: 'airplanes', bypass: true }, { from: 'uf', to: 'adsbhub', bypass: true }, 
+            { from: 'plw', to: 'planewatch', bypass: true }, { from: 'uf', to: 'plw', bypass: true }, 
+            { from: 'uf', to: 'anr', bypass: true }, { from: 'anr', to: 'airnavradar', bypass: true },
+            { from: 'uf', to: 'adsblol', bypass: true }, { from: 'uf', to: 'planespotters', bypass: true },
+            { from: 'uf', to: 'theairtraffic', bypass: true }, { from: 'uf', to: 'avdelphi', bypass: true },
+            { from: 'uf', to: 'hpradar', bypass: true }, { from: 'uf', to: 'radarplane', bypass: true },
+            { from: 'uf', to: 'flyitalyadsb', bypass: true }, { from: 'uf', to: 'rv', bypass: true },
+            { from: 'rv', to: 'radarvirtuelcloud', bypass: true }
         ];
 
         function drawLines() {
