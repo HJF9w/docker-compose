@@ -1,0 +1,17 @@
+services:
+  # ----------------------------------------------------------------------
+  # TOPOLOGY DASHBOARD
+  # ----------------------------------------------------------------------
+  dashboard:
+    image: nginx:1.29-alpine3.23
+    container_name: dashboard
+    restart: unless-stopped
+    networks:
+      - caddy_to_adsb
+    volumes:
+      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/topology:/usr/share/nginx/html:z
+      - ./index.html:/usr/share/nginx/html/index.html:z
+
+networks:
+  caddy_to_adsb:
+    external: true

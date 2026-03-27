@@ -3,142 +3,451 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADS-B Topology Dashboard</title>
+    <title>ADS-B Tracking Hub</title>
+    
+    <!-- FontAwesome for UI Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- LeaderLine for Drawing Interactive Data Flow Connections -->
+    <script src="https://cdn.jsdelivr.net/npm/leader-line-new@1.1.9/leader-line.min.js"></script>
+
     <style>
+        :root {
+            --bg: #0b1120;
+            --card-bg: rgba(30, 41, 59, 0.8);
+            --card-border: #334155;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --accent-hover: #38bdf8;
+            --line-idle: rgba(148, 163, 184, 0.25);
+            --line-active: rgba(56, 189, 248, 0.9);
+        }
+
         body {
-            background-color: #0f172a; /* Dark slate background */
-            color: #f8fafc;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
-            padding: 20px;
+            padding: 40px 20px;
+            background: radial-gradient(circle at top, #1e293b, var(--bg));
+            color: var(--text-main);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            z-index: 10;
+            position: relative;
+        }
+
+        .header h1 { margin: 0; font-size: 2.5rem; color: #fff; }
+        .header p { color: var(--text-sub); font-size: 1.1rem; }
+
+        /* The Main Desktop Layout */
+        .dashboard {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            max-width: 1500px;
+            margin: 0 auto;
+            gap: 40px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .column {
+            flex: 1;
             display: flex;
             flex-direction: column;
+            gap: 20px;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .column h2 {
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-sub);
+            border-bottom: 2px solid var(--card-border);
+            padding-bottom: 10px;
+            margin-bottom: 5px;
+        }
+
+        .sub-category {
+            margin-top: 20px;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            color: #64748b;
+            text-transform: uppercase;
+        }
+
+        /* Responsive Card Styling */
+        .card {
+            display: flex;
             align-items: center;
-        }
-        h1 { margin-bottom: 5px; color: #38bdf8; }
-        p { color: #94a3b8; margin-bottom: 30px; }
-        .mermaid {
-            background-color: #1e293b;
-            padding: 20px;
+            gap: 18px;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            padding: 16px 20px;
             border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
-            width: 95%;
-            max-width: 1400px;
-            overflow-x: auto;
+            border: 1px solid var(--card-border);
+            text-decoration: none;
+            color: var(--text-main);
+            transition: all 0.3s ease;
+            position: relative;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2);
+            z-index: 2;
         }
-        /* Make cursor a pointer so it's obvious they are links */
-        .node { cursor: pointer; }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-hover);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3);
+            background: rgba(30, 41, 59, 1);
+            z-index: 20;
+        }
+
+        .card img {
+            width: 36px;
+            height: 36px;
+            border-radius: 6px;
+            object-fit: contain;
+            background: white; /* helps logos with transparent dark text */
+            padding: 2px;
+        }
+
+        .card i.icon {
+            font-size: 28px;
+            width: 36px;
+            text-align: center;
+            color: #cbd5e1;
+        }
+
+        .info { display: flex; flex-direction: column; }
+        .title { font-size: 1.25rem; font-weight: 600; }
+        .subtitle { font-size: 0.85rem; color: var(--text-sub); margin-top: 3px; word-break: break-all;}
+
+        /* Mobile Adjustments */
+        @media (max-width: 1024px) {
+            .dashboard {
+                flex-direction: column;
+                align-items: center;
+                gap: 60px;
+            }
+            .column { max-width: 100%; width: 90%; }
+            .card { padding: 20px; }
+            .title { font-size: 1.4rem; }
+            .subtitle { font-size: 1rem; }
+            .card img, .card i.icon { width: 44px; height: 44px; font-size: 34px; }
+        }
     </style>
 </head>
 <body>
 
-    <h1>ADS-B Network Topology</h1>
-    <p>Click any node to open its Web UI or Cloud Account.</p>
+    <div class="header">
+        <h1>ADS-B Tracking Hub</h1>
+        <p>Hover over any card to view its data flow connections.</p>
+    </div>
 
-    <!-- The Mermaid Diagram Definition -->
-    <pre class="mermaid">
-        graph LR
-            %% Styling classes
-            classDef pi fill:#065f46,stroke:#34d399,stroke-width:2px,color:#fff;
-            classDef server fill:#1e3a8a,stroke:#60a5fa,stroke-width:2px,color:#fff;
-            classDef cloud fill:#4c1d95,stroke:#a78bfa,stroke-width:2px,color:#fff;
-            classDef community fill:#701a75,stroke:#f472b6,stroke-width:2px,color:#fff;
+    <div class="dashboard" id="dashboard">
+        
+        <!-- COLUMN 1: RASPBERRY PI HUB -->
+        <div class="column">
+            <h2><i class="fa-solid fa-microchip"></i> Hardware Hub</h2>
+            
+            <!-- data-targets defines which IDs this node sends data to -->
+            <a href="#" class="card" id="ultrafeeder" data-targets="tar1090,graphs,piaware,fr24,pf,anr,pw,adsbx,adsbfi,airplanes,adsblol,adsbhub">
+                <i class="icon fa-solid fa-satellite-dish" style="color: #34d399;"></i>
+                <div class="info">
+                    <span class="title">Ultrafeeder</span>
+                    <span class="subtitle">Core Decoder & Multiplexer</span>
+                </div>
+            </a>
 
-            %% Node definitions and layout
-            subgraph PI[Raspberry Pi Hardware]
-                UF[Ultrafeeder Core]:::pi
-                TAR[tar1090 Map]:::pi
-                GRA[graphs1090]:::pi
-                VNS[vnStat]:::pi
+            <a href="https://tar1090.sub.example.org/" target="_blank" class="card" id="tar1090" data-targets="planefence">
+                <i class="icon fa-solid fa-map-location-dot" style="color: #60a5fa;"></i>
+                <div class="info">
+                    <span class="title">tar1090 Map</span>
+                    <span class="subtitle">tar1090.sub.example.org</span>
+                </div>
+            </a>
 
-                UF -->|Hosts| TAR
-                UF -->|Hosts| GRA
-            end
+            <a href="https://tar1090.sub.example.org/graphs1090/" target="_blank" class="card" id="graphs">
+                <i class="icon fa-solid fa-chart-line" style="color: #fbbf24;"></i>
+                <div class="info">
+                    <span class="title">graphs1090</span>
+                    <span class="subtitle">Receiver Performance</span>
+                </div>
+            </a>
 
-            subgraph SERVER[Server Docker Stack]
-                PIA[PiAware Local]:::server
-                PIASTAT[PiAware Status]:::server
-                FR24[FR24 Local Status]:::server
-                PF[PlaneFinder Local]:::server
-                ANR[AirNav Local]:::server
-                PW[PlaneWatch Local]:::server
-                FENCE[PlaneFence]:::server
+            <a href="https://vnstat.sub.example.org/" target="_blank" class="card" id="vnstat">
+                <i class="icon fa-solid fa-network-wired" style="color: #a78bfa;"></i>
+                <div class="info">
+                    <span class="title">vnStat</span>
+                    <span class="subtitle">vnstat.sub.example.org</span>
+                </div>
+            </a>
+        </div>
 
-                UF -->|Beast Port 30005| PIA
-                PIA --- PIASTAT
-                UF -->|Beast Port 30005| FR24
-                UF -->|Beast Port 30005| PF
-                UF -->|Beast Port 30005| ANR
-                UF -->|Beast Port 30005| PW
-                TAR -->|aircraft.json| FENCE
-            end
+        <!-- COLUMN 2: LOCAL SERVER -->
+        <div class="column">
+            <h2><i class="fa-solid fa-server"></i> Server Stack</h2>
+            
+            <a href="https://piaware.sub.example.org/" target="_blank" class="card" id="piaware" data-targets="cloud_fa">
+                <img src="https://icon.horse/icon/flightaware.com" alt="FA">
+                <div class="info">
+                    <span class="title">PiAware Local</span>
+                    <span class="subtitle">piaware.sub.example.org</span>
+                </div>
+            </a>
 
-            subgraph CLOUD [Commercial Networks]
-                C_FA[FlightAware.com]:::cloud
-                C_FR24[FlightRadar24.com]:::cloud
-                C_PF[PlaneFinder.net]:::cloud
-                C_ANR[AirNavRadar.com]:::cloud
-                C_PW[Plane.Watch]:::cloud
+            <a href="https://piaware-status.sub.example.org/" target="_blank" class="card" id="piawarestat">
+                <i class="icon fa-solid fa-heart-pulse" style="color: #f43f5e;"></i>
+                <div class="info">
+                    <span class="title">PiAware Status</span>
+                    <span class="subtitle">piaware-status.sub.example.org</span>
+                </div>
+            </a>
 
-                PIA -->|Feeds| C_FA
-                FR24 -->|Feeds| C_FR24
-                PF -->|Feeds| C_PF
-                ANR -->|Feeds| C_ANR
-                PW -->|Feeds| C_PW
-            end
+            <a href="https://fr24.sub.example.org/" target="_blank" class="card" id="fr24" data-targets="cloud_fr24">
+                <img src="https://icon.horse/icon/flightradar24.com" alt="FR24">
+                <div class="info">
+                    <span class="title">FR24 Local</span>
+                    <span class="subtitle">fr24.sub.example.org</span>
+                </div>
+            </a>
 
-            subgraph COMMUNITY [Community Aggregators]
-                C_ADSBX[ADS-B Exchange]:::community
-                C_ADSBFI[adsb.fi]:::community
-                C_AIRL[airplanes.live]:::community
-                C_LOL[adsb.lol]:::community
-                C_HUB[ADSBHub.org]:::community
+            <a href="https://planefinder.sub.example.org/" target="_blank" class="card" id="pf" data-targets="cloud_pf">
+                <img src="https://icon.horse/icon/planefinder.net" alt="PF">
+                <div class="info">
+                    <span class="title">PlaneFinder Local</span>
+                    <span class="subtitle">planefinder.sub.example.org</span>
+                </div>
+            </a>
+
+            <a href="#" class="card" id="anr" data-targets="cloud_anr">
+                <img src="https://icon.horse/icon/airnavradar.com" alt="ANR">
+                <div class="info">
+                    <span class="title">AirNav Local</span>
+                    <span class="subtitle">Background Service</span>
+                </div>
+            </a>
+
+            <a href="#" class="card" id="pw" data-targets="cloud_pw">
+                <img src="https://icon.horse/icon/plane.watch" alt="PW">
+                <div class="info">
+                    <span class="title">PlaneWatch Local</span>
+                    <span class="subtitle">Background Service</span>
+                </div>
+            </a>
+
+            <a href="https://planefence.sub.example.org/" target="_blank" class="card" id="planefence">
+                <i class="icon fa-solid fa-shield-halved" style="color: #22d3ee;"></i>
+                <div class="info">
+                    <span class="title">PlaneFence</span>
+                    <span class="subtitle">planefence.sub.example.org</span>
+                </div>
+            </a>
+        </div>
+
+        <!-- COLUMN 3: CLOUD WEB -->
+        <div class="column">
+            <h2><i class="fa-solid fa-globe"></i> Web Output</h2>
+            
+            <div class="sub-category">Commercial Networks</div>
+            
+            <a href="https://www.flightaware.com/" target="_blank" class="card" id="cloud_fa">
+                <img src="https://icon.horse/icon/flightaware.com" alt="FA">
+                <div class="info">
+                    <span class="title">FlightAware</span>
+                    <span class="subtitle">flightaware.com</span>
+                </div>
+            </a>
+
+            <a href="https://www.flightradar24.com/" target="_blank" class="card" id="cloud_fr24">
+                <img src="https://icon.horse/icon/flightradar24.com" alt="FR24">
+                <div class="info">
+                    <span class="title">FlightRadar24</span>
+                    <span class="subtitle">flightradar24.com</span>
+                </div>
+            </a>
+
+            <a href="https://planefinder.net/" target="_blank" class="card" id="cloud_pf">
+                <img src="https://icon.horse/icon/planefinder.net" alt="PF">
+                <div class="info">
+                    <span class="title">PlaneFinder</span>
+                    <span class="subtitle">planefinder.net</span>
+                </div>
+            </a>
+
+            <a href="https://www.airnavradar.com/" target="_blank" class="card" id="cloud_anr">
+                <img src="https://icon.horse/icon/airnavradar.com" alt="ANR">
+                <div class="info">
+                    <span class="title">AirNav Radar</span>
+                    <span class="subtitle">airnavradar.com</span>
+                </div>
+            </a>
+
+            <a href="https://atc.plane.watch/" target="_blank" class="card" id="cloud_pw">
+                <img src="https://icon.horse/icon/plane.watch" alt="PW">
+                <div class="info">
+                    <span class="title">Plane.Watch</span>
+                    <span class="subtitle">atc.plane.watch</span>
+                </div>
+            </a>
+
+            <div class="sub-category">Community Aggregators</div>
+
+            <a href="https://account.adsbexchange.com/" target="_blank" class="card" id="adsbx">
+                <img src="https://icon.horse/icon/adsbexchange.com" alt="ADSBX">
+                <div class="info">
+                    <span class="title">ADS-B Exchange</span>
+                    <span class="subtitle">account.adsbexchange.com</span>
+                </div>
+            </a>
+
+            <a href="https://www.adsbhub.org/" target="_blank" class="card" id="adsbhub">
+                <img src="https://icon.horse/icon/adsbhub.org" alt="HUB">
+                <div class="info">
+                    <span class="title">ADS-B Hub</span>
+                    <span class="subtitle">adsbhub.org</span>
+                </div>
+            </a>
+
+            <a href="https://adsb.fi/" target="_blank" class="card" id="adsbfi">
+                <img src="https://icon.horse/icon/adsb.fi" alt="FI">
+                <div class="info">
+                    <span class="title">adsb.fi</span>
+                    <span class="subtitle">adsb.fi</span>
+                </div>
+            </a>
+
+            <a href="https://airplanes.live/" target="_blank" class="card" id="airplanes">
+                <img src="https://icon.horse/icon/airplanes.live" alt="AL">
+                <div class="info">
+                    <span class="title">airplanes.live</span>
+                    <span class="subtitle">airplanes.live</span>
+                </div>
+            </a>
+
+            <a href="https://adsb.lol/" target="_blank" class="card" id="adsblol">
+                <img src="https://icon.horse/icon/adsb.lol" alt="LOL">
+                <div class="info">
+                    <span class="title">adsb.lol</span>
+                    <span class="subtitle">adsb.lol</span>
+                </div>
+            </a>
+
+        </div>
+    </div>
+
+    <script>
+        let lineObjects =[];
+
+        function drawLines() {
+            // Remove existing lines on resize
+            lineObjects.forEach(l => l.line.remove());
+            lineObjects =
+const sources = document.querySelectorAll('[data-targets]');
+            
+            // Default styling for the drawn connections
+            const lineOptions = {
+                color: 'rgba(148, 163, 184, 0.15)', // Idle line color
+                size: 3,
+                path: 'fluid',
+                startSocket: 'right',
+                endSocket: 'left',
+                dropShadow: true,
+                hide: true // Start hidden to animate them in
+            };
+
+            // If we are on mobile (stacked layout), the lines should flow top-to-bottom instead of left-to-right
+            if (window.innerWidth <= 1024) {
+                lineOptions.startSocket = 'bottom';
+                lineOptions.endSocket = 'top';
+            }
+
+            sources.forEach(source => {
+                const targets = source.getAttribute('data-targets').split(',');
                 
-                UF -->|Direct Feed| C_ADSBX
-                UF -->|Direct Feed| C_ADSBFI
-                UF -->|Direct Feed| C_AIRL
-                UF -->|Direct Feed| C_LOL
-                UF -->|SBS Port 30003| C_HUB
-            end
+                targets.forEach(targetId => {
+                    const targetEl = document.getElementById(targetId.trim());
+                    if (targetEl) {
+                        const line = new LeaderLine(source, targetEl, lineOptions);
+                        
+                        lineObjects.push({
+                            sourceId: source.id,
+                            targetId: targetEl.id,
+                            line: line
+                        });
+                        
+                        // Fade/draw the lines in nicely on load
+                        line.show('draw', {duration: 800, timing: 'ease-out'});
+                    }
+                });
+            });
+        }
 
-            %% -- CLICKABLE LINKS BINDING --
+        // Set up the Hover Interactions
+        const cards = document.querySelectorAll('.card');
+        
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                // 1. Dim all lines to make the active ones pop
+                lineObjects.forEach(obj => {
+                    obj.line.setOptions({
+                        color: 'rgba(148, 163, 184, 0.05)',
+                        size: 2,
+                        zIndex: 1,
+                        dash: false
+                    });
+                });
+                
+                // 2. Highlight lines connected to the hovered card
+                lineObjects.forEach(obj => {
+                    if (obj.sourceId === card.id || obj.targetId === card.id) {
+                        obj.line.setOptions({
+                            color: 'rgba(56, 189, 248, 0.9)', // Bright blue
+                            size: 4,
+                            zIndex: 100,
+                            dash: {animation: true} // Creates a "flowing data" effect
+                        });
+                    }
+                });
+            });
 
-            %% Pi Links
-            click TAR "https://tar1090.sub.example.org/" "Open Map"
-            click GRA "https://tar1090.sub.example.org/graphs1090/" "Open Statistics"
-            click VNS "https://vnstat.sub.example.org/" "Open Pi Network Stats"
-
-            %% Server Links
-            click PIA "https://piaware.sub.example.org/" "Open PiAware Local Map"
-            click PIASTAT "https://piaware-status.sub.example.org/" "Open PiAware Status"
-            click PF "https://planefinder.sub.example.org/" "Open PlaneFinder Local"
-            click FR24 "https://fr24.sub.example.org/" "Open FR24 Local"
-            click FENCE "https://planefence.sub.example.org/" "Open PlaneFence"
-
-            %% Cloud Commercial Links
-            click C_FA "https://www.flightaware.com/" "Open FlightAware"
-            click C_FR24 "https://www.flightradar24.com/" "Open FlightRadar24"
-            click C_PF "https://planefinder.net/" "Open PlaneFinder"
-            click C_ANR "https://www.airnavradar.com/" "Open AirNav"
-            click C_PW "https://atc.plane.watch/" "Open Plane.Watch"
-
-            %% Community Links
-            click C_ADSBX "https://account.adsbexchange.com/" "Open ADSBExchange"
-            click C_ADSBFI "https://adsb.fi/" "Open adsb.fi"
-            click C_AIRL "https://airplanes.live/" "Open airplanes.live"
-            click C_LOL "https://adsb.lol/" "Open adsb.lol"
-            click C_HUB "https://www.adsbhub.org/" "Open ADSB Hub"
-    </pre>
-
-    <!-- Load Mermaid.js from CDN -->
-    <script type="module">
-        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
-        mermaid.initialize({ 
-            startOnLoad: true, 
-            theme: 'dark',
-            securityLevel: 'loose', /* Required to allow clickable links */
-            flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' }
+            card.addEventListener('mouseleave', () => {
+                // Reset all lines back to normal when the mouse leaves
+                lineObjects.forEach(obj => {
+                    obj.line.setOptions({
+                        color: 'rgba(148, 163, 184, 0.15)',
+                        size: 3,
+                        zIndex: 1,
+                        dash: false
+                    });
+                });
+            });
         });
+
+        // Initialize drawing after a short delay so fonts and images finish loading (prevents misaligned lines)
+        window.addEventListener('load', () => {
+            setTimeout(drawLines, 200);
+        });
+
+        // LeaderLine needs to recalculate positions if the window is resized
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            // Debounce the resize so it doesn't lag
+            resizeTimer = setTimeout(drawLines, 200);
+        });
+        
+        // Reposition lines if the user scrolls down the page
+        window.addEventListener('scroll', () => {
+            lineObjects.forEach(obj => obj.line.position());
+        });
+
     </script>
 </body>
 </html>
