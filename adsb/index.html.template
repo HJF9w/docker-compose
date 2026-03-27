@@ -142,6 +142,13 @@
                         <span class="subtitle">planefinder.${LOCAL_DOMAIN}</span>
                     </div>
                 </a>
+                <a href="#" target="_blank" class="card" id="anr">
+                    <img src="https://icon.horse/icon/airnavradar.com" alt="ANR">
+                    <div class="info">
+                        <span class="title">AirNav Radar</span>
+                        <span class="subtitle">No GUI</span>
+                    </div>
+                </a>
             </div>
 
             <!-- COLUMN 3: Cloud -->
@@ -161,7 +168,7 @@
                         <span class="subtitle">flightaware.com</span>
                     </div>
                 </a>
-                <a href="https://www.flightradar24.com/" target="_blank" class="card" id="fr24cloud">
+                <a href="https://www.flightradar24.com/account/feed-stats/?id=80156" target="_blank" class="card" id="fr24cloud">
                     <img src="https://icon.horse/icon/flightradar24.com" alt="FR24">
                     <div class="info">
                         <span class="title">FlightRadar24</span>
@@ -211,6 +218,13 @@
                         <span class="subtitle">atc.plane.watch</span>
                     </div>
                 </a>
+                <a href="https://www.airnavradar.com/stations/EXTRPI701493" target="_blank" class="card" id="airnavradar">
+                    <img src="https://icon.horse/icon/airnavradar.com" alt="ANR">
+                    <div class="info">
+                        <span class="title">AirNav Radar</span>
+                        <span class="subtitle">airnavradar.com</span>
+                    </div>
+                </a>
             </div>
         </div>
     </div>
@@ -223,7 +237,7 @@
             { from: 'piaware', to: 'piawarestat' }, { from: 'fr24', to: 'fr24cloud' },
             { from: 'pf', to: 'pfcloud' }, { from: 'tar', to: 'planefence' },
             { from: 'uf', to: 'adsbx', bypass: true }, { from: 'uf', to: 'adsbfi', bypass: true },
-            { from: 'uf', to: 'airplanes', bypass: true }, { from: 'uf', to: 'adsbhub', bypass: true }, { from: 'uf', to: 'planewatch', bypass: true }
+            { from: 'uf', to: 'airplanes', bypass: true }, { from: 'uf', to: 'adsbhub', bypass: true }, { from: 'uf', to: 'planewatch', bypass: true }, { from: 'uf', to: 'anr', bypass: true }, { from: 'anr', to: 'airnavradar', bypass: true }
         ];
 
         function drawLines() {
