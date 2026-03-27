@@ -197,11 +197,18 @@
                         <span class="subtitle">airplanes.live</span>
                     </div>
                 </a>
-                <a href="https://www.adsbhub.org/" target="_blank" class="card" id="adsbhub">
+                <a href="https://www.adsbhub.org/setting.php" target="_blank" class="card" id="adsbhub">
                     <img src="https://icon.horse/icon/adsbhub.org" alt="HUB">
                     <div class="info">
                         <span class="title">ADS-B Hub</span>
                         <span class="subtitle">adsbhub.org</span>
+                    </div>
+                </a>
+                <a href="https://atc.plane.watch/feeders/1861" target="_blank" class="card" id="planewatch">
+                    <img src="https://icon.horse/icon/plane.watch" alt="HUB">
+                    <div class="info">
+                        <span class="title">Plane.Watch</span>
+                        <span class="subtitle">atc.plane.watch</span>
                     </div>
                 </a>
             </div>
@@ -216,7 +223,7 @@
             { from: 'piaware', to: 'piawarestat' }, { from: 'fr24', to: 'fr24cloud' },
             { from: 'pf', to: 'pfcloud' }, { from: 'tar', to: 'planefence' },
             { from: 'uf', to: 'adsbx', bypass: true }, { from: 'uf', to: 'adsbfi', bypass: true },
-            { from: 'uf', to: 'airplanes', bypass: true }, { from: 'uf', to: 'adsbhub', bypass: true }
+            { from: 'uf', to: 'airplanes', bypass: true }, { from: 'uf', to: 'adsbhub', bypass: true }, { from: 'uf', to: 'planewatch', bypass: true }
         ];
 
         function drawLines() {
