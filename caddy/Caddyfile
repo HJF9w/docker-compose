@@ -119,10 +119,10 @@
         }
         @tar1090 host tar1090.adsb.ioui.eu
         handle @tar1090 {
-            reverse_proxy adsb.ioui.eu:8080
+            reverse_proxy feed.adsb.ioui.eu:8080
         }
         @vnstat host vnstat.adsb.ioui.eu
         handle @vnstat {
-            reverse_proxy adsb.ioui.eu:8685
+            reverse_proxy feed.adsb.ioui.eu:8685
         }
 }
