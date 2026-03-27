@@ -82,17 +82,20 @@
             display: flex;
             flex-direction: row;
             justify-content: space-between;
-            gap: 120px; /* Provides wide space for flowchart curves */
+            gap: 120px; 
         }
 
         .col {
             display: flex;
             flex-direction: column;
-            justify-content: center; /* Vertically centers the nodes */
+            justify-content: flex-start; /* Aligns items to top so lines can pass underneath */
             gap: 20px;
             flex: 1;
             max-width: 350px;
         }
+
+        /* Pushes the first column down so Ultrafeeder sits vertically centered */
+        #col-hub { padding-top: 140px; }
 
         .col-title {
             text-align: center;
@@ -172,6 +175,7 @@
                 gap: 80px;
             }
             .col { max-width: 100%; width: 90%; }
+            #col-hub { padding-top: 0; }
             .card { padding: 20px; gap: 20px; }
             .title { font-size: 1.4rem; }
             .subtitle { font-size: 1rem; }
@@ -181,7 +185,6 @@
 </head>
 <body>
 
-    <!-- Canvas for SVG Flowchart Lines -->
     <svg id="canvas-container"></svg>
 
     <div class="wrapper">
@@ -204,7 +207,7 @@
                     </div>
                 </a>
 
-                <a href="https://vnstat.${LOCAL_DOMAIN}/" target="_blank" class="card" id="vnstat">
+                <a href="https://vnstat.sub.example.org/" target="_blank" class="card" id="vnstat">
                     <i class="icon fa-solid fa-network-wired" style="color: #a78bfa;"></i>
                     <div class="info">
                         <span class="title">vnStat</span>
@@ -217,15 +220,15 @@
             <div class="col" id="col-proc">
                 <div class="col-title"><i class="fa-solid fa-server"></i> Local Render & Feeders</div>
                 
-                <a href="https://tar1090.${LOCAL_DOMAIN}/" target="_blank" class="card" id="tar">
+                <a href="https://tar1090.sub.example.org/" target="_blank" class="card" id="tar">
                     <i class="icon fa-solid fa-map-location-dot" style="color: #60a5fa;"></i>
                     <div class="info">
                         <span class="title">tar1090 Map</span>
-                        <span class="subtitle">tar1090.${LOCAL_DOMAIN}</span>
+                        <span class="subtitle">tar1090.sub.example.org</span>
                     </div>
                 </a>
 
-                <a href="https://tar1090.${LOCAL_DOMAIN}/graphs1090/" target="_blank" class="card" id="graphs">
+                <a href="https://tar1090.sub.example.org/graphs1090/" target="_blank" class="card" id="graphs">
                     <i class="icon fa-solid fa-chart-line" style="color: #fbbf24;"></i>
                     <div class="info">
                         <span class="title">graphs1090</span>
@@ -235,15 +238,15 @@
 
                 <div class="separator"><span>SERVER DOCKERS</span></div>
 
-                <a href="https://piaware.${LOCAL_DOMAIN}/" target="_blank" class="card" id="piaware">
+                <a href="https://piaware.sub.example.org/" target="_blank" class="card" id="piaware">
                     <img src="https://icon.horse/icon/flightaware.com" alt="FA">
                     <div class="info">
                         <span class="title">PiAware Local</span>
-                        <span class="subtitle">piaware.${LOCAL_DOMAIN}</span>
+                        <span class="subtitle">piaware.sub.example.org</span>
                     </div>
                 </a>
 
-                <a href="https://piaware-status.${LOCAL_DOMAIN}/" target="_blank" class="card" id="piawarestat">
+                <a href="https://piaware-status.sub.example.org/" target="_blank" class="card" id="piawarestat">
                     <i class="icon fa-solid fa-heart-pulse" style="color: #f43f5e;"></i>
                     <div class="info">
                         <span class="title">PiAware Status</span>
@@ -251,19 +254,19 @@
                     </div>
                 </a>
 
-                <a href="https://fr24.${LOCAL_DOMAIN}/" target="_blank" class="card" id="fr24">
+                <a href="https://fr24.sub.example.org/" target="_blank" class="card" id="fr24">
                     <img src="https://icon.horse/icon/flightradar24.com" alt="FR24">
                     <div class="info">
                         <span class="title">FR24 Local</span>
-                        <span class="subtitle">fr24.${LOCAL_DOMAIN}</span>
+                        <span class="subtitle">fr24.sub.example.org</span>
                     </div>
                 </a>
 
-                <a href="https://planefinder.${LOCAL_DOMAIN}/" target="_blank" class="card" id="pf">
+                <a href="https://planefinder.sub.example.org/" target="_blank" class="card" id="pf">
                     <img src="https://icon.horse/icon/planefinder.net" alt="PF">
                     <div class="info">
                         <span class="title">PlaneFinder Local</span>
-                        <span class="subtitle">planefinder.${LOCAL_DOMAIN}</span>
+                        <span class="subtitle">planefinder.sub.example.org</span>
                     </div>
                 </a>
             </div>
@@ -272,11 +275,11 @@
             <div class="col" id="col-cloud">
                 <div class="col-title"><i class="fa-solid fa-cloud"></i> Public Networks</div>
                 
-                <a href="https://planefence.${LOCAL_DOMAIN}/" target="_blank" class="card" id="planefence">
+                <a href="https://planefence.sub.example.org/" target="_blank" class="card" id="planefence">
                     <i class="icon fa-solid fa-shield-halved" style="color: #22d3ee;"></i>
                     <div class="info">
                         <span class="title">PlaneFence Logs</span>
-                        <span class="subtitle">planefence.${LOCAL_DOMAIN}</span>
+                        <span class="subtitle">planefence.sub.example.org</span>
                     </div>
                 </a>
 
@@ -342,139 +345,127 @@
         </div>
     </div>
 
-    <!-- NATIVE VANILLA JS ENGINE - NO DEPENDENCIES -->
+    <!-- NATIVE VANILLA JS ENGINE -->
     <script>
-    // Define all flowchart connections
-    const connections = [
-        { from: 'uf', to: 'tar' },
-        { from: 'uf', to: 'graphs' },
-        { from: 'uf', to: 'piaware' },
-        { from: 'uf', to: 'fr24' },
-        { from: 'uf', to: 'pf' },
-        { from: 'piaware', to: 'piawarestat' },
-        { from: 'piaware', to: 'fa' },
-        { from: 'fr24', to: 'fr24cloud' },
-        { from: 'pf', to: 'pfcloud' },
-        { from: 'tar', to: 'planefence' },
-        { from: 'uf', to: 'adsbx' },
-        { from: 'uf', to: 'adsbfi' },
-        { from: 'uf', to: 'airplanes' },
-        { from: 'uf', to: 'adsbhub' }
-    ];
+        // Notice the bypass flag on the community feeds!
+        const connections =[
+            { from: 'uf', to: 'tar' },
+            { from: 'uf', to: 'graphs' },
+            { from: 'uf', to: 'piaware' },
+            { from: 'uf', to: 'fr24' },
+            { from: 'uf', to: 'pf' },
+            { from: 'piaware', to: 'fa' },
+            { from: 'fr24', to: 'fr24cloud' },
+            { from: 'pf', to: 'pfcloud' },
+            { from: 'tar', to: 'planefence' },
+            { from: 'uf', to: 'adsbx', bypass: true },
+            { from: 'uf', to: 'adsbfi', bypass: true },
+            { from: 'uf', to: 'airplanes', bypass: true },
+            { from: 'uf', to: 'adsbhub', bypass: true }
+        ];
 
-    function drawLines() {
-        const svg = document.getElementById('canvas-container');
-        svg.innerHTML = ''; 
-        
-        svg.style.height = document.documentElement.scrollHeight + 'px';
-        const isMobile = window.innerWidth <= 1024;
+        function drawLines() {
+            const svg = document.getElementById('canvas-container');
+            svg.innerHTML = ''; 
+            
+            // Extend SVG height to cover full page
+            svg.style.height = document.documentElement.scrollHeight + 'px';
+            const isMobile = window.innerWidth <= 1024;
 
-        const colProc = document.getElementById('col-proc');
-        let colProcRect = colProc ? colProc.getBoundingClientRect() : null;
+            connections.forEach(conn => {
+                const el1 = document.getElementById(conn.from);
+                const el2 = document.getElementById(conn.to);
+                if (!el1 || !el2) return;
 
-        connections.forEach(conn => {
-            const el1 = document.getElementById(conn.from);
-            const el2 = document.getElementById(conn.to);
-            if (!el1 || !el2) return;
+                const rect1 = el1.getBoundingClientRect();
+                const rect2 = el2.getBoundingClientRect();
+                const scrollX = window.scrollX;
+                const scrollY = window.scrollY;
 
-            const rect1 = el1.getBoundingClientRect();
-            const rect2 = el2.getBoundingClientRect();
-            const scrollX = window.scrollX;
-            const scrollY = window.scrollY;
+                let x1, y1, x2, y2, cp1x, cp1y, cp2x, cp2y;
 
-            let x1, y1, x2, y2, cp1x, cp1y, cp2x, cp2y;
-
-            if (isMobile) {
-                // Mobile Top-to-Bottom
-                x1 = rect1.left + rect1.width / 2 + scrollX;
-                y1 = rect1.bottom + scrollY;
-                x2 = rect2.left + rect2.width / 2 + scrollX;
-                y2 = rect2.top + scrollY;
-                
-                const distance = Math.abs(y2 - y1) * 0.4;
-                cp1x = x1; cp1y = y1 + distance;
-                cp2x = x2; cp2y = y2 - distance;
-            } else {
-                // Desktop Left-to-Right
-                x1 = rect1.right + scrollX;
-                y1 = rect1.top + rect1.height / 2 + scrollY;
-                x2 = rect2.left + scrollX;
-                y2 = rect2.top + rect2.height / 2 + scrollY;
-
-                // Check if the line skips Column 2 to go directly to Column 3
-                const isLongJump = colProcRect && (rect1.right < colProcRect.left && rect2.left > colProcRect.right);
-
-                if (isLongJump) {
-                    // Deep dip under Column 2 to bypass all middle buttons
-                    const dipY = colProcRect.bottom + scrollY + 40; 
+                if (isMobile) {
+                    // Mobile Portrait Layout
+                    x1 = rect1.left + rect1.width / 2 + scrollX;
+                    y1 = rect1.bottom + scrollY;
+                    x2 = rect2.left + rect2.width / 2 + scrollX;
+                    y2 = rect2.top + scrollY;
                     
-                    // Route perfectly down the center of the open gutters
-                    cp1x = x1 + (colProcRect.left - x1) / 2;
-                    cp1y = dipY;
-                    cp2x = colProcRect.right + (x2 - colProcRect.right) / 2;
-                    cp2y = dipY;
+                    const distance = Math.abs(y2 - y1) * 0.4;
+                    cp1x = x1; cp1y = y1 + distance;
+                    cp2x = x2; cp2y = y2 - distance;
                 } else {
-                    // Standard adjacent curve
-                    const distance = Math.abs(x2 - x1) * 0.5;
-                    cp1x = x1 + distance;
-                    cp1y = y1;
-                    cp2x = x2 - distance;
-                    cp2y = y2;
+                    // Desktop Landscape Layout
+                    x1 = rect1.right + scrollX;
+                    y1 = rect1.top + rect1.height / 2 + scrollY;
+                    x2 = rect2.left + scrollX;
+                    y2 = rect2.top + rect2.height / 2 + scrollY;
+                    
+                    if (conn.bypass) {
+                        // "Waterfall Routing" - dives down into the gap before moving right to avoid the middle column
+                        cp1x = x1 + 60;   
+                        cp1y = y2;        
+                        cp2x = x2 - 80;   
+                        cp2y = y2;
+                    } else {
+                        // Standard smooth horizontal curve
+                        const distance = Math.abs(x2 - x1) * 0.5;
+                        cp1x = x1 + distance; cp1y = y1;
+                        cp2x = x2 - distance; cp2y = y2;
+                    }
                 }
-            }
 
-            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-            path.setAttribute('d', `M ${x1} ${y1} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${x2} ${y2}`);
-            path.setAttribute('class', `line line-from-${conn.from} line-to-${conn.to}`);
-            path.dataset.from = conn.from;
-            path.dataset.to = conn.to;
-            svg.appendChild(path);
-        });
-    }
+                // Draw curve
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                path.setAttribute('d', `M ${x1} ${y1} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${x2} ${y2}`);
+                path.setAttribute('class', `line line-from-${conn.from} line-to-${conn.to}`);
+                path.dataset.from = conn.from;
+                path.dataset.to = conn.to;
+                svg.appendChild(path);
+            });
+        }
 
-    // --- Hover Tracking System ---
-    function highlightPaths(nodeId, direction) {
-        connections.forEach(conn => {
-            if (direction === 'forward' && conn.from === nodeId) {
-                const path = document.querySelector(`.line-from-${conn.from}.line-to-${conn.to}`);
-                if (path) path.classList.add('active');
-                highlightPaths(conn.to, 'forward');
-            }
-            if (direction === 'backward' && conn.to === nodeId) {
-                const path = document.querySelector(`.line-from-${conn.from}.line-to-${conn.to}`);
-                if (path) path.classList.add('active');
-                highlightPaths(conn.from, 'backward');
-            }
-        });
-    }
+        // --- Recursive Hover Tracking System ---
+        function highlightPaths(nodeId, direction) {
+            connections.forEach(conn => {
+                if (direction === 'forward' && conn.from === nodeId) {
+                    const path = document.querySelector(`.line-from-${conn.from}.line-to-${conn.to}`);
+                    if(path) path.classList.add('active');
+                    highlightPaths(conn.to, 'forward');
+                }
+                if (direction === 'backward' && conn.to === nodeId) {
+                    const path = document.querySelector(`.line-from-${conn.from}.line-to-${conn.to}`);
+                    if(path) path.classList.add('active');
+                    highlightPaths(conn.from, 'backward');
+                }
+            });
+        }
 
-    document.querySelectorAll('.card').forEach(card => {
-        card.addEventListener('mouseenter', () => {
-            document.querySelectorAll('.line').forEach(l => l.style.opacity = '0.1');
-            highlightPaths(card.id, 'forward');
-            highlightPaths(card.id, 'backward');
-        });
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                // Dim all lines first
+                document.querySelectorAll('.line').forEach(l => l.style.opacity = '0.1');
+                // Recursively light up the path
+                highlightPaths(card.id, 'forward');
+                highlightPaths(card.id, 'backward');
+            });
 
-        card.addEventListener('mouseleave', () => {
-            document.querySelectorAll('.line').forEach(l => {
-                l.classList.remove('active');
-                l.style.opacity = '1';
+            card.addEventListener('mouseleave', () => {
+                // Reset everything to normal
+                document.querySelectorAll('.line').forEach(l => {
+                    l.classList.remove('active');
+                    l.style.opacity = '1';
+                });
             });
         });
-    });
 
-    window.addEventListener('load', () => setTimeout(drawLines, 200));
-    
-    let resizeTimer;
-    window.addEventListener('resize', () => {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(drawLines, 200);
-    });
-
-    window.addEventListener('scroll', () => {
-        // Redraw lines to ensure they track correctly during vertical scrolls
-        drawLines(); 
-    });
-  </script>
+        // Initialize and handle window changes
+        window.addEventListener('load', () => setTimeout(drawLines, 100));
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(drawLines, 100);
+        });
+    </script>
 </body>
 </html>
