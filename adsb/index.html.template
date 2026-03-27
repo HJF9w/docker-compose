@@ -163,6 +163,13 @@
                         <span class="subtitle">No GUI</span>
                     </div>
                 </a>
+                <a href="#" target="_blank" class="card" id="osn">
+                    <img src="https://icon.horse/icon/opensky-network.org" alt="OSN">
+                    <div class="info">
+                        <span class="title">OpenSky Network</span>
+                        <span class="subtitle">No GUI</span>
+                    </div>
+                </a>
             </div>
 
             <!-- COLUMN 3: Cloud -->
@@ -253,7 +260,7 @@
                         <span class="subtitle">planespotters.net</span>
                     </div>
                 </a>
-                <a href="https://theairtraffic.com/" target="_blank" class="card" id="theairtraffic">
+                <a href="https://theairtraffic.com/myip" target="_blank" class="card" id="theairtraffic">
                     <img src="https://icon.horse/icon/theairtraffic.com" alt="TAT">
                     <div class="info">
                         <span class="title">TheAirTraffic</span>
@@ -267,7 +274,7 @@
                         <span class="subtitle">avdelphi.com</span>
                     </div>
                 </a>
-                <a href="https://hpradar.com/" target="_blank" class="card" id="hpradar">
+                <a href="https://skylink.hpradar.com/" target="_blank" class="card" id="hpradar">
                     <img src="https://icon.horse/icon/hpradar.com" alt="HPR">
                     <div class="info">
                         <span class="title">HP Radar</span>
@@ -295,6 +302,13 @@
                         <span class="subtitle">adsbhub.org</span>
                     </div>
                 </a>
+                <a href="https://opensky-network.org/my-opensky/sensors/view-sensors" target="_blank" class="card" id="opensky">
+                    <img src="https://icon.horse/icon/opensky-network.org" alt="OSN">
+                    <div class="info">
+                        <span class="title">OpenSky Network</span>
+                        <span class="subtitle">opensky-network.org</span>
+                    </div>
+                </a>
             </div>
         </div>
     </div>
@@ -314,7 +328,8 @@
             { from: 'uf', to: 'theairtraffic', bypass: true }, { from: 'uf', to: 'avdelphi', bypass: true },
             { from: 'uf', to: 'hpradar', bypass: true }, { from: 'uf', to: 'radarplane', bypass: true },
             { from: 'uf', to: 'flyitalyadsb', bypass: true }, { from: 'uf', to: 'rv', bypass: true },
-            { from: 'rv', to: 'radarvirtuelcloud', bypass: true }
+            { from: 'rv', to: 'radarvirtuelcloud', bypass: true },
+            { from: 'uf', to: 'osn', bypass: true }, { from: 'osn', to: 'opensky', bypass: true }
         ];
 
         function drawLines() {

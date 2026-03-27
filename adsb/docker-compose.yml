@@ -86,6 +86,23 @@ services:
       - /run:exec,size=64M
       - /var/log
 
+  opensky:
+    image: ghcr.io/sdr-enthusiasts/docker-opensky-network:latest-build-823
+    container_name: opensky
+    restart: unless-stopped
+    environment:
+      - BEASTHOST=${PI_IP}
+      - TZ=${FEEDER_TZ}
+      - API_KEY=${PLANEWATCH_KEY}
+      - DEBUG_LOGGING=true
+      - LAT=${FEEDER_LAT}
+      - LONG=${FEEDER_LONG}
+      - ALT=${FEEDER_ALT_FT}ft
+      - OPENSKY_USERNAME=${OPENSKY_USERNAME}
+      - OPENSKY_SERIAL=${OPENSKY_SERIAL}
+    networks:
+      - adsbnet
+
 ##  adsbhub: ## Website not working, couldn't get key
 ##    image: ghcr.io/sdr-enthusiasts/docker-adsbhub:latest-build-517
 ##    container_name: adsbhub
