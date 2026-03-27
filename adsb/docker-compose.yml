@@ -93,15 +93,15 @@ services:
     environment:
       - BEASTHOST=${PI_IP}
       - TZ=${FEEDER_TZ}
-      - API_KEY=${PLANEWATCH_KEY}
       - DEBUG_LOGGING=true
       - LAT=${FEEDER_LAT}
       - LONG=${FEEDER_LONG}
-      - ALT=${FEEDER_ALT_FT}ft
+      - ALT=${FEEDER_ALT}
       - OPENSKY_USERNAME=${OPENSKY_USERNAME}
       - OPENSKY_SERIAL=${OPENSKY_SERIAL}
-    networks:
-      - adsbnet
+    tmpfs:
+      - /run:exec,size=64M
+      - /var/log
 
 ##  adsbhub: ## Website not working, couldn't get key
 ##    image: ghcr.io/sdr-enthusiasts/docker-adsbhub:latest-build-517
