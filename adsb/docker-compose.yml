@@ -101,3 +101,16 @@ services:
        - RATE_UNIT=0
        - PAGE_REFRESH=0
        - SERVER_NAME="ADSB Pi IO Stats"
+
+  # ----------------------------------------------------------------------
+  # LINK DASHBOARD
+  # ----------------------------------------------------------------------
+  dashboard:
+    image: b4bz/homer:v24.05.1
+    container_name: adsb_dashboard
+    restart: unless-stopped
+    networks:
+      - caddy_to_adsb
+    volumes:
+      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/dashboard/assets:/www/assets:z
+      - ./config.yml:/www/assets/config.yml:z
