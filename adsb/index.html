@@ -3,457 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADS-B Tracking Hub</title>
-    
-    <!-- FontAwesome for UI Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <title>ADS-B Topology Dashboard</title>
     <style>
-        :root {
-            --bg: #0b1120;
-            --card-bg: rgba(30, 41, 59, 0.9);
-            --card-border: #334155;
-            --text-main: #f8fafc;
-            --text-sub: #94a3b8;
-            --accent-hover: #38bdf8;
-            --line-idle: rgba(100, 116, 139, 0.25);
-            --line-active: #0ea5e9;
-        }
-
-        * { box-sizing: border-box; }
-
         body {
+            background-color: #0f172a; /* Dark slate background */
+            color: #f8fafc;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
-            background: var(--bg);
-            background-image: radial-gradient(circle at top, #1e293b, var(--bg));
-            color: var(--text-main);
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* SVG Canvas for drawing flowchart lines */
-        #canvas-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .line {
-            fill: none;
-            stroke: var(--line-idle);
-            stroke-width: 2px;
-            transition: stroke 0.3s, stroke-width 0.3s, opacity 0.3s;
-        }
-
-        .line.active {
-            stroke: var(--line-active);
-            stroke-width: 3px;
-            stroke-dasharray: 8 6;
-            animation: flow 0.6s linear infinite;
-            z-index: 100;
-        }
-
-        @keyframes flow {
-            to { stroke-dashoffset: -14; }
-        }
-
-        /* Dashboard Layout */
-        .wrapper {
-            position: relative;
-            z-index: 2;
-            padding: 40px 20px;
-            max-width: 1600px;
-            margin: 0 auto;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 60px;
-        }
-        .header h1 { margin: 0; font-size: 2.5rem; color: #fff; }
-        .header p { color: var(--text-sub); }
-
-        .dashboard {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            gap: 120px; /* Provides wide space for flowchart curves */
-        }
-
-        .col {
+            padding: 20px;
             display: flex;
             flex-direction: column;
-            justify-content: center; /* Vertically centers the nodes */
-            gap: 20px;
-            flex: 1;
-            max-width: 350px;
-        }
-
-        .col-title {
-            text-align: center;
-            font-size: 1.1rem;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: var(--text-sub);
-            border-bottom: 2px solid var(--card-border);
-            padding-bottom: 10px;
-            margin-bottom: 10px;
-        }
-
-        /* Card Styling */
-        .card {
-            display: flex;
             align-items: center;
-            gap: 15px;
-            background: var(--card-bg);
-            padding: 15px;
+        }
+        h1 { margin-bottom: 5px; color: #38bdf8; }
+        p { color: #94a3b8; margin-bottom: 30px; }
+        .mermaid {
+            background-color: #1e293b;
+            padding: 20px;
             border-radius: 12px;
-            border: 1px solid var(--card-border);
-            text-decoration: none;
-            color: var(--text-main);
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2);
-            position: relative;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+            width: 95%;
+            max-width: 1400px;
+            overflow-x: auto;
         }
-
-        .card:hover {
-            transform: scale(1.05);
-            border-color: var(--accent-hover);
-            background: rgba(30, 41, 59, 1);
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3);
-            z-index: 10;
-        }
-
-        .card img {
-            width: 38px;
-            height: 38px;
-            border-radius: 8px;
-            object-fit: contain;
-            background: white;
-            padding: 3px;
-        }
-
-        .card i.icon {
-            font-size: 26px;
-            width: 38px;
-            text-align: center;
-            color: #cbd5e1;
-        }
-
-        .info { display: flex; flex-direction: column; }
-        .title { font-size: 1.1rem; font-weight: 600; }
-        .subtitle { font-size: 0.8rem; color: var(--text-sub); margin-top: 2px;}
-
-        .separator {
-            height: 20px;
-            border-bottom: 1px dashed var(--card-border);
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        .separator span {
-            background: var(--bg);
-            padding: 0 10px;
-            font-size: 0.8rem;
-            color: #64748b;
-            position: relative;
-            top: 10px;
-        }
-
-        /* Mobile Adjustments */
-        @media (max-width: 1024px) {
-            .dashboard {
-                flex-direction: column;
-                align-items: center;
-                gap: 80px;
-            }
-            .col { max-width: 100%; width: 90%; }
-            .card { padding: 20px; gap: 20px; }
-            .title { font-size: 1.4rem; }
-            .subtitle { font-size: 1rem; }
-            .card img, .card i.icon { width: 50px; height: 50px; font-size: 34px; }
-        }
+        /* Make cursor a pointer so it's obvious they are links */
+        .node { cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <!-- Canvas for SVG Flowchart Lines -->
-    <svg id="canvas-container"></svg>
+    <h1>ADS-B Network Topology</h1>
+    <p>Click any node to open its Web UI or Cloud Account.</p>
 
-    <div class="wrapper">
-        <div class="header">
-            <h1>ADS-B Flowchart</h1>
-            <p>Hover over any card to trace the live data flow.</p>
-        </div>
+    <!-- The Mermaid Diagram Definition -->
+    <pre class="mermaid">
+        graph LR
+            %% Styling classes
+            classDef pi fill:#065f46,stroke:#34d399,stroke-width:2px,color:#fff;
+            classDef server fill:#1e3a8a,stroke:#60a5fa,stroke-width:2px,color:#fff;
+            classDef cloud fill:#4c1d95,stroke:#a78bfa,stroke-width:2px,color:#fff;
+            classDef community fill:#701a75,stroke:#f472b6,stroke-width:2px,color:#fff;
 
-        <div class="dashboard">
-            
-            <!-- COLUMN 1: Hardware Hub -->
-            <div class="col" id="col-hub">
-                <div class="col-title"><i class="fa-solid fa-microchip"></i> Source Hardware</div>
+            %% Node definitions and layout
+            subgraph PI[Raspberry Pi Hardware]
+                UF[Ultrafeeder Core]:::pi
+                TAR[tar1090 Map]:::pi
+                GRA[graphs1090]:::pi
+                VNS[vnStat]:::pi
+
+                UF -->|Hosts| TAR
+                UF -->|Hosts| GRA
+            end
+
+            subgraph SERVER[Server Docker Stack]
+                PIA[PiAware Local]:::server
+                PIASTAT[PiAware Status]:::server
+                FR24[FR24 Local Status]:::server
+                PF[PlaneFinder Local]:::server
+                ANR[AirNav Local]:::server
+                PW[PlaneWatch Local]:::server
+                FENCE[PlaneFence]:::server
+
+                UF -->|Beast Port 30005| PIA
+                PIA --- PIASTAT
+                UF -->|Beast Port 30005| FR24
+                UF -->|Beast Port 30005| PF
+                UF -->|Beast Port 30005| ANR
+                UF -->|Beast Port 30005| PW
+                TAR -->|aircraft.json| FENCE
+            end
+
+            subgraph CLOUD [Commercial Networks]
+                C_FA[FlightAware.com]:::cloud
+                C_FR24[FlightRadar24.com]:::cloud
+                C_PF[PlaneFinder.net]:::cloud
+                C_ANR[AirNavRadar.com]:::cloud
+                C_PW[Plane.Watch]:::cloud
+
+                PIA -->|Feeds| C_FA
+                FR24 -->|Feeds| C_FR24
+                PF -->|Feeds| C_PF
+                ANR -->|Feeds| C_ANR
+                PW -->|Feeds| C_PW
+            end
+
+            subgraph COMMUNITY [Community Aggregators]
+                C_ADSBX[ADS-B Exchange]:::community
+                C_ADSBFI[adsb.fi]:::community
+                C_AIRL[airplanes.live]:::community
+                C_LOL[adsb.lol]:::community
+                C_HUB[ADSBHub.org]:::community
                 
-                <a href="#" class="card" id="uf">
-                    <i class="icon fa-solid fa-satellite-dish" style="color: #34d399;"></i>
-                    <div class="info">
-                        <span class="title">Ultrafeeder</span>
-                        <span class="subtitle">Raspberry Pi Decoder</span>
-                    </div>
-                </a>
+                UF -->|Direct Feed| C_ADSBX
+                UF -->|Direct Feed| C_ADSBFI
+                UF -->|Direct Feed| C_AIRL
+                UF -->|Direct Feed| C_LOL
+                UF -->|SBS Port 30003| C_HUB
+            end
 
-                <a href="https://vnstat.sub.example.org/" target="_blank" class="card" id="vnstat">
-                    <i class="icon fa-solid fa-network-wired" style="color: #a78bfa;"></i>
-                    <div class="info">
-                        <span class="title">vnStat</span>
-                        <span class="subtitle">Hardware Network IO</span>
-                    </div>
-                </a>
-            </div>
+            %% -- CLICKABLE LINKS BINDING --
 
-            <!-- COLUMN 2: Internal Processors -->
-            <div class="col" id="col-proc">
-                <div class="col-title"><i class="fa-solid fa-server"></i> Local Render & Feeders</div>
-                
-                <a href="https://tar1090.sub.example.org/" target="_blank" class="card" id="tar">
-                    <i class="icon fa-solid fa-map-location-dot" style="color: #60a5fa;"></i>
-                    <div class="info">
-                        <span class="title">tar1090 Map</span>
-                        <span class="subtitle">tar1090.sub.example.org</span>
-                    </div>
-                </a>
+            %% Pi Links
+            click TAR "https://tar1090.sub.example.org/" "Open Map"
+            click GRA "https://tar1090.sub.example.org/graphs1090/" "Open Statistics"
+            click VNS "https://vnstat.sub.example.org/" "Open Pi Network Stats"
 
-                <a href="https://tar1090.sub.example.org/graphs1090/" target="_blank" class="card" id="graphs">
-                    <i class="icon fa-solid fa-chart-line" style="color: #fbbf24;"></i>
-                    <div class="info">
-                        <span class="title">graphs1090</span>
-                        <span class="subtitle">Antenna Statistics</span>
-                    </div>
-                </a>
+            %% Server Links
+            click PIA "https://piaware.sub.example.org/" "Open PiAware Local Map"
+            click PIASTAT "https://piaware-status.sub.example.org/" "Open PiAware Status"
+            click PF "https://planefinder.sub.example.org/" "Open PlaneFinder Local"
+            click FR24 "https://fr24.sub.example.org/" "Open FR24 Local"
+            click FENCE "https://planefence.sub.example.org/" "Open PlaneFence"
 
-                <div class="separator"><span>SERVER DOCKERS</span></div>
+            %% Cloud Commercial Links
+            click C_FA "https://www.flightaware.com/" "Open FlightAware"
+            click C_FR24 "https://www.flightradar24.com/" "Open FlightRadar24"
+            click C_PF "https://planefinder.net/" "Open PlaneFinder"
+            click C_ANR "https://www.airnavradar.com/" "Open AirNav"
+            click C_PW "https://atc.plane.watch/" "Open Plane.Watch"
 
-                <a href="https://piaware.sub.example.org/" target="_blank" class="card" id="piaware">
-                    <img src="https://icon.horse/icon/flightaware.com" alt="FA">
-                    <div class="info">
-                        <span class="title">PiAware Local</span>
-                        <span class="subtitle">piaware.sub.example.org</span>
-                    </div>
-                </a>
+            %% Community Links
+            click C_ADSBX "https://account.adsbexchange.com/" "Open ADSBExchange"
+            click C_ADSBFI "https://adsb.fi/" "Open adsb.fi"
+            click C_AIRL "https://airplanes.live/" "Open airplanes.live"
+            click C_LOL "https://adsb.lol/" "Open adsb.lol"
+            click C_HUB "https://www.adsbhub.org/" "Open ADSB Hub"
+    </pre>
 
-                <a href="https://piaware-status.sub.example.org/" target="_blank" class="card" id="piawarestat">
-                    <i class="icon fa-solid fa-heart-pulse" style="color: #f43f5e;"></i>
-                    <div class="info">
-                        <span class="title">PiAware Status</span>
-                        <span class="subtitle">Health Monitor</span>
-                    </div>
-                </a>
-
-                <a href="https://fr24.sub.example.org/" target="_blank" class="card" id="fr24">
-                    <img src="https://icon.horse/icon/flightradar24.com" alt="FR24">
-                    <div class="info">
-                        <span class="title">FR24 Local</span>
-                        <span class="subtitle">fr24.sub.example.org</span>
-                    </div>
-                </a>
-
-                <a href="https://planefinder.sub.example.org/" target="_blank" class="card" id="pf">
-                    <img src="https://icon.horse/icon/planefinder.net" alt="PF">
-                    <div class="info">
-                        <span class="title">PlaneFinder Local</span>
-                        <span class="subtitle">planefinder.sub.example.org</span>
-                    </div>
-                </a>
-            </div>
-
-            <!-- COLUMN 3: Cloud -->
-            <div class="col" id="col-cloud">
-                <div class="col-title"><i class="fa-solid fa-cloud"></i> Public Networks</div>
-                
-                <a href="https://planefence.sub.example.org/" target="_blank" class="card" id="planefence">
-                    <i class="icon fa-solid fa-shield-halved" style="color: #22d3ee;"></i>
-                    <div class="info">
-                        <span class="title">PlaneFence Logs</span>
-                        <span class="subtitle">planefence.sub.example.org</span>
-                    </div>
-                </a>
-
-                <a href="https://www.flightaware.com/" target="_blank" class="card" id="fa">
-                    <img src="https://icon.horse/icon/flightaware.com" alt="FA">
-                    <div class="info">
-                        <span class="title">FlightAware</span>
-                        <span class="subtitle">flightaware.com</span>
-                    </div>
-                </a>
-
-                <a href="https://www.flightradar24.com/" target="_blank" class="card" id="fr24cloud">
-                    <img src="https://icon.horse/icon/flightradar24.com" alt="FR24">
-                    <div class="info">
-                        <span class="title">FlightRadar24</span>
-                        <span class="subtitle">flightradar24.com</span>
-                    </div>
-                </a>
-
-                <a href="https://planefinder.net/" target="_blank" class="card" id="pfcloud">
-                    <img src="https://icon.horse/icon/planefinder.net" alt="PF">
-                    <div class="info">
-                        <span class="title">PlaneFinder Net</span>
-                        <span class="subtitle">planefinder.net</span>
-                    </div>
-                </a>
-
-                <div class="separator"><span>COMMUNITY DIRECT FEEDS</span></div>
-
-                <a href="https://account.adsbexchange.com/" target="_blank" class="card" id="adsbx">
-                    <img src="https://icon.horse/icon/adsbexchange.com" alt="ADSBX">
-                    <div class="info">
-                        <span class="title">ADS-B Exchange</span>
-                        <span class="subtitle">adsbexchange.com</span>
-                    </div>
-                </a>
-
-                <a href="https://adsb.fi/" target="_blank" class="card" id="adsbfi">
-                    <img src="https://icon.horse/icon/adsb.fi" alt="FI">
-                    <div class="info">
-                        <span class="title">adsb.fi</span>
-                        <span class="subtitle">adsb.fi</span>
-                    </div>
-                </a>
-
-                <a href="https://airplanes.live/" target="_blank" class="card" id="airplanes">
-                    <img src="https://icon.horse/icon/airplanes.live" alt="AL">
-                    <div class="info">
-                        <span class="title">airplanes.live</span>
-                        <span class="subtitle">airplanes.live</span>
-                    </div>
-                </a>
-
-                <a href="https://www.adsbhub.org/" target="_blank" class="card" id="adsbhub">
-                    <img src="https://icon.horse/icon/adsbhub.org" alt="HUB">
-                    <div class="info">
-                        <span class="title">ADS-B Hub</span>
-                        <span class="subtitle">adsbhub.org</span>
-                    </div>
-                </a>
-
-            </div>
-        </div>
-    </div>
-
-    <!-- NATIVE VANILLA JS ENGINE - NO DEPENDENCIES -->
-    <script>
-        // Define all flowchart connections
-        const connections =[
-            { from: 'uf', to: 'tar' },
-            { from: 'uf', to: 'graphs' },
-            { from: 'uf', to: 'piaware' },
-            { from: 'uf', to: 'fr24' },
-            { from: 'uf', to: 'pf' },
-            { from: 'piaware', to: 'piawarestat' },
-            { from: 'piaware', to: 'fa' },
-            { from: 'fr24', to: 'fr24cloud' },
-            { from: 'pf', to: 'pfcloud' },
-            { from: 'tar', to: 'planefence' },
-            { from: 'uf', to: 'adsbx' },
-            { from: 'uf', to: 'adsbfi' },
-            { from: 'uf', to: 'airplanes' },
-            { from: 'uf', to: 'adsbhub' }
-        ];
-
-        function drawLines() {
-            const svg = document.getElementById('canvas-container');
-            svg.innerHTML = ''; 
-            
-            // Extend SVG height to cover full page
-            svg.style.height = document.documentElement.scrollHeight + 'px';
-            const isMobile = window.innerWidth <= 1024;
-
-            connections.forEach(conn => {
-                const el1 = document.getElementById(conn.from);
-                const el2 = document.getElementById(conn.to);
-                if (!el1 || !el2) return;
-
-                const rect1 = el1.getBoundingClientRect();
-                const rect2 = el2.getBoundingClientRect();
-                const scrollX = window.scrollX;
-                const scrollY = window.scrollY;
-
-                let x1, y1, x2, y2, cp1x, cp1y, cp2x, cp2y;
-
-                if (isMobile) {
-                    // Draw lines from Bottom to Top (Mobile Portrait)
-                    x1 = rect1.left + rect1.width / 2 + scrollX;
-                    y1 = rect1.bottom + scrollY;
-                    x2 = rect2.left + rect2.width / 2 + scrollX;
-                    y2 = rect2.top + scrollY;
-                    
-                    const distance = Math.abs(y2 - y1) * 0.4;
-                    cp1x = x1; cp1y = y1 + distance;
-                    cp2x = x2; cp2y = y2 - distance;
-                } else {
-                    // Draw lines from Right to Left (Desktop Landscape)
-                    x1 = rect1.right + scrollX;
-                    y1 = rect1.top + rect1.height / 2 + scrollY;
-                    x2 = rect2.left + scrollX;
-                    y2 = rect2.top + rect2.height / 2 + scrollY;
-                    
-                    const distance = Math.abs(x2 - x1) * 0.5;
-                    cp1x = x1 + distance; cp1y = y1;
-                    cp2x = x2 - distance; cp2y = y2;
-                }
-
-                // Draw Bezier Curve
-                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                path.setAttribute('d', `M ${x1} ${y1} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${x2} ${y2}`);
-                path.setAttribute('class', `line line-from-${conn.from} line-to-${conn.to}`);
-                path.dataset.from = conn.from;
-                path.dataset.to = conn.to;
-                svg.appendChild(path);
-            });
-        }
-
-        // --- Recursive Hover Tracking System ---
-        function highlightPaths(nodeId, direction) {
-            connections.forEach(conn => {
-                if (direction === 'forward' && conn.from === nodeId) {
-                    const path = document.querySelector(`.line-from-${conn.from}.line-to-${conn.to}`);
-                    if(path) path.classList.add('active');
-                    highlightPaths(conn.to, 'forward');
-                }
-                if (direction === 'backward' && conn.to === nodeId) {
-                    const path = document.querySelector(`.line-from-${conn.from}.line-to-${conn.to}`);
-                    if(path) path.classList.add('active');
-                    highlightPaths(conn.from, 'backward');
-                }
-            });
-        }
-
-        document.querySelectorAll('.card').forEach(card => {
-            card.addEventListener('mouseenter', () => {
-                // Dim all lines first
-                document.querySelectorAll('.line').forEach(l => l.style.opacity = '0.1');
-                // Recursively light up the path for the hovered card
-                highlightPaths(card.id, 'forward');
-                highlightPaths(card.id, 'backward');
-            });
-
-            card.addEventListener('mouseleave', () => {
-                // Reset everything to normal
-                document.querySelectorAll('.line').forEach(l => {
-                    l.classList.remove('active');
-                    l.style.opacity = '1';
-                });
-            });
-        });
-
-        // Initialize and handle window changes
-        window.addEventListener('load', () => setTimeout(drawLines, 100));
-        let resizeTimer;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(drawLines, 100);
+    <!-- Load Mermaid.js from CDN -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ 
+            startOnLoad: true, 
+            theme: 'dark',
+            securityLevel: 'loose', /* Required to allow clickable links */
+            flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' }
         });
     </script>
 </body>
