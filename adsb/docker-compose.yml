@@ -142,6 +142,19 @@ services:
 ##       - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/vrs:/root/.local/share/VirtualRadar
 ##       - /etc/localtime:/etc/localtime:ro
 
+  # ----------------------------------------------------------------------
+  # LINK DASHBOARD
+  # ----------------------------------------------------------------------
+  dashboard:
+    image: b4bz/homer:v25.11.1
+    container_name: dashboard
+    restart: unless-stopped
+    networks:
+      - caddy_to_adsb
+    volumes:
+      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/dashboard/assets:/www/assets:z
+      - ./config.yml:/www/assets/config.yml:z
+
 networks:
   caddy_to_adsb:
     external: true
