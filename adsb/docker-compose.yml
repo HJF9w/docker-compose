@@ -120,6 +120,8 @@ services:
     container_name: planefence
     hostname: planefence
     restart: unless-stopped
+    ports:
+      - 9999:9999
     networks:
       - caddy_to_adsb
       - default
