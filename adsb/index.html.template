@@ -113,6 +113,20 @@
                         <span class="subtitle">Antenna Statistics</span>
                     </div>
                 </a>
+                <a href="https://planefence.${LOCAL_DOMAIN}/" target="_blank" class="card" id="planefence">
+                    <i class="icon fa-solid fa-shield-halved" style="color: #22d3ee;"></i>
+                    <div class="info">
+                        <span class="title">PlaneFence Logs</span>
+                        <span class="subtitle">planefence.${LOCAL_DOMAIN}</span>
+                    </div>
+                </a>
+                <a href="https://planefence-conf.${LOCAL_DOMAIN}/" target="_blank" class="card" id="planefence-conf">
+                    <i class="icon fa-solid fa-shield-halved" style="color: #22d3ee;"></i>
+                    <div class="info">
+                        <span class="title">PlaneFence Configuration</span>
+                        <span class="subtitle">planefence-conf.${LOCAL_DOMAIN}</span>
+                    </div>
+                </a>
                 <div class="separator"><span>SERVER DOCKERS</span></div>
                 <a href="https://piaware.${LOCAL_DOMAIN}/" target="_blank" class="card" id="piaware">
                     <img src="https://icon.horse/icon/flightaware.com" alt="FA">
@@ -175,13 +189,6 @@
             <!-- COLUMN 3: Cloud -->
             <div class="col" id="col-cloud">
                 <div class="col-title"><i class="fa-solid fa-cloud"></i> Public Networks</div>
-                <a href="https://planefence.${LOCAL_DOMAIN}/" target="_blank" class="card" id="planefence">
-                    <i class="icon fa-solid fa-shield-halved" style="color: #22d3ee;"></i>
-                    <div class="info">
-                        <span class="title">PlaneFence Logs</span>
-                        <span class="subtitle">planefence.${LOCAL_DOMAIN}</span>
-                    </div>
-                </a>
                 <a href="https://www.flightaware.com/adsb/stats/user/Colossal3638#stats-270286" target="_blank" class="card" id="fa">
                     <img src="https://icon.horse/icon/flightaware.com" alt="FA">
                     <div class="info">
@@ -319,7 +326,7 @@
             { from: 'uf', to: 'piaware' }, { from: 'uf', to: 'fr24' },
             { from: 'uf', to: 'pf' }, { from: 'piaware', to: 'fa' },
             { from: 'piaware', to: 'piawarestat' }, { from: 'fr24', to: 'fr24cloud' },
-            { from: 'pf', to: 'pfcloud' }, { from: 'tar', to: 'planefence' },
+            { from: 'pf', to: 'pfcloud' }, { from: 'tar', to: 'planefence' }, { from: 'planefence', to: 'planefence-conf' },
             { from: 'uf', to: 'adsbx', bypass: true }, { from: 'uf', to: 'adsbfi', bypass: true },
             { from: 'uf', to: 'airplanes', bypass: true }, { from: 'uf', to: 'adsbhub', bypass: true }, 
             { from: 'plw', to: 'planewatch', bypass: true }, { from: 'uf', to: 'plw', bypass: true }, 

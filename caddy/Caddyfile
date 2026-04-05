@@ -109,6 +109,10 @@
         handle @planefence {
             reverse_proxy planefence:80
         }
+        @planefence-conf host planefence-conf.adsb.ioui.eu
+        handle @planefence-conf {
+            reverse_proxy planefence:9999
+        }
         @vrs host vrs.adsb.ioui.eu
         handle @vrs {
             reverse_proxy vrs:8080

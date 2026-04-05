@@ -123,10 +123,8 @@ services:
     networks:
       - caddy_to_adsb
       - default
-    # Removed port 8083 to route via Caddy
     environment:
       - TZ=${FEEDER_TZ}
-      # Planefence needs to know where to pull the JSON data from
       - URL_TAR1090=http://${PI_IP}:8080
     volumes:
       - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/planefence/config:/usr/share/planefence/persist:z
