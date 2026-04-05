@@ -1,9 +1,9 @@
 services:
   db:
-    image: postgres:17.9-alpine3.23
+    image: postgres:18.3-alpine3.23
     restart: unless-stopped
     volumes:
-      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/db:/var/lib/postgresql/data
+      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/db:/var/lib/postgresql
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
