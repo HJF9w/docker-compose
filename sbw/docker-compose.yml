@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   app:
-    image: "trafex/php-nginx:3.9.0"
+    image: "trafex/php-nginx:3.11.1"
     restart: unless-stopped
     healthcheck:
       test: curl --fail http://127.0.0.1:8080 || exit 1
