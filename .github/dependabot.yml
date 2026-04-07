@@ -3,7 +3,7 @@ updates:
   - package-ecosystem: "docker-compose"
     target-branch: "master"
     directories:
-      - "/portainer-ee"
+      - "**/*"
     schedule:
       interval: "daily"
 
@@ -11,31 +11,14 @@ updates:
   - package-ecosystem: "docker-compose"
     target-branch: "xenon"
     directories:
-      - "/bind9"
-      - "/caddy"
-      - "/email-cleaner"
-      - "/grafana"
-      - "/it-tools"
-      - "/kuma"
-      - "/pdf-tools"
-      - "/portainer-ce"
-      - "/portainer-ee"
-      - "/scraper-lange"
-      - "/solar-downloader"
-      - "/syncthing"
-      - "/watchtower"
-      - "/weather-notify"
+      - "**/*"
     schedule:
       interval: "daily"
 
   - package-ecosystem: "docker"
     target-branch: "xenon"
     directories:
-      - "/caddy"
-      - "/email-cleaner"
-      - "/scraper-lange"
-      - "/solar-downloader"
-      - "/weather-notify"
+      - "**/*"
     schedule:
       interval: "daily"
 
@@ -43,29 +26,13 @@ updates:
   - package-ecosystem: "docker-compose"
     target-branch: "opal"
     directories:
-      - "/bind9"
-      - "/caddy"
-      - "/hetzner-ddns"
-      - "/nextcloud"
-      - "/n8n"
-      - "/searxng"
-      - "/tandoor"
-      - "/twitch-recorder"
-      - "/vaultwarden"
-      - "/video-player"
-      - "/espTlS"
+      - "**/*"
     schedule:
       interval: "daily"
 
   - package-ecosystem: "docker"
     target-branch: "opal"
     directories:
-      - "/caddy"
-      - "/twitch-recorder"
-      - "/video-player"
-      - "/espTlS/downloader"
-      - "/espTlS/processor"
-      - "/espTlS/scraper"
-      - "/espTlS/timelapse"
+      - "**/*"
     schedule:
       interval: "daily"
