@@ -37,7 +37,7 @@ services:
       - 'default'
 
   server:
-    image: 'ghcr.io/paperless-ngx/paperless-ngx:2.18'
+    image: 'ghcr.io/paperless-ngx/paperless-ngx:2.20'
     restart: 'unless-stopped'
     depends_on:
       - db
