@@ -1,9 +1,4 @@
-# Use Python 3.12 on Alpine as requested
 FROM python:3.14-alpine
-
-# metadata
-LABEL org.opencontainers.image.source="local" \
-      maintainer="you@example.com"
 
 # Install build dependencies required by some Python packages and tzdata
 # We include rust/cargo because some packages (cryptography, wheels) may require it on musl builds.

@@ -4,6 +4,9 @@ import re
 import sys
 import time
 import smtplib
+import csv
+import zipfile
+import io
 from email.message import EmailMessage
 from datetime import datetime, date, time as dt_time, timezone
 
@@ -93,18 +96,15 @@ def parse_pegelonline(soup):
 
 def parse_solar(soup):
     data = {}
-    # locate the solar section by its id
     section = soup.find("section", id="content1-1y")
     if not section:
         raise ValueError("Solar section #content1-1y not found")
-    # within that, find the <div class="mbr-text"> containing two <p> tags
     container = section.find("div", class_="mbr-text")
     if not container:
         raise ValueError("Solar container in section not found")
     ps = container.find_all("p")
     if len(ps) < 2:
         raise ValueError("Expected two <p> tags in solar data block")
-    # second <p> has our data
     data_p = ps[1]
     strongs = data_p.find_all("strong")
     if len(strongs) < 2:
@@ -116,14 +116,12 @@ def parse_solar(soup):
     return data
 
 def parse_neon_ext_temp(text):
-    # expect exactly "extTempSensor=XX.XX" (allowing optional minus sign)
     m = re.match(r"^extTempSensor=(-?\d+\.?\d*)$", text.strip())
     if not m:
         raise ValueError(f"Unexpected sensor response: {text[:100]}")
     return m.group(1)
 
 def parse_neon_cpu_temp(text):
-    # expect exactly "cpuTemp=XX.X" (allowing optional minus sign)
     m = re.match(r"^cpuTemp=(-?\d+\.?\d*)$", text.strip())
     if not m:
         raise ValueError(f"Unexpected sensor response: {text[:100]}")
@@ -134,6 +132,127 @@ def write_metric(write_api, bucket, org, key, value, timestamp=None):
     if timestamp:
         point = point.time(timestamp)
     write_api.write(bucket=bucket, org=org, record=point)
+
+# --- DWD WEATHER FUNCTIONS ---
+
+def fetch_dwd_zip(session, url):
+    resp = session.get(url, timeout=30)
+    resp.raise_for_status()
+    return zipfile.ZipFile(io.BytesIO(resp.content))
+
+def process_dwd_zip(z, write_api, bucket, org):
+    txt_filename = None
+    for name in z.namelist():
+        if name.startswith("produkt_niederschlag_tag_") and name.endswith(".txt"):
+            txt_filename = name
+            break
+    if not txt_filename:
+        raise ValueError("No data file found in DWD zip")
+        
+    with z.open(txt_filename) as f:
+        content = f.read().decode('latin1')
+        
+    reader = csv.DictReader(io.StringIO(content), delimiter=';')
+    points =[]
+    
+    for row in reader:
+        row = {k.strip(): v.strip() for k, v in row.items()}
+        date_str = row.get('MESS_DATUM')
+        rsk_str = row.get('RSK')
+        
+        # -999 indicates missing measurement. We safely skip those days.
+        if not date_str or not rsk_str or rsk_str == '-999':
+            continue
+            
+        try:
+            rsk_val = float(rsk_str)
+            dt = datetime.strptime(date_str, "%Y%m%d").replace(tzinfo=timezone.utc)
+            
+            p = Point("rawRainDaily").field("value", rsk_val).time(dt)
+            points.append(p)
+        except ValueError:
+            continue
+            
+        # Write chunks to avoid large memory footprints
+        if len(points) >= 5000:
+            write_api.write(bucket=bucket, org=org, record=points)
+            points =[]
+            
+    if points:
+        write_api.write(bucket=bucket, org=org, record=points)
+
+def check_history_loaded(query_api, bucket, station_id):
+    # Query for our specific marker point
+    query = f'''
+    from(bucket: "{bucket}")
+      |> range(start: 2000-01-01T00:00:00Z)
+      |> filter(fn: (r) => r._measurement == "dwd_system" and r.station == "{station_id}" and r._field == "history_loaded")
+      |> last()
+    '''
+    tables = query_api.query(query)
+    return len(tables) > 0
+
+def mark_history_loaded(write_api, bucket, org, station_id):
+    p = Point("dwd_system").tag("station", station_id).field("history_loaded", True)
+    write_api.write(bucket=bucket, org=org, record=p)
+
+def get_dwd_historical_url(session, station_id):
+    base_url = "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/daily/more_precip/historical/"
+    resp = session.get(base_url, timeout=10)
+    resp.raise_for_status()
+    soup = BeautifulSoup(resp.content, "html.parser")
+    for a in soup.find_all('a'):
+        href = a.get('href')
+        # We parse the directory to find the unpredictable filename containing the date ranges
+        if href and f"_{station_id}_" in href and href.endswith("_hist.zip"):
+            return base_url + href
+    raise ValueError(f"Historical zip for station {station_id} not found.")
+
+def scrape_dwd(args, session, query_api, write_api):
+    station_id = args.dwd_station_id
+    
+    # 1. Historical Load (Runs exactly once for the life of the database)
+    hist_loaded = run_with_retries(args, "Influx Query Error", 
+                                   lambda: check_history_loaded(query_api, args.influx_bucket, station_id), 
+                                   default=True) # Default to True so a DB timeout doesn't force a huge redownload
+    if not hist_loaded:
+        print(f"[{datetime.now().isoformat()}] No historical data flag found. Downloading historical zip for station {station_id}...")
+        hist_url = run_with_retries(args, "DWD Historical URL Error", 
+                                    lambda: get_dwd_historical_url(session, station_id))
+        if hist_url:
+            def load_hist():
+                z = fetch_dwd_zip(session, hist_url)
+                process_dwd_zip(z, write_api, args.influx_bucket, args.influx_org)
+                mark_history_loaded(write_api, args.influx_bucket, args.influx_org, station_id)
+            run_with_retries(args, "DWD Historical Data Error", load_hist)
+            print("Historical DWD data successfully imported.")
+            
+    # 2. Daily Recent Data Update
+    DWD_LAST_FETCH_FILE = "/tmp/dwd_last_fetch.txt"
+    today = date.today().isoformat()
+    try:
+        with open(DWD_LAST_FETCH_FILE, "r") as f:
+            if f.read().strip() == today:
+                return # We already fetched DWD data today
+    except FileNotFoundError:
+        pass
+
+    print(f"[{datetime.now().isoformat()}] Fetching recent daily DWD data for station {station_id}...")
+    recent_url = f"https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/daily/more_precip/recent/tageswerte_RR_{station_id}_akt.zip"
+    
+    def load_recent():
+        z = fetch_dwd_zip(session, recent_url)
+        process_dwd_zip(z, write_api, args.influx_bucket, args.influx_org)
+    
+    success = run_with_retries(args, "DWD Recent Data Error", load_recent, default="FAIL")
+    if success != "FAIL":
+        try:
+            with open(DWD_LAST_FETCH_FILE, "w") as f:
+                f.write(today)
+        except Exception as e:
+            print(f"Warning: could not write DWD state file: {e}", file=sys.stderr)
+
+# --- END DWD FUNCTIONS ---
 
 def main():
     p = argparse.ArgumentParser()
@@ -152,6 +271,7 @@ def main():
     p.add_argument("--email-to",     required=True)
     p.add_argument("--neon-ext-sensor-url")
     p.add_argument("--neon-cpu-sensor-url")
+    p.add_argument("--dwd-station-id", default="00991", help="DWD station ID (more_precip)")
     args = p.parse_args()
 
     client = InfluxDBClient(
@@ -159,6 +279,7 @@ def main():
         token=args.influx_token,
         org=args.influx_org
     )
+    query_api = client.query_api()
     write_api = client.write_api()
 
     sess_wx   = requests.Session()
@@ -198,6 +319,9 @@ def main():
             write_metric(write_api, args.influx_bucket, args.influx_org, "neonCPUTempSensor", sensor_val)
         run_with_retries(args, "Sensor Scrape Error", scrape_neon_cpu)
 
+    # DWD Daily Rain Scrape
+    scrape_dwd(args, sess_wx, query_api, write_api)
+
     # write all but solar totalenergy
     for k, v in {**fam_data, **peg_data, **solar_data}.items():
         if k == "totalenergy":
@@ -218,4 +342,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

@@ -19,6 +19,7 @@ services:
       EMAIL_TO: ${EMAIL_TO:-}
       NEON_EXT_SENSOR_URL: ${NEON_EXT_SENSOR_URL:-}
       NEON_CPU_SENSOR_URL: ${NEON_CPU_SENSOR_URL:-}
+      DWD_STATION_ID: ${DWD_STATION_ID:-}
     networks:
       grafana_internal:
 
