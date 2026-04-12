@@ -13,6 +13,7 @@ from datetime import datetime, date, time as dt_time, timezone
 import requests
 from bs4 import BeautifulSoup
 from influxdb_client import InfluxDBClient, Point
+from influxdb_client.client.write_api import SYNCHRONOUS
 
 def send_error_email(args, subject, body):
     msg = EmailMessage()
@@ -144,13 +145,11 @@ def fetch_dwd_zip(session, url):
 def process_dwd_zip(z, write_api, bucket, org):
     txt_filename = None
     for name in z.namelist():
-        # Loosened the check to simply "produkt_" to catch both historical and recent naming variants
         if name.startswith("produkt_") and name.endswith(".txt"):
             txt_filename = name
             break
             
     if not txt_filename:
-        # If it fails again, the email will now tell us exactly what files WERE inside the zip
         file_list = ", ".join(z.namelist())
         raise ValueError(f"No 'produkt_*.txt' data file found in DWD zip. Files present: {file_list}")
         
@@ -159,13 +158,17 @@ def process_dwd_zip(z, write_api, bucket, org):
         
     reader = csv.DictReader(io.StringIO(content), delimiter=';')
     points =[]
+    processed_count = 0
     
     for row in reader:
-        row = {k.strip(): v.strip() for k, v in row.items()}
-        date_str = row.get('MESS_DATUM')
-        rsk_str = row.get('RSK')
+        # Clean whitespaces in keys and values
+        row = {k.strip(): v.strip() for k, v in row.items() if k and v}
         
-        # -999 indicates missing measurement. We safely skip those days.
+        date_str = row.get('MESS_DATUM')
+        # Handle both precip-only datasets (RS) and full climate datasets (RSK)
+        rsk_str = row.get('RS') if 'RS' in row else row.get('RSK')
+        
+        # -999 indicates missing measurement. We safely skip those.
         if not date_str or not rsk_str or rsk_str == '-999':
             continue
             
@@ -175,6 +178,7 @@ def process_dwd_zip(z, write_api, bucket, org):
             
             p = Point("rawRainDaily").field("value", rsk_val).time(dt)
             points.append(p)
+            processed_count += 1
         except ValueError:
             continue
             
@@ -183,13 +187,12 @@ def process_dwd_zip(z, write_api, bucket, org):
             write_api.write(bucket=bucket, org=org, record=points)
             points =[]
             
-    # Flush remaining points
     if points:
         write_api.write(bucket=bucket, org=org, record=points)
+        
+    return processed_count
 
 def check_history_loaded(query_api, bucket, station_id):
-    # Query for our specific marker point.
-    # IMPORTANT: The Influx token must have READ permissions on the bucket for this to work.
     query = f'''
     from(bucket: "{bucket}")
       |> range(start: 2000-01-01T00:00:00Z)
@@ -210,7 +213,6 @@ def get_dwd_historical_url(session, station_id):
     soup = BeautifulSoup(resp.content, "html.parser")
     for a in soup.find_all('a'):
         href = a.get('href')
-        # We parse the directory to find the unpredictable filename containing the date ranges
         if href and f"_{station_id}_" in href and href.endswith("_hist.zip"):
             return base_url + href
     raise ValueError(f"Historical zip for station {station_id} not found.")
@@ -218,10 +220,10 @@ def get_dwd_historical_url(session, station_id):
 def scrape_dwd(args, session, query_api, write_api):
     station_id = args.dwd_station_id
     
-    # 1. Historical Load (Runs exactly once for the life of the database)
+    # 1. Historical Load
     hist_loaded = run_with_retries(args, "Influx Query Error", 
                                    lambda: check_history_loaded(query_api, args.influx_bucket, station_id), 
-                                   default=True) # Default to True so a DB timeout doesn't force a huge redownload
+                                   default=True)
     if not hist_loaded:
         print(f"[{datetime.now().isoformat()}] No historical data flag found. Downloading historical zip for station {station_id}...")
         hist_url = run_with_retries(args, "DWD Historical URL Error", 
@@ -229,10 +231,12 @@ def scrape_dwd(args, session, query_api, write_api):
         if hist_url:
             def load_hist():
                 z = fetch_dwd_zip(session, hist_url)
-                process_dwd_zip(z, write_api, args.influx_bucket, args.influx_org)
+                count = process_dwd_zip(z, write_api, args.influx_bucket, args.influx_org)
                 mark_history_loaded(write_api, args.influx_bucket, args.influx_org, station_id)
-            run_with_retries(args, "DWD Historical Data Error", load_hist)
-            print("Historical DWD data successfully imported.")
+                return count
+            count = run_with_retries(args, "DWD Historical Data Error", load_hist)
+            if count is not None:
+                print(f"Historical DWD data successfully imported ({count} valid records).")
             
     # 2. Daily Recent Data Update
     DWD_LAST_FETCH_FILE = "/tmp/dwd_last_fetch.txt"
@@ -249,10 +253,11 @@ def scrape_dwd(args, session, query_api, write_api):
     
     def load_recent():
         z = fetch_dwd_zip(session, recent_url)
-        process_dwd_zip(z, write_api, args.influx_bucket, args.influx_org)
+        return process_dwd_zip(z, write_api, args.influx_bucket, args.influx_org)
     
-    success = run_with_retries(args, "DWD Recent Data Error", load_recent, default="FAIL")
-    if success != "FAIL":
+    count = run_with_retries(args, "DWD Recent Data Error", load_recent)
+    if count is not None:
+        print(f"Recent DWD data successfully updated ({count} valid records).")
         try:
             with open(DWD_LAST_FETCH_FILE, "w") as f:
                 f.write(today)
@@ -288,7 +293,8 @@ def main():
         org=args.influx_org
     )
     query_api = client.query_api()
-    write_api = client.write_api()
+    # CHANGED: Use SYNCHRONOUS mode to prevent background threads from hanging on close()
+    write_api = client.write_api(write_options=SYNCHRONOUS)
 
     sess_wx   = requests.Session()
     sess_peg  = requests.Session()
