@@ -208,7 +208,7 @@ def mark_history_loaded(write_api, bucket, org, station_id):
 
 def get_dwd_historical_url(session, station_id):
     base_url = "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/daily/more_precip/historical/"
-    resp = session.get(base_url, timeout=10)
+    resp = session.get(base_url, timeout=60)
     resp.raise_for_status()
     soup = BeautifulSoup(resp.content, "html.parser")
     for a in soup.find_all('a'):
