@@ -133,6 +133,7 @@ def write_metric(write_api, bucket, org, key, value, timestamp=None):
         point = point.time(timestamp)
     write_api.write(bucket=bucket, org=org, record=point)
 
+
 # --- DWD WEATHER FUNCTIONS ---
 
 def fetch_dwd_zip(session, url):
@@ -143,11 +144,15 @@ def fetch_dwd_zip(session, url):
 def process_dwd_zip(z, write_api, bucket, org):
     txt_filename = None
     for name in z.namelist():
-        if name.startswith("produkt_niederschlag_tag_") and name.endswith(".txt"):
+        # Loosened the check to simply "produkt_" to catch both historical and recent naming variants
+        if name.startswith("produkt_") and name.endswith(".txt"):
             txt_filename = name
             break
+            
     if not txt_filename:
-        raise ValueError("No data file found in DWD zip")
+        # If it fails again, the email will now tell us exactly what files WERE inside the zip
+        file_list = ", ".join(z.namelist())
+        raise ValueError(f"No 'produkt_*.txt' data file found in DWD zip. Files present: {file_list}")
         
     with z.open(txt_filename) as f:
         content = f.read().decode('latin1')
@@ -178,11 +183,13 @@ def process_dwd_zip(z, write_api, bucket, org):
             write_api.write(bucket=bucket, org=org, record=points)
             points =[]
             
+    # Flush remaining points
     if points:
         write_api.write(bucket=bucket, org=org, record=points)
 
 def check_history_loaded(query_api, bucket, station_id):
-    # Query for our specific marker point
+    # Query for our specific marker point.
+    # IMPORTANT: The Influx token must have READ permissions on the bucket for this to work.
     query = f'''
     from(bucket: "{bucket}")
       |> range(start: 2000-01-01T00:00:00Z)
@@ -253,6 +260,7 @@ def scrape_dwd(args, session, query_api, write_api):
             print(f"Warning: could not write DWD state file: {e}", file=sys.stderr)
 
 # --- END DWD FUNCTIONS ---
+
 
 def main():
     p = argparse.ArgumentParser()
