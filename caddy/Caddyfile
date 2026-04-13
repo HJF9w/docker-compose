@@ -85,6 +85,14 @@
         handle @adsb {
           reverse_proxy dashboard:80
         }
+        @grafana host grafana.ioui.eu                                                                                                                                                                                                                                                       
+        handle @grafana {
+                reverse_proxy grafana-app-1:3000
+        }
+        @influxdb host influxdb.ioui.eu
+        handle @influxdb {
+                reverse_proxy grafana-db-1:8086
+        }
 }
 
 *.adsb.ioui.eu {

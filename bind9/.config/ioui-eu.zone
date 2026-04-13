@@ -45,6 +45,8 @@ n8n             IN      CNAME   opal-rp
 nc              IN      CNAME   opal-rp
 adsb            IN      CNAME   opal-rp
 *.adsb          IN      CNAME   opal-rp
+grafana         IN      CNAME   opal-rp
+influxdb        IN      CNAME   opal-rp
 
 ;address	IN	A	10.0.0.1 ; easy Load Balancing
 ;			IN	A	10.0.0.2
