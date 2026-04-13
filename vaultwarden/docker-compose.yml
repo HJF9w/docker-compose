@@ -1,6 +1,6 @@
 services:
   app:
-    image: "vaultwarden/server:1.35.4"
+    image: "vaultwarden/server:1.35.6"
       #environment:
       #- ADMIN_TOKEN=123 # use to access the /admin pannel
       #  - DOMAIN=https://speicher.ddns.net
