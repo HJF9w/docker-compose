@@ -51,6 +51,10 @@
 	handle @grafana {
 		reverse_proxy grafana-app-1:3000
 	}
+	@grafana2 host grafana2.ioui.eu
+	handle @grafana2 {
+		reverse_proxy grafana-app-1:3000
+	}
 	@influxdb host influxdb.ioui.eu
 	handle @influxdb {
 		reverse_proxy grafana-db-1:8086
