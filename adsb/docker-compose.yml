@@ -116,7 +116,7 @@ services:
   # VISUALIZATION
   # ----------------------------------------------------------------------
   planefence:
-    image: ghcr.io/sdr-enthusiasts/docker-planefence:latest-build-1185
+    image: ghcr.io/sdr-enthusiasts/docker-planefence:latest-build-1187
     container_name: planefence
     hostname: planefence
     restart: unless-stopped
