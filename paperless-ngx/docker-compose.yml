@@ -34,7 +34,7 @@ services:
       - 'default'
 
   tika:
-    image: 'ghcr.io/paperless-ngx/tika:3.3.0.0-full'
+    image: 'apache/tika:3.3.0.0-full'
     restart: 'unless-stopped'
     networks:
       - 'default'
