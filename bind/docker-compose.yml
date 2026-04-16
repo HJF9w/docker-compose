@@ -5,9 +5,9 @@ services:
       - BIND9_USER=root
       - TZ=Europe/Berlin
     volumes:
-      - "$PWD/.config:/etc/bind"
-      - "$PWD/.cache:/var/cache/bind"
-      - "$PWD/.records:/var/lib/bind"
+      - "./.config:/etc/bind"
+      - "./.cache:/var/cache/bind"
+      - "./.records:/var/lib/bind"
     restart: always
     networks:
       system_mac_vlan:
