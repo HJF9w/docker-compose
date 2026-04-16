@@ -1,11 +1,10 @@
 services:
-  portainer:
-    container_name: portainer
-    image: 'cr.portainer.io/portainer/portainer-ee'
+  app:
+    image: 'portainer/portainer-ee:2.40.0'
     restart: always
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock'
-      - '${basepath}/portainer/data:/data'
+      - '${BASEPATH}/portainer/data:/data'
     networks:
       mac_vlan:
         ipv4_address: ${portainer_mac_vlan_ipv4}

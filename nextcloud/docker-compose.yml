@@ -4,7 +4,7 @@ services:
     command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
     restart: unless-stopped
     volumes:
-      - ${basepath}/nextcloud_db:/var/lib/mysql
+      - ${BASEPATH}/nextcloud_db:/var/lib/mysql
     environment: ## Exec into db container as root -u 0 and use mariadb -u root -p where -p is MYSQL_ROOT_PASSWORD
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_PASSWORD=test
@@ -14,7 +14,7 @@ services:
       default:
 
   redis:
-    image: redis:alpine
+    image: redis:8.6-alpine3.23
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
@@ -22,10 +22,10 @@ services:
       default:
 
   app:
-    image: nextcloud:apache
+    image: nextcloud:32.0.8-apache
     restart: unless-stopped
     volumes:
-      - ${basepath}/nextcloud:/var/www/html
+      - ${BASEPATH}/nextcloud:/var/www/html
     environment:
       - MYSQL_HOST=db
       - REDIS_HOST=redis
@@ -43,10 +43,10 @@ services:
       default:
 
   cron:
-    image: nextcloud:apache
+    image: nextcloud:32.0.8-apache
     restart: unless-stopped
     volumes:
-      - ${basepath}/nextcloud:/var/www/html
+      - ${BASEPATH}/nextcloud:/var/www/html
     entrypoint: /cron.sh
     depends_on:
       - db
@@ -56,15 +56,15 @@ services:
 
 
   proxy:
-    image: 'jc21/nginx-proxy-manager'
+    image: 'jc21/nginx-proxy-manager:2.14.0'
     restart: unless-stopped
     ports: 
       - 80:80
       - 81:81
       - 443:443
     volumes:
-      - '${basepath}/nextcloud_nginx/data:/data'
-      - '${basepath}/nextcloud_nginx/letsencrypt:/etc/letsencrypt'
+      - '${BASEPATH}/nextcloud_nginx/data:/data'
+      - '${BASEPATH}/nextcloud_nginx/letsencrypt:/etc/letsencrypt'
     networks:
       default:
 

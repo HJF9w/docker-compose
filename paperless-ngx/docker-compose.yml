@@ -5,7 +5,7 @@ services:
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
     volumes:
-      - '${basepath}/${COMPOSE_PROJECT_NAME}/broker:/data:Z'
+      - '${BASEPATH}/${COMPOSE_PROJECT_NAME}/broker:/data:Z'
     networks:
       - 'default'
 
@@ -13,7 +13,7 @@ services:
     image: 'postgres:17.6-alpine'
     restart: 'unless-stopped'
     volumes:
-      - '${basepath}/${COMPOSE_PROJECT_NAME}/db_17:/var/lib/postgresql/data:Z'
+      - '${BASEPATH}/${COMPOSE_PROJECT_NAME}/db_17:/var/lib/postgresql/data:Z'
     environment:
       POSTGRES_DB: paperless
       POSTGRES_USER: paperless
@@ -34,13 +34,13 @@ services:
       - 'default'
 
   tika:
-    image: 'ghcr.io/paperless-ngx/tika:latest'
+    image: 'ghcr.io/paperless-ngx/tika:3.3.0.0-full'
     restart: 'unless-stopped'
     networks:
       - 'default'
 
   server:
-    image: 'ghcr.io/paperless-ngx/paperless-ngx:latest'
+    image: 'ghcr.io/paperless-ngx/paperless-ngx:2.20.14'
     restart: 'unless-stopped'
     depends_on:
       - db
@@ -55,11 +55,11 @@ services:
       timeout: 10s
       retries: 5
     volumes:
-      - '${basepath}/${COMPOSE_PROJECT_NAME}/data:/usr/src/paperless/data:Z'
-      - '${basepath}/${COMPOSE_PROJECT_NAME}/media:/usr/src/paperless/media:Z'
-      - '${basepath}/${COMPOSE_PROJECT_NAME}/export:/usr/src/paperless/export:Z'
-      - '${basepath}/${COMPOSE_PROJECT_NAME}/consume:/usr/src/paperless/consume:Z'
-      - '${basepath}/${COMPOSE_PROJECT_NAME}/trash:/media/trash:Z' ## the trash directory has to be writable by the user running docker-compose, with 755 permissions.
+      - '${BASEPATH}/${COMPOSE_PROJECT_NAME}/data:/usr/src/paperless/data:Z'
+      - '${BASEPATH}/${COMPOSE_PROJECT_NAME}/media:/usr/src/paperless/media:Z'
+      - '${BASEPATH}/${COMPOSE_PROJECT_NAME}/export:/usr/src/paperless/export:Z'
+      - '${BASEPATH}/${COMPOSE_PROJECT_NAME}/consume:/usr/src/paperless/consume:Z'
+      - '${BASEPATH}/${COMPOSE_PROJECT_NAME}/trash:/media/trash:Z' ## the trash directory has to be writable by the user running docker-compose, with 755 permissions.
     env_file: .env
     environment:
       PAPERLESS_REDIS: redis://paperless-broker-1:6379

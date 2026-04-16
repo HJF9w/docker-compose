@@ -1,0 +1,21 @@
+services:
+  bind:
+    image: ubuntu/bind9:9.20-24.10_beta
+    environment:
+      - BIND9_USER=root
+      - TZ=Europe/Berlin
+    volumes:
+      - "$PWD/.config:/etc/bind"
+      - "$PWD/.cache:/var/cache/bind"
+      - "$PWD/.records:/var/lib/bind"
+    restart: always
+    networks:
+      system_mac_vlan:
+        ipv4_address: ${BIND_SYSTEM_MAC_VLAN_IPV4}
+      fm_internal:
+
+networks:
+  system_mac_vlan:
+    external: true
+  fm_internal:
+    external: true

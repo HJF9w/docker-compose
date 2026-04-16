@@ -1,6 +1,6 @@
 services:
   db:
-    image: "mysql:oraclelinux8"
+    image: "mysql:9.6.0-oraclelinux9"
     restart: unless-stopped
     env_file:
       - .env
@@ -11,7 +11,7 @@ services:
       - internal
 
   app:
-    image: "wordpress:php8.2-apache"
+    image: "wordpress:6.9-php8.2-apache"
     restart: unless-stopped
     #ports:
     #  - "8080:80"
@@ -30,7 +30,7 @@ services:
   phpmyadmin:
     depends_on:
       - db
-    image: "phpmyadmin:5-apache"
+    image: "phpmyadmin:5.2.3-apache"
     restart: unless-stopped
     environment:
       PMA_HOST: "$DBHOST"
