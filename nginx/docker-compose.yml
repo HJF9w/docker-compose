@@ -14,10 +14,10 @@ services:
     networks:
       system_mac_vlan:
         ipv4_address: ${NGINX_SYSTEM_MAC_VLAN_IPV4}
-      fm_internal:
+      system_internal:
 
 networks:
-  fm_internal:
+  system_internal:
     external: true
   system_mac_vlan:
     external: true

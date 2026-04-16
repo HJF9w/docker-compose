@@ -7,8 +7,8 @@ services:
     hostname: kuma.fairmarkt
     restart: unless-stopped
     networks:
-      fm_internal:
+      system_internal:
 
 networks:
-  fm_internal:
+  system_internal:
     external: true

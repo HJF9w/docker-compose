@@ -71,9 +71,9 @@ services:
       PAPERLESS_APP_TITLE: "FairMarkt Paperless"
     networks:
       - 'default'
-      - 'fm_internal'
+      - 'system_internal'
 
 networks:
   default:
-  fm_internal:
+  system_internal:
     external: true

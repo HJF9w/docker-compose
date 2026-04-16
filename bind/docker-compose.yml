@@ -12,10 +12,10 @@ services:
     networks:
       system_mac_vlan:
         ipv4_address: ${BIND_SYSTEM_MAC_VLAN_IPV4}
-      fm_internal:
+      system_internal:
 
 networks:
   system_mac_vlan:
     external: true
-  fm_internal:
+  system_internal:
     external: true

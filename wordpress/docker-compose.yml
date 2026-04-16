@@ -25,7 +25,7 @@ services:
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/app:/var/www/html:z"
     networks:
       - internal
-      - fm_internal
+      - system_internal
 
   phpmyadmin:
     depends_on:
@@ -46,9 +46,9 @@ services:
       - "./phpmyadmin:/etc/phpmyadmin:ro"
     networks:
       - internal
-      - fm_internal
+      - system_internal
 
 networks:
   internal:
-  fm_internal:
+  system_internal:
     external: true
