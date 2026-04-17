@@ -1,6 +1,6 @@
 services:
   broker:
-    image: 'redis:7'
+    image: 'redis:8'
     restart: 'unless-stopped'
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
