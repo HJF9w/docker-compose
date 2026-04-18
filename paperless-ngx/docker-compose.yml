@@ -10,10 +10,10 @@ services:
       - 'default'
 
   db:
-    image: 'postgres:17.6-alpine'
+    image: 'postgres:18.3-alpine'
     restart: 'unless-stopped'
     volumes:
-      - '${BASEPATH}/${COMPOSE_PROJECT_NAME}/db_17:/var/lib/postgresql/data:Z'
+      - '${BASEPATH}/${COMPOSE_PROJECT_NAME}/db_18:/var/lib/postgresql/data:Z'
     environment:
       POSTGRES_DB: paperless
       POSTGRES_USER: paperless
