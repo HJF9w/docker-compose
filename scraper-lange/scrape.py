@@ -228,7 +228,7 @@ def check_history_loaded(query_api, bucket, station_id):
 
 def mark_history_loaded(write_api, bucket, org, station_id):
     p = Point("dwd_system").tag("station", station_id).field("history_loaded_kl", True).time(datetime.now(timezone.utc))
-    write_api.write(bucket=org, org=org, record=p)
+    write_api.write(bucket=bucket, org=org, record=p)
 
 def get_dwd_historical_url(session, station_id):
     base_url = "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/daily/kl/historical/"
