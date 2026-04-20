@@ -11,7 +11,7 @@ if [ ! -d "/app/thumbs" ]; then
 fi
 
 # ensure permissions are reasonable
-chmod -R 755 /app/data /app/thumbs
+#chmod -R 755 /app/data /app/thumbs
 
 # If the container was started with a mounted data directory owned by root,
 # the app will still be able to read it. Exec the passed command.
