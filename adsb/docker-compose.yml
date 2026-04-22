@@ -75,6 +75,7 @@ services:
       - INFLUXDBV2_BUCKET=${INFLUX_BUCKET}
       - INFLUXDBV2_ORG=${INFLUX_ORG}
       - PROMETHEUS_ENABLE=true
+      - READSB_ENABLE_BIASTEE=${READSB_ENABLE_BIASTEE}
     volumes:
       - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/ultrafeeder/globe_history:/var/globe_history
       - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/ultrafeeder/graphs1090:/var/lib/collectd
