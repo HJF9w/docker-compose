@@ -44,7 +44,6 @@ services:
     image: ghcr.io/sdr-enthusiasts/docker-planefinder:latest-build-530
     container_name: pfclient
     restart: unless-stopped
-    ports:
     networks:
       - caddy_to_adsb
       - default
