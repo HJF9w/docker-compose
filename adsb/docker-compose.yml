@@ -7,6 +7,8 @@ services:
     container_name: piaware
     hostname: piaware
     restart: unless-stopped
+    ports:
+      - 30105:30105
     networks:
       - caddy_to_adsb
       - default
@@ -26,6 +28,8 @@ services:
     container_name: fr24
     hostname: fr24
     restart: unless-stopped
+    ports:
+      - 30108:30106
     networks:
       - caddy_to_adsb
       - default
@@ -40,6 +44,7 @@ services:
     image: ghcr.io/sdr-enthusiasts/docker-planefinder:latest-build-530
     container_name: pfclient
     restart: unless-stopped
+    ports:
     networks:
       - caddy_to_adsb
       - default
@@ -56,6 +61,8 @@ services:
     container_name: airnavradar
     hostname: airnavradar
     restart: unless-stopped
+    ports:
+      - 30106:30105
     environment:
       - BEASTHOST=${PI_IP}
       - LAT=${FEEDER_LAT}
@@ -74,6 +81,8 @@ services:
     container_name: planewatch
     hostname: planewatch
     restart: unless-stopped
+    ports:
+      - 30107:30105
     environment:
       - BEASTHOST=${PI_IP}
       - TZ=${FEEDER_TZ}
