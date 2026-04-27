@@ -13,9 +13,47 @@ services:
   db:
     image: "influxdb:2.8"
     ports:
-      - '8086:8086'
+      - "8086:8086"
     volumes:
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/influxdb:/var/lib/influxdb2"
+    networks:
+      - "system_internal"
+      - "internal"
+
+  postgres:
+    image: "postgres:18.3-alpine3.23"
+    restart: "unless-stopped"
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-timeseries}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - TZ=${TZ:-UTC}
+    volumes:
+      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/postgres:/var/lib/postgresql/data"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+    networks:
+      system_internal:
+      internal:
+      system_mac_vlan:
+        ipv4_address: "${POSTGRES_EXT_IPV4}"
+
+  pgadmin:
+    image: "dpage/pgadmin4:9"
+    restart: "unless-stopped"
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL:-admin@example.com}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+      - PGADMIN_CONFIG_SERVER_MODE=False
+      - TZ=${TZ:-UTC}
+    volumes:
+      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/pgadmin:/var/lib/pgadmin"
+    depends_on:
+      postgres:
+        condition: service_healthy
     networks:
       - "system_internal"
       - "internal"
@@ -24,3 +62,6 @@ networks:
   internal:
   system_internal:
     external: true
+  system_mac_vlan:
+    external: true
+

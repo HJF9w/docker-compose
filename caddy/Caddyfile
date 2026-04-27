@@ -93,6 +93,10 @@
         handle @influxdb {
                 reverse_proxy grafana-db-1:8086
         }
+        @pgadmin host pgadmin.ioui.eu
+        handle @pgadmin {
+                reverse_proxy grafana-pgadmin-1:80
+        }
 }
 
 *.adsb.ioui.eu {
