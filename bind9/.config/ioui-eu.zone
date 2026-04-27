@@ -4,7 +4,7 @@ $TTL 1m
 $ORIGIN ioui.eu.
 
 @	IN	SOA	ns.ioui.eu. admin.ioui.eu. (
-				2026032711     ; serial
+				2026042717     ; serial
 				12h            ; refresh 12h
 				15m            ; retry 15m
 				1w             ; expire 3w
@@ -47,6 +47,7 @@ adsb            IN      CNAME   opal-rp
 *.adsb          IN      CNAME   opal-rp
 grafana         IN      CNAME   opal-rp
 influxdb        IN      CNAME   opal-rp
+pgadmin         IN      CNAME   opal-rp
 
 ;address	IN	A	10.0.0.1 ; easy Load Balancing
 ;			IN	A	10.0.0.2
