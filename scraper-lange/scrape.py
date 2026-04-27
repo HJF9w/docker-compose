@@ -292,7 +292,6 @@ def scrape_dwd(args, session, query_api, write_api):
 
 # --- END DWD FUNCTIONS ---
 
-# --- END DWD FUNCTIONS ---
 
 def main():
     p = argparse.ArgumentParser()
@@ -353,7 +352,7 @@ def main():
         run_with_retries(args, "Sensor Scrape Error", scrape_neon_cpu)
 
     # DWD Daily Rain Scrape
-    scrape_dwd(args, sess_wx, query_api, write_api)
+    ## scrape_dwd(args, sess_wx, query_api, write_api)
 
     for k, v in {**fam_data, **peg_data, **solar_data}.items():
         if k == "totalenergy": continue
