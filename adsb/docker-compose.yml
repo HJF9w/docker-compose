@@ -73,6 +73,36 @@ services:
       - INFLUXDBV2_ORG=${INFLUX_ORG}
       - PROMETHEUS_ENABLE=true
       - READSB_ENABLE_BIASTEE=${READSB_ENABLE_BIASTEE}
+      - TAR1090_CONFIGJS_APPEND=
+          window.addEventListener('load', function() {
+            var container = document.querySelector('#header_top .buttonContainer');
+            if (!container) return;
+            function createBtn(text, title, url) {
+              var btn = document.createElement('span');
+              btn.className = 'button inActiveButton';
+              btn.title = title;
+              btn.style.marginLeft = '5px';
+              btn.innerHTML = '<span class="buttonText">' + text + '</span>';
+              btn.onclick = function() { window.location.href = url; };
+              return btn;
+            }
+            container.appendChild(createBtn('RP', 'Replay Mode', '?replay'));
+            container.appendChild(createBtn('HM', 'Heatmap', '?heatmap&realHeat'));
+            container.appendChild(createBtn('PT', 'pTracks (Coverage)', '?pTracks'));
+          });
+      - PTRACKS=24
+      - READSB_STATS_RANGE=true
+      - READSB_RANGE_OUTLINE_HOURS=24
+      - TAR1090_ENABLE_AC_DB=true
+      - READSB_ENABLE_TRACES=true ## high disk usage
+      - TAR1090_RANGE_OUTLINE_COLORED_BY_ALTITUDE=true
+      - TAR1090_DWDLAYERS=dwd:RX-Produkt,dwd:NowCastMIX-Informationen,dwd:Warnungen_Gemeinden,dwd:Icon_reg025_fd_sl_VMAX_10M,dwd:Icon_reg025_fd_sl_CLCT,dwd:RBSN_VV,dwd:Radar_rv_product_1x1km_ger,dwd:SF-Produkt
+      - GRAPHS1090_LARGE_WIDTH=1920
+      - GRAPHS1090_LARGE_HEIGHT=1080
+      - GRAPHS1090_SMALL_WIDTH=1920
+      - GRAPHS1090_SMALL_HEIGHT=1080
+      - GRAPHS1090_REDUCE_IO=true
+      - GRAPHS1090_REDUCE_IO_FLUSH_IVAL=1h
     volumes:
       - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/ultrafeeder/globe_history:/var/globe_history
       - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/ultrafeeder/graphs1090:/var/lib/collectd
