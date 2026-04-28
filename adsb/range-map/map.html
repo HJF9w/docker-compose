@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Flight Range Comparison Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            font-family: sans-serif;
+        }
+        #map {
+            height: 100vh;
+            width: 100%;
+        }
+        .info-panel {
+            position: absolute;
+            top: 10px;
+            left: 50px;
+            z-index: 1000;
+            background: white;
+            padding: 10px;
+            border-radius: 4px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="info-panel">
+        <h3 style="margin-top:0">Outline Comparison</h3>
+        <div id="status">Loading outlines...</div>
+    </div>
+    <div id="map"></div>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Initialize the map
+        const map = L.map('map').setView([50.0, 13.0], 7);
+
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        const colors = [
+            '#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231', 
+            '#911eb4', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe', 
+            '#008080', '#e6beff', '#9a6324', '#fffac8', '#800000', 
+            '#aaffc3', '#808000', '#ffd8b1', '#000075', '#808080'
+        ];
+        let colorIndex = 0;
+
+        const overlayMaps = {};
+        const layerControl = L.control.layers(null, null, {collapsed: false}).addTo(map);
+
+        async function loadOutlines() {
+            const statusEl = document.getElementById('status');
+            try {
+                // Fetch the directory listing
+                const response = await fetch('outline/');
+                if (!response.ok) throw new Error('Could not fetch outline directory');
+                
+                const text = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(text, 'text/html');
+                
+                // Find all links ending in .json
+                const links = Array.from(doc.querySelectorAll('a'))
+                    .map(a => a.getAttribute('href'))
+                    .filter(href => href && href.toLowerCase().endsWith('.json'))
+                    // Remove potential path prefixes if they exist in the href
+                    .map(href => href.split('/').pop());
+
+                if (links.length === 0) {
+                    statusEl.textContent = 'No JSON files found in outline/';
+                    return;
+                }
+
+                statusEl.textContent = `Found ${links.length} outlines. Loading...`;
+
+                const loadPromises = links.map(async (filename) => {
+                    try {
+                        const fileResponse = await fetch(`outline/${filename}`);
+                        const data = await fileResponse.json();
+                        
+                        if (data.actualRange && data.actualRange.last24h && data.actualRange.last24h.points) {
+                            const points = data.actualRange.last24h.points;
+                            const coordinates = points.map(point => [point[0], point[1]]);
+                            
+                            const color = colors[colorIndex % colors.length];
+                            colorIndex++;
+                            
+                            const polyline = L.polyline(coordinates, {
+                                color: color,
+                                weight: 3,
+                                opacity: 0.8,
+                                lineJoin: 'round'
+                            });
+                            
+                            polyline.addTo(map);
+                            
+                            const displayName = filename.replace('.json', '');
+                            overlayMaps[displayName] = polyline;
+                            layerControl.addOverlay(polyline, displayName);
+                            return true;
+                        }
+                    } catch (e) {
+                        console.error(`Failed to load ${filename}:`, e);
+                    }
+                    return false;
+                });
+
+                await Promise.all(loadPromises);
+                
+                statusEl.textContent = `Loaded ${Object.keys(overlayMaps).length} outlines.`;
+
+                // Fit bounds to show all outlines
+                const group = new L.featureGroup(Object.values(overlayMaps));
+                if (group.getLayers().length > 0) {
+                    map.fitBounds(group.getBounds());
+                }
+            } catch (error) {
+                console.error('Error loading outlines:', error);
+                statusEl.textContent = 'Error: ' + error.message;
+            }
+        }
+
+        loadOutlines();
+    </script>
+</body>
+</html>
