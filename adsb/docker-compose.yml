@@ -86,9 +86,11 @@ services:
               btn.onclick = function() { window.location.href = url; };
               return btn;
             }
-            container.appendChild(createBtn('RP', 'Replay Mode', '?replay'));
-            container.appendChild(createBtn('HM', 'Heatmap', '?heatmap&realHeat'));
-            container.appendChild(createBtn('PT', 'pTracks (Coverage)', '?pTracks'));
+            container.appendChild(createBtn('🔄', 'Replay Mode', '?replay'));
+            container.appendChild(createBtn('⏺️', 'Heatmap', '?heatmap=99999&realHeat&heatDuration=24&heatEnd=0'));
+            container.appendChild(createBtn('🅾️', 'Heatdot', '?heatmap=99999&heatDuration=24&heatEnd=0'));
+            container.appendChild(createBtn('🔀', 'pTracks (Coverage)', '?pTracks=24'));
+            container.appendChild(createBtn('⬅️', 'Full History', '?showTrace=2026-04-27'));
           });
       - PTRACKS=24
       - READSB_STATS_RANGE=true
