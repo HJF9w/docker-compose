@@ -59,7 +59,7 @@ services:
       - TAR1090_ENABLE_AC_DB=true
       - TAR1090_FLIGHTAWARELINKS=true
       - HEYWHATSTHAT_PANORAMA_ID=${FEEDER_HEYWHATSTHAT_ID}
-      - HEYWHATSTHAT_ALTS=${FEEDER_HEYWHATSTHAT_ALTS}
+      - HEYWHATSTHAT_ALTS=2280,10000,40000 ## Setting this via Portainer appears to be broken, variable values containing `,` don't get parsed
       - TAR1090_SITESHOW=true
       - TAR1090_RANGE_OUTLINE_COLORED_BY_ALTITUDE=true
       - TAR1090_RANGE_OUTLINE_WIDTH=2.0
