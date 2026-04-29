@@ -16,6 +16,10 @@ import psycopg
 from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
 
+
+def log_message(level, message):
+    print(f"[{datetime.now().isoformat()}] [{level}] {message}")
+
 def send_error_email(args, subject, body):
     msg = EmailMessage()
     msg['Subject'] = subject
@@ -38,8 +42,10 @@ def run_with_retries(args, subject, func, default=None, body_prefix=""):
             return func()
         except Exception as e:
             if i < 2:
+                log_message("WARN", f"{subject} attempt {i + 1}/3 failed: {e}. Retrying in 5s.")
                 time.sleep(5)
             else:
+                log_message("ERROR", f"{subject} failed after 3 attempts: {e}")
                 send_error_email(args, subject, f"{body_prefix}{e}")
                 return default
 
@@ -54,8 +60,10 @@ def run_with_db_retries(args, conn, subject, func, default=None, body_prefix="")
             except Exception as rollback_error:
                 print(f"PostgreSQL rollback failed: {rollback_error}", file=sys.stderr)
             if i < 2:
+                log_message("WARN", f"{subject} attempt {i + 1}/3 failed: {e}. Rolled back transaction and retrying in 5s.")
                 time.sleep(5)
             else:
+                log_message("ERROR", f"{subject} failed after 3 attempts: {e}")
                 send_error_email(args, subject, f"{body_prefix}{e}")
                 return default
 
@@ -168,7 +176,9 @@ def dwd_recent_index_contains_file(session, resolution, category, filename):
     )
     resp = session.get(index_url, timeout=30)
     resp.raise_for_status()
-    return filename in resp.text
+    exists = filename in resp.text
+    log_message("INFO", f"DWD index check {resolution}/{category}: {'found' if exists else 'missing'} {filename}")
+    return exists
 
 def process_dwd_zip_kl(z, conn, station_id):
     """Processes daily climate (KL) data and upserts it into PostgreSQL."""
@@ -287,13 +297,11 @@ def scrape_high_res(args, session, conn, station_id, category, resolution, field
 
     zip_filename = f"{prefix}_{url_part}_{station_id}_akt.zip"
     if not dwd_recent_index_contains_file(session, resolution, category, zip_filename):
-        print(
-            f"[{datetime.now().isoformat()}] DWD dataset missing for station {station_id} "
-            f"(category={category}, resolution={resolution}); skipping fetch."
-        )
+        log_message("INFO", f"DWD dataset missing for station {station_id} (category={category}, resolution={resolution}); skipping fetch.")
         return 0
 
     url = f"https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/{resolution}/{category}/recent/{zip_filename}"
+    log_message("INFO", f"Downloading DWD file {zip_filename}")
     z = fetch_dwd_zip(session, url)
     txt_filename = next((n for n in z.namelist() if n.startswith("produkt_") and n.endswith(".txt")), None)
     if not txt_filename:
@@ -318,6 +326,7 @@ def scrape_high_res(args, session, conn, station_id, category, resolution, field
             observations = []
     if observations:
         upsert_dwd_observations(conn, observations)
+    log_message("INFO", f"Stored {count} DWD observations for category={category}, resolution={resolution}")
     return count
 
 
@@ -399,7 +408,7 @@ def open_postgres_connection(args):
 
 def scrape_dwd_high_frequency(args, session, conn):
     station_id = args.dwd_station_id
-    print(f"[{datetime.now().isoformat()}] Fetching high-frequency DWD data for station {station_id}...")
+    log_message("INFO", f"Fetching high-frequency DWD data for station {station_id}")
 
     jobs = [
         ('air_temperature', '10_minutes', {'TT_10': 'temperature', 'RF_10': 'humidity'}),
@@ -410,6 +419,7 @@ def scrape_dwd_high_frequency(args, session, conn):
     ]
     total = 0
     for category, resolution, field_mapping in jobs:
+        log_message("INFO", f"Starting DWD job category={category}, resolution={resolution}")
         count = run_with_db_retries(
             args,
             conn,
@@ -419,7 +429,9 @@ def scrape_dwd_high_frequency(args, session, conn):
             ),
             default=0,
         )
+        log_message("INFO", f"Finished DWD job category={category}, resolution={resolution}, rows={count or 0}")
         total += count or 0
+    log_message("INFO", f"Finished high-frequency DWD ingestion with total rows={total}")
     return total
 
 
@@ -427,13 +439,14 @@ def scrape_dwd_daily(args, session, conn):
     station_id = args.dwd_station_id
 
     if not run_with_db_retries(args, conn, "PostgreSQL DWD State Error", lambda: check_history_loaded(conn, station_id), default=True):
-        print(f"[{datetime.now().isoformat()}] Starting historical KL import for station {station_id}...")
+        log_message("INFO", f"Starting historical KL import for station {station_id}")
         hist_url = run_with_retries(args, "DWD Hist URL Error", lambda: get_dwd_historical_url(session, station_id))
         if hist_url:
             def load_hist():
                 z = fetch_dwd_zip(session, hist_url)
                 count = process_dwd_zip_kl(z, conn, station_id)
                 mark_history_loaded(conn, station_id)
+                log_message("INFO", f"Historical KL import complete for station {station_id}, rows={count}")
                 return count
             run_with_db_retries(args, conn, "DWD Historical Data Error", load_hist)
 
@@ -445,14 +458,16 @@ def scrape_dwd_daily(args, session, conn):
         lambda: get_last_daily_kl_run_date(conn, station_id),
     )
     if last_daily_run == today:
+        log_message("INFO", f"Daily KL already processed for station {station_id} today; skipping")
         return 0
 
-    print(f"[{datetime.now().isoformat()}] Fetching daily DWD KL data for station {station_id}...")
+    log_message("INFO", f"Fetching daily DWD KL data for station {station_id}")
     kl_url = f"https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/daily/kl/recent/tageswerte_KL_{station_id}_akt.zip"
 
     def load_daily_kl():
         count = process_dwd_zip_kl(fetch_dwd_zip(session, kl_url), conn, station_id)
         mark_daily_kl_run(conn, station_id, today)
+        log_message("INFO", f"Daily KL import complete for station {station_id}, rows={count}")
         return count
 
     return run_with_db_retries(args, conn, "DWD KL Recent Error", load_daily_kl, default=0)
@@ -499,6 +514,8 @@ def main():
     p.add_argument("--postgres-password")
     args = p.parse_args()
 
+    log_message("INFO", f"Scrape run started (dwd_mode={args.dwd_mode}, dwd_station_id={args.dwd_station_id})")
+
     client = InfluxDBClient(
         url=args.influx_url,
         token=args.influx_token,
@@ -511,15 +528,23 @@ def main():
     sess_peg  = requests.Session()
     sess_sol  = requests.Session()
 
+    log_message("INFO", "Fetching Fam-Lange weather data")
     fam_data = run_with_retries(args, "Fam-Lange Weather Error",
                                 lambda: parse_fam_lange(fetch_soup(sess_wx, "https://fam-lange.de/wetter.php")),
                                 default={})
+    log_message("INFO", f"Fam-Lange weather metrics fetched: {len(fam_data)}")
+
+    log_message("INFO", "Fetching PegelOnline data")
     peg_data = run_with_retries(args, "PegelOnline Error",
                                 lambda: parse_pegelonline(fetch_soup(sess_peg, "https://www.pegelonline.wsv.de/gast/stammdaten?pegelnr=501060")),
                                 default={})
+    log_message("INFO", f"PegelOnline metrics fetched: {len(peg_data)}")
+
+    log_message("INFO", "Fetching solar data")
     solar_data = run_with_retries(args, "Solar Scrape Error",
                                   lambda: parse_solar(fetch_soup(sess_sol, "https://fam-lange.de/solar.php")),
                                   default={})
+    log_message("INFO", f"Solar metrics fetched: {len(solar_data)}")
 
     if args.neon_ext_sensor_url:
         def scrape_neon_ext():
@@ -527,6 +552,7 @@ def main():
             resp.raise_for_status()
             sensor_val = parse_neon_ext_temp(resp.text)
             write_metric(write_api, args.influx_bucket, args.influx_org, "neonExtTempSensor", sensor_val)
+        log_message("INFO", "Fetching and writing NEON external sensor data")
         run_with_retries(args, "Sensor Scrape Error", scrape_neon_ext)
 
     if args.neon_cpu_sensor_url:
@@ -535,25 +561,33 @@ def main():
             resp.raise_for_status()
             sensor_val = parse_neon_cpu_temp(resp.text)
             write_metric(write_api, args.influx_bucket, args.influx_org, "neonCPUTempSensor", sensor_val)
+        log_message("INFO", "Fetching and writing NEON CPU sensor data")
         run_with_retries(args, "Sensor Scrape Error", scrape_neon_cpu)
 
     if args.dwd_mode != "off":
+        log_message("INFO", "Starting DWD PostgreSQL ingestion")
         run_with_retries(args, "DWD PostgreSQL Scrape Error", lambda: scrape_dwd(args, sess_wx))
+        log_message("INFO", "Finished DWD PostgreSQL ingestion")
 
-    for k, v in {**fam_data, **peg_data, **solar_data}.items():
-        if k == "totalenergy": continue
+    merged_metrics = {**fam_data, **peg_data, **solar_data}
+    for k, v in merged_metrics.items():
+        if k == "totalenergy":
+            continue
         run_with_retries(args, "InfluxDB Write Error",
                          lambda: write_metric(write_api, args.influx_bucket, args.influx_org, k, v),
                          body_prefix=f"{k}={v}: ")
+    log_message("INFO", f"Finished writing {len([k for k in merged_metrics if k != 'totalenergy'])} metrics to InfluxDB")
 
     if "totalenergy" in solar_data:
         noon = datetime.combine(date.today(), dt_time(12, 0, 0), tzinfo=timezone.utc)
         run_with_retries(args, "InfluxDB Write Error",
                          lambda: write_metric(write_api, args.influx_bucket, args.influx_org, "totalenergy", solar_data["totalenergy"], timestamp=noon),
                          body_prefix=f"totalenergy={solar_data['totalenergy']}: ")
+        log_message("INFO", "Wrote totalenergy metric to InfluxDB")
 
     write_api.close()
     client.close()
+    log_message("INFO", "Scrape run completed")
 
 if __name__ == "__main__":
     main()
