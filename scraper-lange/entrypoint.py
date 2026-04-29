@@ -4,25 +4,30 @@ Entrypoint / scheduler for running scrape.py according to a cron expression (CRO
 If CRON_SCHEDULE is empty/unset, the script runs once and exits.
 
 Mapping of environment variables to CLI flags:
-  INFLUX_URL      -> --influx-url
-  INFLUX_TOKEN    -> --influx-token
-  INFLUX_ORG      -> --influx-org
-  INFLUX_BUCKET   -> --influx-bucket
-  SMTP_HOST       -> --smtp-host
-  SMTP_PORT       -> --smtp-port
-  SMTP_USE_TLS    -> --smtp-use-tls  (if "true" or "1")
-  SMTP_USER       -> --smtp-user
-  SMTP_PASS       -> --smtp-pass
-  EMAIL_FROM      -> --email-from
-  EMAIL_TO        -> --email-to
+  INFLUX_URL        -> --influx-url
+  INFLUX_TOKEN      -> --influx-token
+  INFLUX_ORG        -> --influx-org
+  INFLUX_BUCKET     -> --influx-bucket
+  SMTP_HOST         -> --smtp-host
+  SMTP_PORT         -> --smtp-port
+  SMTP_USE_TLS      -> --smtp-use-tls  (if "true" or "1")
+  SMTP_USER         -> --smtp-user
+  SMTP_PASS         -> --smtp-pass
+  EMAIL_FROM        -> --email-from
+  EMAIL_TO          -> --email-to
+  POSTGRES_HOST     -> --postgres-host
+  POSTGRES_PORT     -> --postgres-port
+  POSTGRES_DB       -> --postgres-db
+  POSTGRES_USER     -> --postgres-user
+  POSTGRES_PASSWORD -> --postgres-password
+  DWD_MODE          -> --dwd-mode ("off", "high-frequency", "daily", or "all")
 
 Optional:
-  TZ              -> If set, container will respect timezone (tzdata installed in image)
-  CRON_SCHEDULE   -> Cron expression to schedule repeated runs (uses croniter)
-                    Example: "*/10 * * * *" for every 10 minutes
+  TZ                -> If set, container will respect timezone (tzdata installed in image)
+  CRON_SCHEDULE     -> Cron expression to schedule repeated runs (uses croniter)
+                      Example: "*/10 * * * *" for every 10 minutes
   If CRON_SCHEDULE is unset or empty, runs one time and exits.
 """
-
 import os
 import shlex
 import signal
@@ -53,6 +58,12 @@ def build_args_from_env():
         ("NEON_EXT_SENSOR_URL", "--neon-ext-sensor-url"),
         ("NEON_CPU_SENSOR_URL", "--neon-cpu-sensor-url"),
         ("DWD_STATION_ID", "--dwd-station-id"),
+        ("DWD_MODE", "--dwd-mode"),
+        ("POSTGRES_HOST", "--postgres-host"),
+        ("POSTGRES_PORT", "--postgres-port"),
+        ("POSTGRES_DB", "--postgres-db"),
+        ("POSTGRES_USER", "--postgres-user"),
+        ("POSTGRES_PASSWORD", "--postgres-password"),
     ]
     for envk, flag in mapping:
         v = env.get(envk)

@@ -12,6 +12,7 @@ from datetime import datetime, date, time as dt_time, timezone
 
 import requests
 from bs4 import BeautifulSoup
+import psycopg
 from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
 
@@ -143,10 +144,11 @@ def fetch_dwd_zip(session, url):
     resp.raise_for_status()
     return zipfile.ZipFile(io.BytesIO(resp.content))
 
-def process_dwd_zip_kl(z, write_api, bucket, org, station_id):
-    """Processes daily climate (KL) data."""
+def process_dwd_zip_kl(z, conn, station_id):
+    """Processes daily climate (KL) data and upserts it into PostgreSQL."""
     txt_filename = next((n for n in z.namelist() if n.startswith("produkt_") and n.endswith(".txt")), None)
-    if not txt_filename: return 0
+    if not txt_filename:
+        return 0
     with z.open(txt_filename) as f:
         content = f.read().decode('latin1')
     reader = csv.DictReader(io.StringIO(content), delimiter=';')
@@ -155,31 +157,99 @@ def process_dwd_zip_kl(z, write_api, bucket, org, station_id):
         'FM': 'wind_speed', 'FX': 'wind_gust', 'PM': 'pressure',
         'RSK': 'rain', 'SDK': 'sunshine'
     }
-    points = []
+    observations = []
     count = 0
     for row in reader:
         row = {k.strip(): v.strip() for k, v in row.items() if k}
         dt_str = row.get('MESS_DATUM')
-        if not dt_str: continue
+        if not dt_str:
+            continue
         dt = datetime.strptime(dt_str, "%Y%m%d").replace(tzinfo=timezone.utc)
-        p = Point("dwd_climate").tag("station", station_id).time(dt)
-        has_data = False
-        for dwd_key, field_name in field_mapping.items():
-            val = row.get(dwd_key)
-            if val and val != '-999':
-                p.field(field_name, float(val))
-                has_data = True
-        if has_data:
-            points.append(p)
+        metrics = build_dwd_metrics(row, field_mapping)
+        if metrics:
+            observations.append(build_dwd_observation(station_id, dt, 'daily', 'kl', metrics))
             count += 1
-        if len(points) >= 5000:
-            write_api.write(bucket=bucket, org=org, record=points)
-            points = []
-    if points: write_api.write(bucket=bucket, org=org, record=points)
+        if len(observations) >= 5000:
+            upsert_dwd_observations(conn, observations)
+            observations = []
+    if observations:
+        upsert_dwd_observations(conn, observations)
     return count
 
-def scrape_high_res(args, session, write_api, bucket, station_id, category, resolution, field_mapping):
-    """Fetches and writes 10-minute or hourly data."""
+
+def parse_dwd_float(value):
+    if value is None:
+        return None
+    value = value.strip().replace(',', '.')
+    if not value or value in ('-999', '-999.0'):
+        return None
+    return float(value)
+
+
+def build_dwd_metrics(row, field_mapping):
+    metrics = {}
+    for dwd_key, field_name in field_mapping.items():
+        value = parse_dwd_float(row.get(dwd_key))
+        if value is not None:
+            metrics[field_name] = value
+    return metrics
+
+
+def build_dwd_observation(station_id, ts_utc, resolution, source, metrics):
+    observation = {
+        'station_id': station_id,
+        'ts_utc': ts_utc,
+        'resolution': resolution,
+        'source': source,
+        'temperature': None,
+        'humidity': None,
+        'cloudiness': None,
+        'wind_speed': None,
+        'wind_gust': None,
+        'wind_direction': None,
+        'pressure': None,
+        'rain': None,
+        'rain_rate_10min': None,
+        'sunshine': None,
+    }
+    observation.update(metrics)
+    return observation
+
+
+def upsert_dwd_observations(conn, observations):
+    if not observations:
+        return 0
+    sql = """
+        INSERT INTO dwd.observations (
+            station_id, ts_utc, resolution, source,
+            temperature, humidity, cloudiness, wind_speed, wind_gust,
+            wind_direction, pressure, rain, rain_rate_10min, sunshine
+        ) VALUES (
+            %(station_id)s, %(ts_utc)s, %(resolution)s, %(source)s,
+            %(temperature)s, %(humidity)s, %(cloudiness)s, %(wind_speed)s, %(wind_gust)s,
+            %(wind_direction)s, %(pressure)s, %(rain)s, %(rain_rate_10min)s, %(sunshine)s
+        )
+        ON CONFLICT (station_id, ts_utc, resolution, source) DO UPDATE SET
+            temperature = COALESCE(EXCLUDED.temperature, dwd.observations.temperature),
+            humidity = COALESCE(EXCLUDED.humidity, dwd.observations.humidity),
+            cloudiness = COALESCE(EXCLUDED.cloudiness, dwd.observations.cloudiness),
+            wind_speed = COALESCE(EXCLUDED.wind_speed, dwd.observations.wind_speed),
+            wind_gust = COALESCE(EXCLUDED.wind_gust, dwd.observations.wind_gust),
+            wind_direction = COALESCE(EXCLUDED.wind_direction, dwd.observations.wind_direction),
+            pressure = COALESCE(EXCLUDED.pressure, dwd.observations.pressure),
+            rain = COALESCE(EXCLUDED.rain, dwd.observations.rain),
+            rain_rate_10min = COALESCE(EXCLUDED.rain_rate_10min, dwd.observations.rain_rate_10min),
+            sunshine = COALESCE(EXCLUDED.sunshine, dwd.observations.sunshine),
+            updated_at = now()
+    """
+    with conn.cursor() as cur:
+        cur.executemany(sql, observations)
+    conn.commit()
+    return len(observations)
+
+
+def scrape_high_res(args, session, conn, station_id, category, resolution, field_mapping):
+    """Fetches 10-minute or hourly DWD data and upserts it into PostgreSQL."""
     if resolution == '10_minutes':
         prefix, ts_format = "10minutenwerte", "%Y%m%d%H%M"
         cat_map = {'air_temperature': 'TU', 'wind': 'wind', 'precipitation': 'nieder'}
@@ -188,47 +258,87 @@ def scrape_high_res(args, session, write_api, bucket, station_id, category, reso
         prefix, ts_format = "stundenwerte", "%Y%m%d%H"
         cat_map = {'air_temperature': 'TU', 'wind': 'FF', 'precipitation': 'RR', 'pressure': 'P0', 'cloudiness': 'N'}
         url_part = cat_map.get(category, category)
-    
+
     url = f"https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/{resolution}/{category}/recent/{prefix}_{url_part}_{station_id}_akt.zip"
-    try:
-        z = fetch_dwd_zip(session, url)
-        txt_filename = next((n for n in z.namelist() if n.startswith("produkt_") and n.endswith(".txt")), None)
-        if not txt_filename: return 0
-        with z.open(txt_filename) as f:
-            content = f.read().decode('latin1')
-        reader = csv.DictReader(io.StringIO(content), delimiter=';')
-        points = []
-        count = 0
-        for row in reader:
-            row = {k.strip(): v.strip() for k, v in row.items() if k}
-            dt_str = row.get('MESS_DATUM')
-            if not dt_str: continue
-            dt = datetime.strptime(dt_str, ts_format).replace(tzinfo=timezone.utc)
-            p = Point("dwd_weather").tag("station", station_id).time(dt)
-            has_data = False
-            for dwd_key, field_name in field_mapping.items():
-                val = row.get(dwd_key)
-                if val and val != '-999':
-                    p.field(field_name, float(val))
-                    has_data = True
-            if has_data:
-                points.append(p)
-                count += 1
-            if len(points) >= 2000:
-                write_api.write(bucket=bucket, org=args.influx_org, record=points)
-                points = []
-        if points: write_api.write(bucket=bucket, org=args.influx_org, record=points)
-        return count
-    except Exception:
+    z = fetch_dwd_zip(session, url)
+    txt_filename = next((n for n in z.namelist() if n.startswith("produkt_") and n.endswith(".txt")), None)
+    if not txt_filename:
         return 0
+    with z.open(txt_filename) as f:
+        content = f.read().decode('latin1')
+    reader = csv.DictReader(io.StringIO(content), delimiter=';')
+    observations = []
+    count = 0
+    for row in reader:
+        row = {k.strip(): v.strip() for k, v in row.items() if k}
+        dt_str = row.get('MESS_DATUM')
+        if not dt_str:
+            continue
+        dt = datetime.strptime(dt_str, ts_format).replace(tzinfo=timezone.utc)
+        metrics = build_dwd_metrics(row, field_mapping)
+        if metrics:
+            observations.append(build_dwd_observation(station_id, dt, resolution, category, metrics))
+            count += 1
+        if len(observations) >= 2000:
+            upsert_dwd_observations(conn, observations)
+            observations = []
+    if observations:
+        upsert_dwd_observations(conn, observations)
+    return count
 
-def check_history_loaded(query_api, bucket, station_id):
-    query = f'from(bucket: "{bucket}") |> range(start: 0) |> filter(fn: (r) => r._measurement == "dwd_system" and r.station == "{station_id}" and r._field == "history_loaded_kl") |> last()'
-    return len(query_api.query(query)) > 0
 
-def mark_history_loaded(write_api, bucket, org, station_id):
-    p = Point("dwd_system").tag("station", station_id).field("history_loaded_kl", True).time(datetime.now(timezone.utc))
-    write_api.write(bucket=bucket, org=org, record=p)
+def check_history_loaded(conn, station_id):
+    with conn.cursor() as cur:
+        cur.execute(
+            "SELECT historical_kl_loaded FROM dwd.ingest_state WHERE station_id = %s",
+            (station_id,),
+        )
+        row = cur.fetchone()
+    return bool(row and row[0])
+
+
+def mark_history_loaded(conn, station_id):
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            INSERT INTO dwd.ingest_state (
+                station_id, historical_kl_loaded, historical_kl_loaded_at, updated_at
+            ) VALUES (%s, true, now(), now())
+            ON CONFLICT (station_id) DO UPDATE SET
+                historical_kl_loaded = true,
+                historical_kl_loaded_at = now(),
+                updated_at = now()
+            """,
+            (station_id,),
+        )
+    conn.commit()
+
+
+def get_last_daily_kl_run_date(conn, station_id):
+    with conn.cursor() as cur:
+        cur.execute(
+            "SELECT last_daily_kl_run_date FROM dwd.ingest_state WHERE station_id = %s",
+            (station_id,),
+        )
+        row = cur.fetchone()
+    return row[0] if row else None
+
+
+def mark_daily_kl_run(conn, station_id, run_date):
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            INSERT INTO dwd.ingest_state (
+                station_id, last_daily_kl_run_date, updated_at
+            ) VALUES (%s, %s, now())
+            ON CONFLICT (station_id) DO UPDATE SET
+                last_daily_kl_run_date = EXCLUDED.last_daily_kl_run_date,
+                updated_at = now()
+            """,
+            (station_id, run_date),
+        )
+    conn.commit()
+
 
 def get_dwd_historical_url(session, station_id):
     base_url = "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/daily/kl/historical/"
@@ -241,54 +351,88 @@ def get_dwd_historical_url(session, station_id):
             return base_url + href
     raise ValueError(f"Historical KL zip for station {station_id} not found.")
 
-def scrape_dwd(args, session, query_api, write_api):
-    station_id = args.dwd_station_id
-    dwd_bucket = "dwd"
 
-    # 1. Historical Load (Daily KL)
-    if not run_with_retries(args, "Influx Query Error", lambda: check_history_loaded(query_api, dwd_bucket, station_id), default=True):
+def open_postgres_connection(args):
+    return psycopg.connect(
+        host=args.postgres_host,
+        port=args.postgres_port,
+        dbname=args.postgres_db,
+        user=args.postgres_user,
+        password=args.postgres_password,
+        connect_timeout=10,
+    )
+
+
+def scrape_dwd_high_frequency(args, session, conn):
+    station_id = args.dwd_station_id
+    print(f"[{datetime.now().isoformat()}] Fetching high-frequency DWD data for station {station_id}...")
+
+    jobs = [
+        ('air_temperature', '10_minutes', {'TT_10': 'temperature', 'RF_10': 'humidity'}),
+        ('wind', '10_minutes', {'FF_10': 'wind_speed', 'DD_10': 'wind_direction'}),
+        ('precipitation', '10_minutes', {'RWS_10': 'rain_rate_10min'}),
+        ('pressure', 'hourly', {'P0': 'pressure'}),
+        ('cloudiness', 'hourly', {'N': 'cloudiness'}),
+    ]
+    total = 0
+    for category, resolution, field_mapping in jobs:
+        count = run_with_retries(
+            args,
+            f"DWD {category} Recent Error",
+            lambda category=category, resolution=resolution, field_mapping=field_mapping: scrape_high_res(
+                args, session, conn, station_id, category, resolution, field_mapping
+            ),
+            default=0,
+        )
+        total += count or 0
+    return total
+
+
+def scrape_dwd_daily(args, session, conn):
+    station_id = args.dwd_station_id
+
+    if not run_with_retries(args, "PostgreSQL DWD State Error", lambda: check_history_loaded(conn, station_id), default=True):
         print(f"[{datetime.now().isoformat()}] Starting historical KL import for station {station_id}...")
         hist_url = run_with_retries(args, "DWD Hist URL Error", lambda: get_dwd_historical_url(session, station_id))
         if hist_url:
             def load_hist():
                 z = fetch_dwd_zip(session, hist_url)
-                cnt = process_dwd_zip_kl(z, write_api, dwd_bucket, args.influx_org, station_id)
-                mark_history_loaded(write_api, dwd_bucket, args.influx_org, station_id)
-                return cnt
+                count = process_dwd_zip_kl(z, conn, station_id)
+                mark_history_loaded(conn, station_id)
+                return count
             run_with_retries(args, "DWD Historical Data Error", load_hist)
 
-    # 2. Daily Recent Update
-    STATE_FILE = "/tmp/dwd_full_fetch.txt"
-    today = date.today().isoformat()
-    try:
-        with open(STATE_FILE, "r") as f:
-            if f.read().strip() == today: return
-    except FileNotFoundError: pass
+    today = date.today()
+    last_daily_run = run_with_retries(
+        args,
+        "PostgreSQL DWD State Error",
+        lambda: get_last_daily_kl_run_date(conn, station_id),
+    )
+    if last_daily_run == today:
+        return 0
 
-    print(f"[{datetime.now().isoformat()}] Fetching high-resolution DWD data for station {station_id}...")
-    
-    # 10-min: Temp & Humidity
-    scrape_high_res(args, session, write_api, dwd_bucket, station_id, 'air_temperature', '10_minutes', {'TT_10': 'temperature', 'RF_10': 'humidity'})
-
-    # 10-min: Wind
-    scrape_high_res(args, session, write_api, dwd_bucket, station_id, 'wind', '10_minutes', {'FF_10': 'wind_speed', 'DD_10': 'wind_direction'})
-
-    # Hourly: Pressure
-    scrape_high_res(args, session, write_api, dwd_bucket, station_id, 'pressure', 'hourly', {'P0': 'pressure'})
-
-    # Hourly: Cloudiness
-    scrape_high_res(args, session, write_api, dwd_bucket, station_id, 'cloudiness', 'hourly', {'N': 'cloudiness'})
-
-    # 10-min: Precipitation
-    scrape_high_res(args, session, write_api, dwd_bucket, station_id, 'precipitation', '10_minutes', {'RWS_10': 'rain_rate_10min'})
-
-    # Daily KL Update (Recent)
+    print(f"[{datetime.now().isoformat()}] Fetching daily DWD KL data for station {station_id}...")
     kl_url = f"https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/daily/kl/recent/tageswerte_KL_{station_id}_akt.zip"
-    run_with_retries(args, "DWD KL Recent Error", lambda: process_dwd_zip_kl(fetch_dwd_zip(session, kl_url), write_api, dwd_bucket, args.influx_org, station_id))
 
-    try:
-        with open(STATE_FILE, "w") as f: f.write(today)
-    except Exception: pass
+    def load_daily_kl():
+        count = process_dwd_zip_kl(fetch_dwd_zip(session, kl_url), conn, station_id)
+        mark_daily_kl_run(conn, station_id, today)
+        return count
+
+    return run_with_retries(args, "DWD KL Recent Error", load_daily_kl, default=0)
+
+
+def scrape_dwd(args, session):
+    if not args.dwd_station_id:
+        return
+    if not all([args.postgres_host, args.postgres_db, args.postgres_user, args.postgres_password]):
+        raise ValueError("DWD PostgreSQL ingestion requires postgres host, database, user, and password.")
+
+    with open_postgres_connection(args) as conn:
+        if args.dwd_mode in ('all', 'high-frequency'):
+            scrape_dwd_high_frequency(args, session, conn)
+        if args.dwd_mode in ('all', 'daily'):
+            scrape_dwd_daily(args, session, conn)
 
 # --- END DWD FUNCTIONS ---
 
@@ -311,6 +455,12 @@ def main():
     p.add_argument("--neon-ext-sensor-url")
     p.add_argument("--neon-cpu-sensor-url")
     p.add_argument("--dwd-station-id", default="00991", help="DWD station ID")
+    p.add_argument("--dwd-mode", choices=("all", "high-frequency", "daily", "off"), default="off", help="DWD PostgreSQL ingestion mode")
+    p.add_argument("--postgres-host", default="postgres")
+    p.add_argument("--postgres-port", type=int, default=5432)
+    p.add_argument("--postgres-db", default="timeseries")
+    p.add_argument("--postgres-user")
+    p.add_argument("--postgres-password")
     args = p.parse_args()
 
     client = InfluxDBClient(
@@ -351,8 +501,8 @@ def main():
             write_metric(write_api, args.influx_bucket, args.influx_org, "neonCPUTempSensor", sensor_val)
         run_with_retries(args, "Sensor Scrape Error", scrape_neon_cpu)
 
-    # DWD Daily Rain Scrape
-    ## scrape_dwd(args, sess_wx, query_api, write_api)
+    if args.dwd_mode != "off":
+        run_with_retries(args, "DWD PostgreSQL Scrape Error", lambda: scrape_dwd(args, sess_wx))
 
     for k, v in {**fam_data, **peg_data, **solar_data}.items():
         if k == "totalenergy": continue
