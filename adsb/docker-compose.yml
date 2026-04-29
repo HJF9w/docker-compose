@@ -93,7 +93,7 @@ services:
             container.appendChild(createBtn('⬅️', 'Full History', '?showTrace=2026-04-27'));
           });
       - PTRACKS=24
-      - READSB_STATS_RANGE=true
+      - READSB_STATS_RANGE=${READSB_STATS_RANGE:-true}
       - READSB_RANGE_OUTLINE_HOURS=24
       - TAR1090_ENABLE_AC_DB=true
       - READSB_ENABLE_TRACES=true ## high disk usage
