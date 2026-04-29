@@ -43,6 +43,22 @@ def run_with_retries(args, subject, func, default=None, body_prefix=""):
                 send_error_email(args, subject, f"{body_prefix}{e}")
                 return default
 
+
+def run_with_db_retries(args, conn, subject, func, default=None, body_prefix=""):
+    for i in range(3):
+        try:
+            return func()
+        except Exception as e:
+            try:
+                conn.rollback()
+            except Exception as rollback_error:
+                print(f"PostgreSQL rollback failed: {rollback_error}", file=sys.stderr)
+            if i < 2:
+                time.sleep(5)
+            else:
+                send_error_email(args, subject, f"{body_prefix}{e}")
+                return default
+
 def fetch_soup(session, url):
     resp = session.get(url, timeout=10)
     resp.raise_for_status()
@@ -376,8 +392,9 @@ def scrape_dwd_high_frequency(args, session, conn):
     ]
     total = 0
     for category, resolution, field_mapping in jobs:
-        count = run_with_retries(
+        count = run_with_db_retries(
             args,
+            conn,
             f"DWD {category} Recent Error",
             lambda category=category, resolution=resolution, field_mapping=field_mapping: scrape_high_res(
                 args, session, conn, station_id, category, resolution, field_mapping
@@ -391,7 +408,7 @@ def scrape_dwd_high_frequency(args, session, conn):
 def scrape_dwd_daily(args, session, conn):
     station_id = args.dwd_station_id
 
-    if not run_with_retries(args, "PostgreSQL DWD State Error", lambda: check_history_loaded(conn, station_id), default=True):
+    if not run_with_db_retries(args, conn, "PostgreSQL DWD State Error", lambda: check_history_loaded(conn, station_id), default=True):
         print(f"[{datetime.now().isoformat()}] Starting historical KL import for station {station_id}...")
         hist_url = run_with_retries(args, "DWD Hist URL Error", lambda: get_dwd_historical_url(session, station_id))
         if hist_url:
@@ -400,11 +417,12 @@ def scrape_dwd_daily(args, session, conn):
                 count = process_dwd_zip_kl(z, conn, station_id)
                 mark_history_loaded(conn, station_id)
                 return count
-            run_with_retries(args, "DWD Historical Data Error", load_hist)
+            run_with_db_retries(args, conn, "DWD Historical Data Error", load_hist)
 
     today = date.today()
-    last_daily_run = run_with_retries(
+    last_daily_run = run_with_db_retries(
         args,
+        conn,
         "PostgreSQL DWD State Error",
         lambda: get_last_daily_kl_run_date(conn, station_id),
     )
@@ -419,7 +437,7 @@ def scrape_dwd_daily(args, session, conn):
         mark_daily_kl_run(conn, station_id, today)
         return count
 
-    return run_with_retries(args, "DWD KL Recent Error", load_daily_kl, default=0)
+    return run_with_db_retries(args, conn, "DWD KL Recent Error", load_daily_kl, default=0)
 
 
 def scrape_dwd(args, session):
