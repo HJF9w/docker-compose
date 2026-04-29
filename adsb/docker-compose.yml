@@ -103,8 +103,8 @@ services:
       - GRAPHS1090_LARGE_HEIGHT=1080
       - GRAPHS1090_SMALL_WIDTH=1920
       - GRAPHS1090_SMALL_HEIGHT=1080
-      - GRAPHS1090_REDUCE_IO=true
-      - GRAPHS1090_REDUCE_IO_FLUSH_IVAL=1h
+      #- GRAPHS1090_REDUCE_IO=true
+      #- GRAPHS1090_REDUCE_IO_FLUSH_IVAL=1h
     volumes:
       - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/ultrafeeder/globe_history:/var/globe_history
       - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/ultrafeeder/graphs1090:/var/lib/collectd
