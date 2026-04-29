@@ -160,6 +160,16 @@ def fetch_dwd_zip(session, url):
     resp.raise_for_status()
     return zipfile.ZipFile(io.BytesIO(resp.content))
 
+
+def dwd_recent_index_contains_file(session, resolution, category, filename):
+    index_url = (
+        "https://opendata.dwd.de/climate_environment/CDC/observations_germany/"
+        f"climate/{resolution}/{category}/recent/"
+    )
+    resp = session.get(index_url, timeout=30)
+    resp.raise_for_status()
+    return filename in resp.text
+
 def process_dwd_zip_kl(z, conn, station_id):
     """Processes daily climate (KL) data and upserts it into PostgreSQL."""
     txt_filename = next((n for n in z.namelist() if n.startswith("produkt_") and n.endswith(".txt")), None)
@@ -275,7 +285,15 @@ def scrape_high_res(args, session, conn, station_id, category, resolution, field
         cat_map = {'air_temperature': 'TU', 'wind': 'FF', 'precipitation': 'RR', 'pressure': 'P0', 'cloudiness': 'N'}
         url_part = cat_map.get(category, category)
 
-    url = f"https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/{resolution}/{category}/recent/{prefix}_{url_part}_{station_id}_akt.zip"
+    zip_filename = f"{prefix}_{url_part}_{station_id}_akt.zip"
+    if not dwd_recent_index_contains_file(session, resolution, category, zip_filename):
+        print(
+            f"[{datetime.now().isoformat()}] DWD dataset missing for station {station_id} "
+            f"(category={category}, resolution={resolution}); skipping fetch."
+        )
+        return 0
+
+    url = f"https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/{resolution}/{category}/recent/{zip_filename}"
     z = fetch_dwd_zip(session, url)
     txt_filename = next((n for n in z.namelist() if n.startswith("produkt_") and n.endswith(".txt")), None)
     if not txt_filename:
