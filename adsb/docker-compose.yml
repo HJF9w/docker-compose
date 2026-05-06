@@ -3,7 +3,7 @@ services:
   # COMMERCIAL & OTHER ADS-B FEEDERS
   # ----------------------------------------------------------------------
   piaware:
-    image: ghcr.io/sdr-enthusiasts/docker-piaware:latest-build-654
+    image: ghcr.io/sdr-enthusiasts/docker-piaware:latest-build-656
     container_name: piaware
     hostname: piaware
     restart: unless-stopped
@@ -24,7 +24,7 @@ services:
       - /var/log
 
   fr24:
-    image: ghcr.io/sdr-enthusiasts/docker-flightradar24:latest-build-845
+    image: ghcr.io/sdr-enthusiasts/docker-flightradar24:latest-build-847
     container_name: fr24
     hostname: fr24
     restart: unless-stopped
@@ -56,7 +56,7 @@ services:
       - SHARECODE=${PLANEFINDER_SHARECODE}
 
   airnavradar:
-    image: ghcr.io/sdr-enthusiasts/docker-airnavradar:latest-build-869
+    image: ghcr.io/sdr-enthusiasts/docker-airnavradar:latest-build-873
     container_name: airnavradar
     hostname: airnavradar
     restart: unless-stopped
@@ -95,7 +95,7 @@ services:
       - /var/log
 
   opensky:
-    image: ghcr.io/sdr-enthusiasts/docker-opensky-network:latest-build-823
+    image: ghcr.io/sdr-enthusiasts/docker-opensky-network:latest-build-827
     container_name: opensky
     restart: unless-stopped
     environment:
