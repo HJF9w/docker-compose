@@ -433,6 +433,29 @@ def scrape_high_res(args, session, conn, station_id, category, resolution, field
     return count
 
 
+def daily_kl_has_full_fields(conn, station_id):
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            SELECT EXISTS (
+                SELECT 1
+                FROM dwd.observations
+                WHERE station_id = %s
+                  AND resolution = 'daily'
+                  AND source = 'kl'
+                  AND (
+                      temperature_max IS NOT NULL
+                      OR temperature_min IS NOT NULL
+                      OR temperature_ground_min IS NOT NULL
+                  )
+            )
+            """,
+            (station_id,),
+        )
+        row = cur.fetchone()
+    return bool(row and row[0])
+
+
 def check_history_loaded(conn, station_id):
     with conn.cursor() as cur:
         cur.execute(
@@ -440,7 +463,16 @@ def check_history_loaded(conn, station_id):
             (station_id,),
         )
         row = cur.fetchone()
-    return bool(row and row[0])
+    if not bool(row and row[0]):
+        return False
+    if daily_kl_has_full_fields(conn, station_id):
+        return True
+    log_message(
+        "INFO",
+        f"Historical KL full-field state is set for station {station_id}, "
+        "but no daily min/max/ground-min values were found; reimporting historical KL data.",
+    )
+    return False
 
 
 def mark_history_loaded(conn, station_id):
@@ -594,8 +626,14 @@ def scrape_dwd_daily(args, session, conn):
         lambda: get_last_daily_kl_run_date(conn, station_id),
     )
     if last_daily_run == today:
-        log_message("INFO", f"Daily KL already processed for station {station_id} today; skipping")
-        return 0
+        if daily_kl_has_full_fields(conn, station_id):
+            log_message("INFO", f"Daily KL already processed for station {station_id} today; skipping")
+            return 0
+        log_message(
+            "INFO",
+            f"Daily KL state says station {station_id} was processed today, "
+            "but no daily min/max/ground-min values were found; reprocessing daily KL data.",
+        )
 
     log_message("INFO", f"Fetching daily DWD KL data for station {station_id}")
     kl_url = f"https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/daily/kl/recent/tageswerte_KL_{station_id}_akt.zip"
