@@ -1,6 +1,6 @@
 services:
   app:
-    image: "portainer/portainer-ee:2.39.1-alpine"
+    image: "portainer/portainer-ee:2.39.2-alpine"
     restart: always
     environment:
       - TRUSTED_ORIGINS=portainer-xenon.ioui.eu
@@ -18,7 +18,7 @@ services:
       internal:
 
   agent:
-    image: 'portainer/agent:2.39.1-alpine'
+    image: 'portainer/agent:2.39.2-alpine'
     environment:
       - EDGE_INSECURE_POLL=1
       - EDGE_KEY=${EDGE_KEY}
