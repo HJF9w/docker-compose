@@ -214,67 +214,123 @@ DWD_DAILY_KL_FIELD_MAPPING = {
 }
 
 
+def postgres_schema_exists(conn, schema_name):
+    with conn.cursor() as cur:
+        cur.execute(
+            "SELECT EXISTS (SELECT 1 FROM information_schema.schemata WHERE schema_name = %s)",
+            (schema_name,),
+        )
+        row = cur.fetchone()
+    return bool(row and row[0])
+
+
+def postgres_table_exists(conn, schema_name, table_name):
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            SELECT EXISTS (
+                SELECT 1
+                FROM information_schema.tables
+                WHERE table_schema = %s
+                  AND table_name = %s
+            )
+            """,
+            (schema_name, table_name),
+        )
+        row = cur.fetchone()
+    return bool(row and row[0])
+
+
+def postgres_table_columns(conn, schema_name, table_name):
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            SELECT column_name
+            FROM information_schema.columns
+            WHERE table_schema = %s
+              AND table_name = %s
+            """,
+            (schema_name, table_name),
+        )
+        return {row[0] for row in cur.fetchall()}
+
+
 def ensure_dwd_schema(conn):
     """Create or extend the DWD tables without dropping existing data."""
-    with conn.cursor() as cur:
-        cur.execute("CREATE SCHEMA IF NOT EXISTS dwd")
-        cur.execute(
-            """
-            CREATE TABLE IF NOT EXISTS dwd.observations (
-                station_id TEXT NOT NULL,
-                ts_utc TIMESTAMPTZ NOT NULL,
-                resolution TEXT NOT NULL,
-                source TEXT NOT NULL,
-                created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-                updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-                PRIMARY KEY (station_id, ts_utc, resolution, source)
-            )
-            """
-        )
-        for column_name, column_type in DWD_OBSERVATION_FLOAT_COLUMNS.items():
+    if not postgres_schema_exists(conn, 'dwd'):
+        with conn.cursor() as cur:
+            cur.execute("CREATE SCHEMA dwd")
+        conn.commit()
+
+    if not postgres_table_exists(conn, 'dwd', 'observations'):
+        with conn.cursor() as cur:
             cur.execute(
-                f"ALTER TABLE dwd.observations ADD COLUMN IF NOT EXISTS {column_name} {column_type}"
+                """
+                CREATE TABLE dwd.observations (
+                    station_id TEXT NOT NULL,
+                    ts_utc TIMESTAMPTZ NOT NULL,
+                    resolution TEXT NOT NULL,
+                    source TEXT NOT NULL,
+                    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+                    updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+                    PRIMARY KEY (station_id, ts_utc, resolution, source)
+                )
+                """
             )
-        cur.execute(
-            """
-            CREATE TABLE IF NOT EXISTS dwd.ingest_state (
-                station_id TEXT PRIMARY KEY,
-                historical_kl_loaded BOOLEAN NOT NULL DEFAULT false,
-                historical_kl_full_fields_loaded BOOLEAN NOT NULL DEFAULT false,
-                historical_kl_loaded_at TIMESTAMPTZ,
-                historical_kl_full_fields_loaded_at TIMESTAMPTZ,
-                last_daily_kl_run_date DATE,
-                last_daily_kl_full_fields_run_date DATE,
-                created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-                updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+        conn.commit()
+
+    observation_columns = postgres_table_columns(conn, 'dwd', 'observations')
+    missing_observation_columns = [
+        (column_name, column_type)
+        for column_name, column_type in DWD_OBSERVATION_FLOAT_COLUMNS.items()
+        if column_name not in observation_columns
+    ]
+    if missing_observation_columns:
+        with conn.cursor() as cur:
+            for column_name, column_type in missing_observation_columns:
+                cur.execute(f"ALTER TABLE dwd.observations ADD COLUMN {column_name} {column_type}")
+        conn.commit()
+
+    if not postgres_table_exists(conn, 'dwd', 'ingest_state'):
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                CREATE TABLE dwd.ingest_state (
+                    station_id TEXT PRIMARY KEY,
+                    historical_kl_loaded BOOLEAN NOT NULL DEFAULT false,
+                    historical_kl_full_fields_loaded BOOLEAN NOT NULL DEFAULT false,
+                    historical_kl_loaded_at TIMESTAMPTZ,
+                    historical_kl_full_fields_loaded_at TIMESTAMPTZ,
+                    last_daily_kl_run_date DATE,
+                    last_daily_kl_full_fields_run_date DATE,
+                    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+                    updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+                )
+                """
             )
-            """
-        )
-        cur.execute(
-            "ALTER TABLE dwd.ingest_state ADD COLUMN IF NOT EXISTS historical_kl_loaded BOOLEAN NOT NULL DEFAULT false"
-        )
-        cur.execute(
-            "ALTER TABLE dwd.ingest_state ADD COLUMN IF NOT EXISTS historical_kl_full_fields_loaded BOOLEAN NOT NULL DEFAULT false"
-        )
-        cur.execute(
-            "ALTER TABLE dwd.ingest_state ADD COLUMN IF NOT EXISTS historical_kl_loaded_at TIMESTAMPTZ"
-        )
-        cur.execute(
-            "ALTER TABLE dwd.ingest_state ADD COLUMN IF NOT EXISTS historical_kl_full_fields_loaded_at TIMESTAMPTZ"
-        )
-        cur.execute(
-            "ALTER TABLE dwd.ingest_state ADD COLUMN IF NOT EXISTS last_daily_kl_run_date DATE"
-        )
-        cur.execute(
-            "ALTER TABLE dwd.ingest_state ADD COLUMN IF NOT EXISTS last_daily_kl_full_fields_run_date DATE"
-        )
-        cur.execute(
-            "ALTER TABLE dwd.ingest_state ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ NOT NULL DEFAULT now()"
-        )
-        cur.execute(
-            "ALTER TABLE dwd.ingest_state ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ NOT NULL DEFAULT now()"
-        )
-    conn.commit()
+        conn.commit()
+
+    ingest_state_columns = postgres_table_columns(conn, 'dwd', 'ingest_state')
+    ingest_state_column_definitions = {
+        'historical_kl_loaded': 'BOOLEAN NOT NULL DEFAULT false',
+        'historical_kl_full_fields_loaded': 'BOOLEAN NOT NULL DEFAULT false',
+        'historical_kl_loaded_at': 'TIMESTAMPTZ',
+        'historical_kl_full_fields_loaded_at': 'TIMESTAMPTZ',
+        'last_daily_kl_run_date': 'DATE',
+        'last_daily_kl_full_fields_run_date': 'DATE',
+        'created_at': 'TIMESTAMPTZ NOT NULL DEFAULT now()',
+        'updated_at': 'TIMESTAMPTZ NOT NULL DEFAULT now()',
+    }
+    missing_ingest_state_columns = [
+        (column_name, column_type)
+        for column_name, column_type in ingest_state_column_definitions.items()
+        if column_name not in ingest_state_columns
+    ]
+    if missing_ingest_state_columns:
+        with conn.cursor() as cur:
+            for column_name, column_type in missing_ingest_state_columns:
+                cur.execute(f"ALTER TABLE dwd.ingest_state ADD COLUMN {column_name} {column_type}")
+        conn.commit()
 
 
 def fetch_dwd_zip(session, url):
