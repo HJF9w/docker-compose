@@ -162,6 +162,121 @@ def write_metric(write_api, bucket, org, key, value, timestamp=None):
 
 # --- DWD WEATHER FUNCTIONS ---
 
+DWD_OBSERVATION_FLOAT_COLUMNS = {
+    'temperature': 'DOUBLE PRECISION',
+    'temperature_max': 'DOUBLE PRECISION',
+    'temperature_min': 'DOUBLE PRECISION',
+    'temperature_5cm': 'DOUBLE PRECISION',
+    'temperature_ground_min': 'DOUBLE PRECISION',
+    'temperature_wet_bulb': 'DOUBLE PRECISION',
+    'temperature_dew_point': 'DOUBLE PRECISION',
+    'humidity': 'DOUBLE PRECISION',
+    'cloudiness': 'DOUBLE PRECISION',
+    'wind_speed': 'DOUBLE PRECISION',
+    'wind_gust': 'DOUBLE PRECISION',
+    'wind_direction': 'DOUBLE PRECISION',
+    'pressure': 'DOUBLE PRECISION',
+    'pressure_station': 'DOUBLE PRECISION',
+    'rain': 'DOUBLE PRECISION',
+    'rain_rate_10min': 'DOUBLE PRECISION',
+    'precipitation_duration_10min': 'DOUBLE PRECISION',
+    'rain_indicator': 'DOUBLE PRECISION',
+    'precipitation_form': 'DOUBLE PRECISION',
+    'sunshine': 'DOUBLE PRECISION',
+    'snow_depth': 'DOUBLE PRECISION',
+    'vapor_pressure': 'DOUBLE PRECISION',
+    'absolute_humidity': 'DOUBLE PRECISION',
+    'quality_level': 'DOUBLE PRECISION',
+    'quality_level_3': 'DOUBLE PRECISION',
+    'quality_level_4': 'DOUBLE PRECISION',
+    'quality_level_8': 'DOUBLE PRECISION',
+}
+
+DWD_OBSERVATION_COLUMNS = list(DWD_OBSERVATION_FLOAT_COLUMNS.keys())
+
+DWD_DAILY_KL_FIELD_MAPPING = {
+    'QN_3': 'quality_level_3',
+    'QN_4': 'quality_level_4',
+    'TMK': 'temperature',
+    'TXK': 'temperature_max',
+    'TNK': 'temperature_min',
+    'TGK': 'temperature_ground_min',
+    'UPM': 'humidity',
+    'NM': 'cloudiness',
+    'FM': 'wind_speed',
+    'FX': 'wind_gust',
+    'PM': 'pressure',
+    'RSK': 'rain',
+    'RSKF': 'precipitation_form',
+    'SDK': 'sunshine',
+    'SHK_TAG': 'snow_depth',
+    'VPM': 'vapor_pressure',
+}
+
+
+def ensure_dwd_schema(conn):
+    """Create or extend the DWD tables without dropping existing data."""
+    with conn.cursor() as cur:
+        cur.execute("CREATE SCHEMA IF NOT EXISTS dwd")
+        cur.execute(
+            """
+            CREATE TABLE IF NOT EXISTS dwd.observations (
+                station_id TEXT NOT NULL,
+                ts_utc TIMESTAMPTZ NOT NULL,
+                resolution TEXT NOT NULL,
+                source TEXT NOT NULL,
+                created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+                updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+                PRIMARY KEY (station_id, ts_utc, resolution, source)
+            )
+            """
+        )
+        for column_name, column_type in DWD_OBSERVATION_FLOAT_COLUMNS.items():
+            cur.execute(
+                f"ALTER TABLE dwd.observations ADD COLUMN IF NOT EXISTS {column_name} {column_type}"
+            )
+        cur.execute(
+            """
+            CREATE TABLE IF NOT EXISTS dwd.ingest_state (
+                station_id TEXT PRIMARY KEY,
+                historical_kl_loaded BOOLEAN NOT NULL DEFAULT false,
+                historical_kl_full_fields_loaded BOOLEAN NOT NULL DEFAULT false,
+                historical_kl_loaded_at TIMESTAMPTZ,
+                historical_kl_full_fields_loaded_at TIMESTAMPTZ,
+                last_daily_kl_run_date DATE,
+                last_daily_kl_full_fields_run_date DATE,
+                created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+                updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+            )
+            """
+        )
+        cur.execute(
+            "ALTER TABLE dwd.ingest_state ADD COLUMN IF NOT EXISTS historical_kl_loaded BOOLEAN NOT NULL DEFAULT false"
+        )
+        cur.execute(
+            "ALTER TABLE dwd.ingest_state ADD COLUMN IF NOT EXISTS historical_kl_full_fields_loaded BOOLEAN NOT NULL DEFAULT false"
+        )
+        cur.execute(
+            "ALTER TABLE dwd.ingest_state ADD COLUMN IF NOT EXISTS historical_kl_loaded_at TIMESTAMPTZ"
+        )
+        cur.execute(
+            "ALTER TABLE dwd.ingest_state ADD COLUMN IF NOT EXISTS historical_kl_full_fields_loaded_at TIMESTAMPTZ"
+        )
+        cur.execute(
+            "ALTER TABLE dwd.ingest_state ADD COLUMN IF NOT EXISTS last_daily_kl_run_date DATE"
+        )
+        cur.execute(
+            "ALTER TABLE dwd.ingest_state ADD COLUMN IF NOT EXISTS last_daily_kl_full_fields_run_date DATE"
+        )
+        cur.execute(
+            "ALTER TABLE dwd.ingest_state ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ NOT NULL DEFAULT now()"
+        )
+        cur.execute(
+            "ALTER TABLE dwd.ingest_state ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ NOT NULL DEFAULT now()"
+        )
+    conn.commit()
+
+
 def fetch_dwd_zip(session, url):
     # Bumped timeout to 60s for historical files
     resp = session.get(url, timeout=60)
@@ -188,11 +303,6 @@ def process_dwd_zip_kl(z, conn, station_id):
     with z.open(txt_filename) as f:
         content = f.read().decode('latin1')
     reader = csv.DictReader(io.StringIO(content), delimiter=';')
-    field_mapping = {
-        'TMK': 'temperature', 'UPM': 'humidity', 'NM': 'cloudiness',
-        'FM': 'wind_speed', 'FX': 'wind_gust', 'PM': 'pressure',
-        'RSK': 'rain', 'SDK': 'sunshine'
-    }
     observations = []
     count = 0
     for row in reader:
@@ -201,7 +311,7 @@ def process_dwd_zip_kl(z, conn, station_id):
         if not dt_str:
             continue
         dt = datetime.strptime(dt_str, "%Y%m%d").replace(tzinfo=timezone.utc)
-        metrics = build_dwd_metrics(row, field_mapping)
+        metrics = build_dwd_metrics(row, DWD_DAILY_KL_FIELD_MAPPING)
         if metrics:
             observations.append(build_dwd_observation(station_id, dt, 'daily', 'kl', metrics))
             count += 1
@@ -237,17 +347,8 @@ def build_dwd_observation(station_id, ts_utc, resolution, source, metrics):
         'ts_utc': ts_utc,
         'resolution': resolution,
         'source': source,
-        'temperature': None,
-        'humidity': None,
-        'cloudiness': None,
-        'wind_speed': None,
-        'wind_gust': None,
-        'wind_direction': None,
-        'pressure': None,
-        'rain': None,
-        'rain_rate_10min': None,
-        'sunshine': None,
     }
+    observation.update({column: None for column in DWD_OBSERVATION_COLUMNS})
     observation.update(metrics)
     return observation
 
@@ -255,27 +356,22 @@ def build_dwd_observation(station_id, ts_utc, resolution, source, metrics):
 def upsert_dwd_observations(conn, observations):
     if not observations:
         return 0
-    sql = """
+    metric_columns_sql = ", ".join(DWD_OBSERVATION_COLUMNS)
+    metric_placeholders_sql = ", ".join(f"%({column})s" for column in DWD_OBSERVATION_COLUMNS)
+    update_sql = ",\n            ".join(
+        f"{column} = COALESCE(EXCLUDED.{column}, dwd.observations.{column})"
+        for column in DWD_OBSERVATION_COLUMNS
+    )
+    sql = f"""
         INSERT INTO dwd.observations (
             station_id, ts_utc, resolution, source,
-            temperature, humidity, cloudiness, wind_speed, wind_gust,
-            wind_direction, pressure, rain, rain_rate_10min, sunshine
+            {metric_columns_sql}
         ) VALUES (
             %(station_id)s, %(ts_utc)s, %(resolution)s, %(source)s,
-            %(temperature)s, %(humidity)s, %(cloudiness)s, %(wind_speed)s, %(wind_gust)s,
-            %(wind_direction)s, %(pressure)s, %(rain)s, %(rain_rate_10min)s, %(sunshine)s
+            {metric_placeholders_sql}
         )
         ON CONFLICT (station_id, ts_utc, resolution, source) DO UPDATE SET
-            temperature = COALESCE(EXCLUDED.temperature, dwd.observations.temperature),
-            humidity = COALESCE(EXCLUDED.humidity, dwd.observations.humidity),
-            cloudiness = COALESCE(EXCLUDED.cloudiness, dwd.observations.cloudiness),
-            wind_speed = COALESCE(EXCLUDED.wind_speed, dwd.observations.wind_speed),
-            wind_gust = COALESCE(EXCLUDED.wind_gust, dwd.observations.wind_gust),
-            wind_direction = COALESCE(EXCLUDED.wind_direction, dwd.observations.wind_direction),
-            pressure = COALESCE(EXCLUDED.pressure, dwd.observations.pressure),
-            rain = COALESCE(EXCLUDED.rain, dwd.observations.rain),
-            rain_rate_10min = COALESCE(EXCLUDED.rain_rate_10min, dwd.observations.rain_rate_10min),
-            sunshine = COALESCE(EXCLUDED.sunshine, dwd.observations.sunshine),
+            {update_sql},
             updated_at = now()
     """
     with conn.cursor() as cur:
@@ -292,7 +388,14 @@ def scrape_high_res(args, session, conn, station_id, category, resolution, field
         url_part = cat_map.get(category, category)
     else:
         prefix, ts_format = "stundenwerte", "%Y%m%d%H"
-        cat_map = {'air_temperature': 'TU', 'wind': 'FF', 'precipitation': 'RR', 'pressure': 'P0', 'cloudiness': 'N'}
+        cat_map = {
+            'air_temperature': 'TU',
+            'wind': 'FF',
+            'precipitation': 'RR',
+            'pressure': 'P0',
+            'cloudiness': 'N',
+            'moisture': 'TF',
+        }
         url_part = cat_map.get(category, category)
 
     zip_filename = f"{prefix}_{url_part}_{station_id}_akt.zip"
@@ -333,7 +436,7 @@ def scrape_high_res(args, session, conn, station_id, category, resolution, field
 def check_history_loaded(conn, station_id):
     with conn.cursor() as cur:
         cur.execute(
-            "SELECT historical_kl_loaded FROM dwd.ingest_state WHERE station_id = %s",
+            "SELECT historical_kl_full_fields_loaded FROM dwd.ingest_state WHERE station_id = %s",
             (station_id,),
         )
         row = cur.fetchone()
@@ -345,11 +448,15 @@ def mark_history_loaded(conn, station_id):
         cur.execute(
             """
             INSERT INTO dwd.ingest_state (
-                station_id, historical_kl_loaded, historical_kl_loaded_at, updated_at
-            ) VALUES (%s, true, now(), now())
+                station_id, historical_kl_loaded, historical_kl_loaded_at,
+                historical_kl_full_fields_loaded, historical_kl_full_fields_loaded_at,
+                updated_at
+            ) VALUES (%s, true, now(), true, now(), now())
             ON CONFLICT (station_id) DO UPDATE SET
                 historical_kl_loaded = true,
                 historical_kl_loaded_at = now(),
+                historical_kl_full_fields_loaded = true,
+                historical_kl_full_fields_loaded_at = now(),
                 updated_at = now()
             """,
             (station_id,),
@@ -360,7 +467,7 @@ def mark_history_loaded(conn, station_id):
 def get_last_daily_kl_run_date(conn, station_id):
     with conn.cursor() as cur:
         cur.execute(
-            "SELECT last_daily_kl_run_date FROM dwd.ingest_state WHERE station_id = %s",
+            "SELECT last_daily_kl_full_fields_run_date FROM dwd.ingest_state WHERE station_id = %s",
             (station_id,),
         )
         row = cur.fetchone()
@@ -372,13 +479,14 @@ def mark_daily_kl_run(conn, station_id, run_date):
         cur.execute(
             """
             INSERT INTO dwd.ingest_state (
-                station_id, last_daily_kl_run_date, updated_at
-            ) VALUES (%s, %s, now())
+                station_id, last_daily_kl_run_date, last_daily_kl_full_fields_run_date, updated_at
+            ) VALUES (%s, %s, %s, now())
             ON CONFLICT (station_id) DO UPDATE SET
                 last_daily_kl_run_date = EXCLUDED.last_daily_kl_run_date,
+                last_daily_kl_full_fields_run_date = EXCLUDED.last_daily_kl_full_fields_run_date,
                 updated_at = now()
             """,
-            (station_id, run_date),
+            (station_id, run_date, run_date),
         )
     conn.commit()
 
@@ -411,11 +519,39 @@ def scrape_dwd_high_frequency(args, session, conn):
     log_message("INFO", f"Fetching high-frequency DWD data for station {station_id}")
 
     jobs = [
-        ('air_temperature', '10_minutes', {'TT_10': 'temperature', 'RF_10': 'humidity'}),
-        ('wind', '10_minutes', {'FF_10': 'wind_speed', 'DD_10': 'wind_direction'}),
-        ('precipitation', '10_minutes', {'RWS_10': 'rain_rate_10min'}),
-        ('pressure', 'hourly', {'P0': 'pressure'}),
-        ('cloudiness', 'hourly', {'N': 'cloudiness'}),
+        ('air_temperature', '10_minutes', {
+            'QN': 'quality_level',
+            'PP_10': 'pressure',
+            'TT_10': 'temperature',
+            'TM5_10': 'temperature_5cm',
+            'RF_10': 'humidity',
+            'TD_10': 'temperature_dew_point',
+        }),
+        ('wind', '10_minutes', {'QN': 'quality_level', 'FF_10': 'wind_speed', 'DD_10': 'wind_direction'}),
+        ('precipitation', '10_minutes', {
+            'QN': 'quality_level',
+            'RWS_DAU_10': 'precipitation_duration_10min',
+            'RWS_10': 'rain_rate_10min',
+            'RWS_IND_10': 'rain_indicator',
+        }),
+        ('pressure', 'hourly', {'QN_8': 'quality_level_8', 'P0': 'pressure'}),
+        ('cloudiness', 'hourly', {'QN_8': 'quality_level_8', 'N': 'cloudiness'}),
+        ('precipitation', 'hourly', {
+            'QN_8': 'quality_level_8',
+            'R1': 'rain',
+            'RS_IND': 'rain_indicator',
+            'WRTR': 'precipitation_form',
+        }),
+        ('moisture', 'hourly', {
+            'QN_8': 'quality_level_8',
+            'ABSF_STD': 'absolute_humidity',
+            'VP_STD': 'vapor_pressure',
+            'TF_STD': 'temperature_wet_bulb',
+            'P_STD': 'pressure_station',
+            'TT_STD': 'temperature',
+            'RF_STD': 'humidity',
+            'TD_STD': 'temperature_dew_point',
+        }),
     ]
     total = 0
     for category, resolution, field_mapping in jobs:
@@ -480,6 +616,7 @@ def scrape_dwd(args, session):
         raise ValueError("DWD PostgreSQL ingestion requires postgres host, database, user, and password.")
 
     with open_postgres_connection(args) as conn:
+        ensure_dwd_schema(conn)
         if args.dwd_mode in ('all', 'high-frequency'):
             scrape_dwd_high_frequency(args, session, conn)
         if args.dwd_mode in ('all', 'daily'):
