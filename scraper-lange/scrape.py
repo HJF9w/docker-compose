@@ -256,12 +256,13 @@ def postgres_table_columns(conn, schema_name, table_name):
 
 
 def ensure_dwd_schema(conn):
-    """Create or extend the DWD tables without dropping existing data."""
+    """Create DWD tables when absent and avoid owner-only DDL on existing tables."""
     if not postgres_schema_exists(conn, 'dwd'):
         with conn.cursor() as cur:
             cur.execute("CREATE SCHEMA dwd")
         conn.commit()
 
+    created_observations = False
     if not postgres_table_exists(conn, 'dwd', 'observations'):
         with conn.cursor() as cur:
             cur.execute(
@@ -278,6 +279,7 @@ def ensure_dwd_schema(conn):
                 """
             )
         conn.commit()
+        created_observations = True
 
     observation_columns = postgres_table_columns(conn, 'dwd', 'observations')
     missing_observation_columns = [
@@ -286,11 +288,20 @@ def ensure_dwd_schema(conn):
         if column_name not in observation_columns
     ]
     if missing_observation_columns:
-        with conn.cursor() as cur:
-            for column_name, column_type in missing_observation_columns:
-                cur.execute(f"ALTER TABLE dwd.observations ADD COLUMN {column_name} {column_type}")
-        conn.commit()
+        if created_observations:
+            with conn.cursor() as cur:
+                for column_name, column_type in missing_observation_columns:
+                    cur.execute(f"ALTER TABLE dwd.observations ADD COLUMN {column_name} {column_type}")
+            conn.commit()
+        else:
+            missing_names = ", ".join(column_name for column_name, _ in missing_observation_columns)
+            log_message(
+                "WARN",
+                "dwd.observations is missing optional columns, but this user is not assumed "
+                f"to own the table; skipping ALTER TABLE. Missing columns: {missing_names}",
+            )
 
+    created_ingest_state = False
     if not postgres_table_exists(conn, 'dwd', 'ingest_state'):
         with conn.cursor() as cur:
             cur.execute(
@@ -309,6 +320,7 @@ def ensure_dwd_schema(conn):
                 """
             )
         conn.commit()
+        created_ingest_state = True
 
     ingest_state_columns = postgres_table_columns(conn, 'dwd', 'ingest_state')
     ingest_state_column_definitions = {
@@ -327,10 +339,18 @@ def ensure_dwd_schema(conn):
         if column_name not in ingest_state_columns
     ]
     if missing_ingest_state_columns:
-        with conn.cursor() as cur:
-            for column_name, column_type in missing_ingest_state_columns:
-                cur.execute(f"ALTER TABLE dwd.ingest_state ADD COLUMN {column_name} {column_type}")
-        conn.commit()
+        if created_ingest_state:
+            with conn.cursor() as cur:
+                for column_name, column_type in missing_ingest_state_columns:
+                    cur.execute(f"ALTER TABLE dwd.ingest_state ADD COLUMN {column_name} {column_type}")
+            conn.commit()
+        else:
+            missing_names = ", ".join(column_name for column_name, _ in missing_ingest_state_columns)
+            log_message(
+                "WARN",
+                "dwd.ingest_state is missing optional columns, but this user is not assumed "
+                f"to own the table; skipping ALTER TABLE. Missing columns: {missing_names}",
+            )
 
 
 def fetch_dwd_zip(session, url):
@@ -490,20 +510,26 @@ def scrape_high_res(args, session, conn, station_id, category, resolution, field
 
 
 def daily_kl_has_full_fields(conn, station_id):
+    table_columns = postgres_table_columns(conn, 'dwd', 'observations')
+    full_field_columns = [
+        column
+        for column in ('temperature_max', 'temperature_min', 'temperature_ground_min')
+        if column in table_columns
+    ]
+    if not full_field_columns:
+        return False
+
+    full_field_condition = " OR ".join(f"{column} IS NOT NULL" for column in full_field_columns)
     with conn.cursor() as cur:
         cur.execute(
-            """
+            f"""
             SELECT EXISTS (
                 SELECT 1
                 FROM dwd.observations
                 WHERE station_id = %s
                   AND resolution = 'daily'
                   AND source = 'kl'
-                  AND (
-                      temperature_max IS NOT NULL
-                      OR temperature_min IS NOT NULL
-                      OR temperature_ground_min IS NOT NULL
-                  )
+                  AND ({full_field_condition})
             )
             """,
             (station_id,),
@@ -513,9 +539,19 @@ def daily_kl_has_full_fields(conn, station_id):
 
 
 def check_history_loaded(conn, station_id):
+    table_columns = postgres_table_columns(conn, 'dwd', 'ingest_state')
+    state_column = None
+    if 'historical_kl_full_fields_loaded' in table_columns:
+        state_column = 'historical_kl_full_fields_loaded'
+    elif 'historical_kl_loaded' in table_columns:
+        state_column = 'historical_kl_loaded'
+
+    if not state_column:
+        return False
+
     with conn.cursor() as cur:
         cur.execute(
-            "SELECT historical_kl_full_fields_loaded FROM dwd.ingest_state WHERE station_id = %s",
+            f"SELECT {state_column} FROM dwd.ingest_state WHERE station_id = %s",
             (station_id,),
         )
         row = cur.fetchone()
@@ -525,37 +561,78 @@ def check_history_loaded(conn, station_id):
         return True
     log_message(
         "INFO",
-        f"Historical KL full-field state is set for station {station_id}, "
+        f"Historical KL state is set for station {station_id}, "
         "but no daily min/max/ground-min values were found; reimporting historical KL data.",
     )
     return False
 
 
-def mark_history_loaded(conn, station_id):
+def upsert_ingest_state(conn, station_id, values, params=None):
+    params = list(params or [])
+    table_columns = postgres_table_columns(conn, 'dwd', 'ingest_state')
+    insert_columns = ['station_id']
+    insert_values_sql = ['%s']
+    query_params = [station_id]
+    value_params = list(params)
+    update_assignments = []
+
+    for column, value_sql in values.items():
+        if column in table_columns:
+            insert_columns.append(column)
+            insert_values_sql.append(value_sql)
+            update_assignments.append(f"{column} = EXCLUDED.{column}")
+            query_params.extend(value_params[:value_sql.count('%s')])
+            del value_params[:value_sql.count('%s')]
+
+    if 'updated_at' in table_columns:
+        insert_columns.append('updated_at')
+        insert_values_sql.append('now()')
+        update_assignments.append('updated_at = now()')
+
+    if update_assignments:
+        conflict_sql = "DO UPDATE SET\n                " + ",\n                ".join(update_assignments)
+    else:
+        conflict_sql = "DO NOTHING"
+
+    columns_sql = ", ".join(insert_columns)
+    values_sql = ", ".join(insert_values_sql)
     with conn.cursor() as cur:
         cur.execute(
-            """
-            INSERT INTO dwd.ingest_state (
-                station_id, historical_kl_loaded, historical_kl_loaded_at,
-                historical_kl_full_fields_loaded, historical_kl_full_fields_loaded_at,
-                updated_at
-            ) VALUES (%s, true, now(), true, now(), now())
-            ON CONFLICT (station_id) DO UPDATE SET
-                historical_kl_loaded = true,
-                historical_kl_loaded_at = now(),
-                historical_kl_full_fields_loaded = true,
-                historical_kl_full_fields_loaded_at = now(),
-                updated_at = now()
+            f"""
+            INSERT INTO dwd.ingest_state ({columns_sql})
+            VALUES ({values_sql})
+            ON CONFLICT (station_id) {conflict_sql}
             """,
-            (station_id,),
+            query_params,
         )
     conn.commit()
 
 
+def mark_history_loaded(conn, station_id):
+    upsert_ingest_state(
+        conn,
+        station_id,
+        {
+            'historical_kl_loaded': 'true',
+            'historical_kl_loaded_at': 'now()',
+            'historical_kl_full_fields_loaded': 'true',
+            'historical_kl_full_fields_loaded_at': 'now()',
+        },
+    )
+
+
 def get_last_daily_kl_run_date(conn, station_id):
+    table_columns = postgres_table_columns(conn, 'dwd', 'ingest_state')
+    if 'last_daily_kl_full_fields_run_date' in table_columns:
+        state_column = 'last_daily_kl_full_fields_run_date'
+    elif 'last_daily_kl_run_date' in table_columns:
+        state_column = 'last_daily_kl_run_date'
+    else:
+        return None
+
     with conn.cursor() as cur:
         cur.execute(
-            "SELECT last_daily_kl_full_fields_run_date FROM dwd.ingest_state WHERE station_id = %s",
+            f"SELECT {state_column} FROM dwd.ingest_state WHERE station_id = %s",
             (station_id,),
         )
         row = cur.fetchone()
@@ -563,20 +640,15 @@ def get_last_daily_kl_run_date(conn, station_id):
 
 
 def mark_daily_kl_run(conn, station_id, run_date):
-    with conn.cursor() as cur:
-        cur.execute(
-            """
-            INSERT INTO dwd.ingest_state (
-                station_id, last_daily_kl_run_date, last_daily_kl_full_fields_run_date, updated_at
-            ) VALUES (%s, %s, %s, now())
-            ON CONFLICT (station_id) DO UPDATE SET
-                last_daily_kl_run_date = EXCLUDED.last_daily_kl_run_date,
-                last_daily_kl_full_fields_run_date = EXCLUDED.last_daily_kl_full_fields_run_date,
-                updated_at = now()
-            """,
-            (station_id, run_date, run_date),
-        )
-    conn.commit()
+    upsert_ingest_state(
+        conn,
+        station_id,
+        {
+            'last_daily_kl_run_date': '%s',
+            'last_daily_kl_full_fields_run_date': '%s',
+        },
+        [run_date, run_date],
+    )
 
 
 def get_dwd_historical_url(session, station_id):
