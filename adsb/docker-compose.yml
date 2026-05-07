@@ -41,7 +41,7 @@ services:
       - /var/log
 
   pfclient:
-    image: ghcr.io/sdr-enthusiasts/docker-planefinder:latest-build-530
+    image: ghcr.io/sdr-enthusiasts/docker-planefinder:latest-build-532
     container_name: pfclient
     restart: unless-stopped
     networks:
