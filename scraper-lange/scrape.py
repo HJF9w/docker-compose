@@ -360,16 +360,20 @@ def fetch_dwd_zip(session, url):
     return zipfile.ZipFile(io.BytesIO(resp.content))
 
 
-def dwd_recent_index_contains_file(session, resolution, category, filename):
+def dwd_index_contains_file(session, resolution, category, file_set, filename):
     index_url = (
         "https://opendata.dwd.de/climate_environment/CDC/observations_germany/"
-        f"climate/{resolution}/{category}/recent/"
+        f"climate/{resolution}/{category}/{file_set}/"
     )
     resp = session.get(index_url, timeout=30)
     resp.raise_for_status()
     exists = filename in resp.text
-    log_message("INFO", f"DWD index check {resolution}/{category}: {'found' if exists else 'missing'} {filename}")
+    log_message("INFO", f"DWD index check {resolution}/{category}/{file_set}: {'found' if exists else 'missing'} {filename}")
     return exists
+
+
+def dwd_recent_index_contains_file(session, resolution, category, filename):
+    return dwd_index_contains_file(session, resolution, category, 'recent', filename)
 
 def process_dwd_zip_kl(z, conn, station_id):
     """Processes daily climate (KL) data and upserts it into PostgreSQL."""
@@ -456,8 +460,7 @@ def upsert_dwd_observations(conn, observations):
     return len(observations)
 
 
-def scrape_high_res(args, session, conn, station_id, category, resolution, field_mapping):
-    """Fetches 10-minute or hourly DWD data and upserts it into PostgreSQL."""
+def dwd_high_res_file_parts(station_id, category, resolution, file_set):
     if resolution == '10_minutes':
         prefix, ts_format = "10minutenwerte", "%Y%m%d%H%M"
         cat_map = {'air_temperature': 'TU', 'wind': 'wind', 'precipitation': 'nieder'}
@@ -474,13 +477,25 @@ def scrape_high_res(args, session, conn, station_id, category, resolution, field
         }
         url_part = cat_map.get(category, category)
 
-    zip_filename = f"{prefix}_{url_part}_{station_id}_akt.zip"
-    if not dwd_recent_index_contains_file(session, resolution, category, zip_filename):
-        log_message("INFO", f"DWD dataset missing for station {station_id} (category={category}, resolution={resolution}); skipping fetch.")
+    suffix = 'now' if file_set == 'now' else 'akt'
+    return f"{prefix}_{url_part}_{station_id}_{suffix}.zip", ts_format
+
+
+def scrape_high_res_file(args, session, conn, station_id, category, resolution, field_mapping, file_set):
+    zip_filename, ts_format = dwd_high_res_file_parts(station_id, category, resolution, file_set)
+    if not dwd_index_contains_file(session, resolution, category, file_set, zip_filename):
+        log_message(
+            "INFO",
+            f"DWD {file_set} dataset missing for station {station_id} "
+            f"(category={category}, resolution={resolution}); skipping fetch.",
+        )
         return 0
 
-    url = f"https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/{resolution}/{category}/recent/{zip_filename}"
-    log_message("INFO", f"Downloading DWD file {zip_filename}")
+    url = (
+        "https://opendata.dwd.de/climate_environment/CDC/observations_germany/"
+        f"climate/{resolution}/{category}/{file_set}/{zip_filename}"
+    )
+    log_message("INFO", f"Downloading DWD {file_set} file {zip_filename}")
     z = fetch_dwd_zip(session, url)
     txt_filename = next((n for n in z.namelist() if n.startswith("produkt_") and n.endswith(".txt")), None)
     if not txt_filename:
@@ -490,12 +505,16 @@ def scrape_high_res(args, session, conn, station_id, category, resolution, field
     reader = csv.DictReader(io.StringIO(content), delimiter=';')
     observations = []
     count = 0
+    first_dt = None
+    last_dt = None
     for row in reader:
         row = {k.strip(): v.strip() for k, v in row.items() if k}
         dt_str = row.get('MESS_DATUM')
         if not dt_str:
             continue
         dt = datetime.strptime(dt_str, ts_format).replace(tzinfo=timezone.utc)
+        first_dt = first_dt or dt
+        last_dt = dt
         metrics = build_dwd_metrics(row, field_mapping)
         if metrics:
             observations.append(build_dwd_observation(station_id, dt, resolution, category, metrics))
@@ -505,8 +524,23 @@ def scrape_high_res(args, session, conn, station_id, category, resolution, field
             observations = []
     if observations:
         upsert_dwd_observations(conn, observations)
-    log_message("INFO", f"Stored {count} DWD observations for category={category}, resolution={resolution}")
+    if first_dt and last_dt:
+        log_message(
+            "INFO",
+            f"Stored {count} DWD {file_set} observations for category={category}, "
+            f"resolution={resolution}, range={first_dt.isoformat()}..{last_dt.isoformat()}",
+        )
+    else:
+        log_message("INFO", f"Stored {count} DWD {file_set} observations for category={category}, resolution={resolution}")
     return count
+
+
+def scrape_high_res(args, session, conn, station_id, category, resolution, field_mapping):
+    """Fetches 10-minute or hourly DWD data and upserts it into PostgreSQL."""
+    total = scrape_high_res_file(args, session, conn, station_id, category, resolution, field_mapping, 'recent')
+    if resolution == '10_minutes':
+        total += scrape_high_res_file(args, session, conn, station_id, category, resolution, field_mapping, 'now')
+    return total
 
 
 def daily_kl_has_full_fields(conn, station_id):
