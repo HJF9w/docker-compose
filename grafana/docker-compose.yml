@@ -42,7 +42,7 @@ services:
         ipv4_address: "${POSTGRES_EXT_IPV4}"
 
   pgadmin:
-    image: "dpage/pgadmin4:2026-03-30-1"
+    image: "dpage/pgadmin4:2026-05-06-1"
     restart: "unless-stopped"
     environment:
       - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL:-admin@example.com}
