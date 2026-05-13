@@ -23,7 +23,7 @@ services:
       default:
 
   app:
-    image: nextcloud:33.0-apache
+    image: nextcloud:33.0.3-apache
     restart: unless-stopped
     volumes:
       - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/app:/var/www/html
