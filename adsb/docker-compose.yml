@@ -3,7 +3,7 @@ services:
   # COMMERCIAL & OTHER ADS-B FEEDERS
   # ----------------------------------------------------------------------
   piaware:
-    image: ghcr.io/sdr-enthusiasts/docker-piaware:latest-build-656
+    image: ghcr.io/sdr-enthusiasts/docker-piaware:latest-build-658
     container_name: piaware
     hostname: piaware
     restart: unless-stopped
