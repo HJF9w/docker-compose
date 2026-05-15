@@ -95,7 +95,7 @@ services:
       - /var/log
 
   opensky:
-    image: ghcr.io/sdr-enthusiasts/docker-opensky-network:latest-build-827
+    image: ghcr.io/sdr-enthusiasts/docker-opensky-network:latest-build-829
     container_name: opensky
     restart: unless-stopped
     environment:
