@@ -14,7 +14,7 @@ services:
       - default
     # Removed ports 8081 & 8088 to route via Caddy
     environment:
-      - BEASTHOST=${PI_IP}
+      - BEASTHOST=${FEEDER_IP}
       - LAT=${FEEDER_LAT}
       - LONG=${FEEDER_LONG}
       - TZ=${FEEDER_TZ}
@@ -34,7 +34,7 @@ services:
       - caddy_to_adsb
       - default
     environment:
-      - BEASTHOST=${PI_IP}
+      - BEASTHOST=${FEEDER_IP}
       - TZ=${FEEDER_TZ}
       - FR24KEY=${FR24_SHARING_KEY}
     tmpfs:
@@ -49,7 +49,7 @@ services:
       - default
     # Removed port 8084 to route via Caddy
     environment:
-      - BEASTHOST=${PI_IP}
+      - BEASTHOST=${FEEDER_IP}
       - LAT=${FEEDER_LAT}
       - LONG=${FEEDER_LONG}
       - TZ=${FEEDER_TZ}
@@ -63,7 +63,7 @@ services:
     ports:
       - 30106:30105
     environment:
-      - BEASTHOST=${PI_IP}
+      - BEASTHOST=${FEEDER_IP}
       - LAT=${FEEDER_LAT}
       - LONG=${FEEDER_LONG}
       - ALT=${FEEDER_ALT_M}
@@ -83,7 +83,7 @@ services:
     ports:
       - 30107:30105
     environment:
-      - BEASTHOST=${PI_IP}
+      - BEASTHOST=${FEEDER_IP}
       - TZ=${FEEDER_TZ}
       - API_KEY=${PLANEWATCH_KEY}
       - DEBUG_LOGGING=true
@@ -99,7 +99,7 @@ services:
     container_name: opensky
     restart: unless-stopped
     environment:
-      - BEASTHOST=${PI_IP}
+      - BEASTHOST=${FEEDER_IP}
       - TZ=${FEEDER_TZ}
       - DEBUG_LOGGING=true
       - LAT=${FEEDER_LAT}
@@ -117,7 +117,7 @@ services:
 ##    restart: unless-stopped
 ##    environment:
 ##      - TZ=${FEEDER_TZ}
-##      - SBSHOST=${PI_IP}
+##      - SBSHOST=${FEEDER_IP}
 ##      - CLIENTKEY=${ADSBHUB_STATION_KEY}
 
   # ----------------------------------------------------------------------

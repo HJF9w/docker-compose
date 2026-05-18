@@ -31,7 +31,7 @@ opal		IN	A	10.0.42.224
 ; -- my DNS Records
 bind		IN	A	10.0.42.26
 allsky		IN	CNAME	neon
-feed.adsb       IN      CNAME   neon
+feed.adsb       IN      CNAME   10.0.42.228
 
 ; -- new opal
 vaultwarden	IN	CNAME	opal-rp
