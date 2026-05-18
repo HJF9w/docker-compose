@@ -56,7 +56,7 @@ services:
       - SHARECODE=${PLANEFINDER_SHARECODE}
 
   airnavradar:
-    image: ghcr.io/sdr-enthusiasts/docker-airnavradar:latest-build-873
+    image: ghcr.io/sdr-enthusiasts/docker-airnavradar:latest-build-875
     container_name: airnavradar
     hostname: airnavradar
     restart: unless-stopped
