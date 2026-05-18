@@ -4,7 +4,7 @@ $TTL 1m
 $ORIGIN ioui.eu.
 
 @	IN	SOA	ns.ioui.eu. admin.ioui.eu. (
-				2026042717     ; serial
+				2026051814     ; serial
 				12h            ; refresh 12h
 				15m            ; retry 15m
 				1w             ; expire 3w
@@ -31,7 +31,7 @@ opal		IN	A	10.0.42.224
 ; -- my DNS Records
 bind		IN	A	10.0.42.26
 allsky		IN	CNAME	neon
-feed.adsb       IN      CNAME   10.0.42.228
+feed.adsb       IN      A       10.0.42.228
 
 ; -- new opal
 vaultwarden	IN	CNAME	opal-rp
