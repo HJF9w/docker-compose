@@ -5,7 +5,7 @@ keys:
   - &sapphire age16rv0yzq38287sd4mef59lfmnw7awcvlhrn5sugyhc5ajz22jpatq5jye3z
   - &xenon age1a5q7wddt8k2jfk9r6e4epkedgz0l3yyzxrr9deyfs228w97eys2qtzyl3e
   - &hrms-ai-test-01 age1jt8qvu4vxxrm34rs4j7y49ns8wmvark6062qkvgp5vpmjvuxa5msfgcs3c
-  - &dock-app-hml-02 age17dkmk5r4zjwkywdw3tl2yjum0adsf0ut02hmfqt4avr05m6s73xqyjx835
+  - &dock-app-hml-02 age1mpwgh44kg7pdrwkcdukma098ny3k6tefflrj5xema5zzh89aq54s6ghwyu
 creation_rules:
   - path_regex: secrets\.env$
     key_groups:
