@@ -1,0 +1,7 @@
+# Telegram Notification URL for Apprise
+# This file should be encrypted with SOPS.
+#
+# Format: tgram://bottoken/ChatID
+# Example: tgram://123456789:ABCDefGhIJKlmNoPQRstUVwxyZ/123456789
+
+tgram://your_bot_token_here/your_chat_id_here
