@@ -14,10 +14,10 @@ services:
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/data:/data"
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/compose:/data/compose/1"
     networks:
-      mac_vlan:
+      system_mac_vlan:
         ipv4_address: "${EXT_IPV4}"
         mac_address: d2:cb:f3:62:49:0a
-      internal:
+      system_internal:
 
   agent:
     image: 'portainer/agent:2.39.2-alpine'
@@ -36,16 +36,18 @@ services:
       - '/var/run/docker.sock:/var/run/docker.sock'
 
 networks:
-  internal:
-    driver: "bridge"
-  mac_vlan:
-    driver: macvlan
-    driver_opts:
-      parent: "${MAC_VLAN_PARENT}"
-    ipam:
-      config:
-      - subnet: "${IPAM_SUBNET}"
-        gateway: "${IPAM_GATEWAY}"
-        ip_range: "${IPAM_IP_RANGE}"
-        aux_addresses:
-          net_address: "${IPAM_NET_ADDRESS}"
+  system_internal: ## now configured in doco-cd
+    external: true
+  system_mac_vlan:
+    external: true
+##  mac_vlan: ## now configured in doco-cd
+##    driver: macvlan
+##    driver_opts:
+##      parent: "${MAC_VLAN_PARENT}"
+##    ipam:
+##      config:
+##      - subnet: "${IPAM_SUBNET}"
+##        gateway: "${IPAM_GATEWAY}"
+##        ip_range: "${IPAM_IP_RANGE}"
+##        aux_addresses:
+##          net_address: "${IPAM_NET_ADDRESS}"
