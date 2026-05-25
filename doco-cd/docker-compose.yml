@@ -21,6 +21,8 @@ services:
         - url: "${MY_REPO_URL}"
           interval: 960
           reference: opal
+    env_file:
+      - secrets.enc.env
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/data:/data"
