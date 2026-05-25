@@ -24,4 +24,7 @@ environment:
 
 repository_url: https://github.com/HJF9w/docker-bookstack.git
 reference: master
-compose_files: docker-compose-xenon.yml
+
+deployments:
+  - name: "bookstack"
+    compose_files: docker-compose-xenon.yml
