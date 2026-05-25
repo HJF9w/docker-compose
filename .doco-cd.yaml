@@ -17,7 +17,6 @@ auto_discovery:
   delete: true
 
 # These settings are inherited by all discovered stacks.
-timeout: 300
 environment:
   BASEPATH: /data
   TZ: Europe/Brussels
