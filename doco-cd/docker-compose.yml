@@ -8,6 +8,7 @@ services:
     environment:
       ## PASS_ENV: true
       TZ: Europe/Brussels
+      BASEPATH: "/data"
       GIT_AUTH_DOMAINS_FILE: /data/auth_domains.txt
       SOPS_AGE_KEY_FILE: /root/.config/sops/age/keys.txt
       POLL_CONFIG: |
@@ -15,10 +16,10 @@ services:
           interval: 960  # 16 minutes in seconds
           reference: opal
     volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
-      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/data:/data"
-      - "/root/.config/sops/age/keys.txt:/root/.config/sops/age/keys.txt:ro"
-      - "./auth_domains.txt:/data/auth_domains.txt:ro"
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./data:/data
+      - /root/.config/sops/age/keys.txt:/root/.config/sops/age/keys.txt:ro
+      - ./auth_domains.txt:/data/auth_domains.txt:ro
     healthcheck:
       test: ["CMD", "/doco-cd", "healthcheck"]
       start_period: 15s
