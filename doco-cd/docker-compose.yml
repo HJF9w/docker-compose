@@ -14,7 +14,7 @@ services:
       APPRISE_NOTIFY_LEVEL: info
       APPRISE_NOTIFY_URLS_FILE: /data/apprise_urls.txt
       # Git & Secrets
-      GIT_AUTH_DOMAINS_FILE: /data/auth_domains.yaml
+      GIT_AUTH_DOMAINS_FILE: /data/auth_domains.txt
       SOPS_AGE_KEY_FILE: /root/.config/sops/age/keys.txt
       # Polling
       POLL_CONFIG: |
@@ -25,7 +25,7 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/data:/data"
       - "/root/.config/sops/age:/root/.config/sops/age:ro"
-      - "./auth_domains.txt:/data/auth_domains.yaml:ro"
+      - "./auth_domains.txt:/data/auth_domains.txt:ro"
       - "./apprise_urls.txt:/data/apprise_urls.txt:ro"
     healthcheck:
       test: ["CMD", "/doco-cd", "healthcheck"]
