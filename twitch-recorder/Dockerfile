@@ -7,6 +7,7 @@ ENV TZ=UTC \
     PYTHONUNBUFFERED=1
 
 # Install dependencies
+RUN apk update
 RUN apk add --no-cache \
         ffmpeg \
         tzdata \

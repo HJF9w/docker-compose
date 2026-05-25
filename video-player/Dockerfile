@@ -2,6 +2,7 @@
 FROM node:26-alpine
 
 # Install ffmpeg for thumbnail generation (optional)
+RUN apk update
 RUN apk add --no-cache ffmpeg
 
 WORKDIR /app
