@@ -32,10 +32,8 @@ services:
 networks:
   internal:
     driver: "bridge"
-    name: system_internal
   mac_vlan:
     driver: macvlan
-    name: system_mac_vlan
     driver_opts:
       parent: "${MAC_VLAN_PARENT}"
     ipam:
