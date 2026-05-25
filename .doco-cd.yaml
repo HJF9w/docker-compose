@@ -22,5 +22,5 @@ environment:
   BASEPATH: /data
   TZ: Europe/Brussels
 
-#repository_url: https://github.com/HJF9w/docker-bookstack.git
+repository_url: https://github.com/HJF9w/docker-bookstack.git
 #reference: master
