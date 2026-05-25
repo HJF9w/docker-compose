@@ -3,6 +3,8 @@ services:
     image: "grafana/grafana:13.0.1-security-01"
     restart: "unless-stopped"
     user: "472"
+    env_file:
+      - secrets.enc.env
     volumes:
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/grafana:/var/lib/grafana"
       - "./config.yml:/etc/influxdb2/config.yml"
@@ -12,6 +14,8 @@ services:
 
   db:
     image: "influxdb:2.9"
+    env_file:
+      - secrets.enc.env
     ports:
       - "8086:8086"
     restart: "unless-stopped"
@@ -24,6 +28,8 @@ services:
   postgres:
     image: "postgres:18.3-alpine3.23"
     restart: "unless-stopped"
+    env_file:
+      - secrets.enc.env
     environment:
       - POSTGRES_DB=${POSTGRES_DB:-timeseries}
       - POSTGRES_USER=${POSTGRES_USER}
@@ -45,6 +51,8 @@ services:
   pgadmin:
     image: "dpage/pgadmin4:2026-05-06-1"
     restart: "unless-stopped"
+    env_file:
+      - secrets.enc.env
     environment:
       - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL:-admin@example.com}
       - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}

@@ -7,6 +7,8 @@ services:
     container_name: piaware
     hostname: piaware
     restart: unless-stopped
+    env_file:
+      - secrets.enc.env
     ports:
       - 30105:30105
     networks:
@@ -28,6 +30,8 @@ services:
     container_name: fr24
     hostname: fr24
     restart: unless-stopped
+    env_file:
+      - secrets.enc.env
     ports:
       - 30108:30106
     networks:
@@ -44,6 +48,8 @@ services:
     image: ghcr.io/sdr-enthusiasts/docker-planefinder:latest-build-534
     container_name: pfclient
     restart: unless-stopped
+    env_file:
+      - secrets.enc.env
     networks:
       - caddy_to_adsb
       - default
@@ -60,6 +66,8 @@ services:
     container_name: airnavradar
     hostname: airnavradar
     restart: unless-stopped
+    env_file:
+      - secrets.enc.env
     ports:
       - 30106:30105
     environment:
@@ -79,6 +87,8 @@ services:
     image: ghcr.io/plane-watch/docker-plane-watch:v0.0.6
     container_name: planewatch
     hostname: planewatch
+    env_file:
+      - secrets.enc.env
     restart: unless-stopped
     ports:
       - 30107:30105
@@ -98,6 +108,8 @@ services:
     image: ghcr.io/sdr-enthusiasts/docker-opensky-network:latest-build-829
     container_name: opensky
     restart: unless-stopped
+    env_file:
+      - secrets.enc.env
     environment:
       - BEASTHOST=${FEEDER_IP}
       - TZ=${FEEDER_TZ}
@@ -115,6 +127,8 @@ services:
 ##    image: ghcr.io/sdr-enthusiasts/docker-adsbhub:latest-build-517
 ##    container_name: adsbhub
 ##    restart: unless-stopped
+##    env_file:
+##      - secrets.enc.env
 ##    environment:
 ##      - TZ=${FEEDER_TZ}
 ##      - SBSHOST=${FEEDER_IP}
@@ -127,6 +141,8 @@ services:
     image: ghcr.io/sdr-enthusiasts/docker-planefence:latest-build-1193
     container_name: planefence
     hostname: planefence
+    env_file:
+      - secrets.enc.env
     restart: unless-stopped
     networks:
       - caddy_to_adsb
@@ -147,6 +163,8 @@ services:
 ##    container_name: vrs
 ##    hostname: vrs
 ##    restart: unless-stopped
+##    env_file:
+##      - secrets.enc.env
 ##    networks:
 ##      - caddy_to_adsb
 ##      - default
