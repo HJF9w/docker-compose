@@ -3,7 +3,9 @@
 deployments:
   - name: "caddy"
     working_dir: "caddy/"
-  
+  - name: "system"
+    working_dir: "portainer-ee"
+
   - name: "bookstack"
     repository_url: https://github.com/HJF9w/docker-bookstack.git
     reference: master
