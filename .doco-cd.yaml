@@ -3,6 +3,11 @@
 deployments:
   - name: "caddy"
     working_dir: "caddy/"
+  
+  - name: "bookstack"
+    repository_url: https://github.com/HJF9w/docker-bookstack.git
+    reference: master
+    compose_files: [ "docker-compose-xenon.yml" ]
 
 # Auto-discovery will find every subdirectory with a docker-compose.yml
 # and deploy it as a stack.
@@ -12,16 +17,6 @@ auto_discovery:
   delete: true
 
 # These settings are inherited by all discovered stacks.
-# By listing secrets.env here, doco-cd will automatically try to 
-# find and decrypt it for every stack if it exists.
-##env_files:
-##  - .env
-##  - secrets.env
-
 environment:
   BASEPATH: /data
   TZ: Europe/Brussels
-
-repository_url: https://github.com/HJF9w/docker-bookstack.git
-reference: master
-compose_files: [ "docker-compose-xenon.yml" ]
