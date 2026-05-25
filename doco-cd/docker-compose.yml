@@ -26,7 +26,6 @@ services:
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/data:/data"
       - "/root/.config/sops/age:/root/.config/sops/age:ro"
       - "./auth_domains.txt:/data/auth_domains.txt:ro"
-      - "./apprise_urls.txt:/data/apprise_urls.txt:ro"
     healthcheck:
       test: ["CMD", "/doco-cd", "healthcheck"]
       start_period: 15s
@@ -41,28 +40,6 @@ services:
     networks:
       mac_vlan:
       internal:
-    depends_on:
-      apprise:
-        condition: service_healthy
-
-  apprise:
-    image: caronc/apprise:latest
-    restart: always
-    environment:
-      - TZ=Europe/Brussels
-    healthcheck:
-      test: ["CMD-SHELL", "curl -fsS http://localhost:8000/status >/dev/null || exit 1"]
-      interval: 30s
-      timeout: 5s
-      retries: 3
-      start_period: 20s
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "5m"
-        max-file: "2"
-    networks:
-      - internal
 
 networks:
   internal:
