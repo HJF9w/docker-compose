@@ -1,5 +1,8 @@
 # Global doco-cd configuration
 # This file enables auto-discovery for all stacks in the repository.
+deployments:
+  - name: "caddy"
+    working_dir: "caddy/"
 
 # Auto-discovery will find every subdirectory with a docker-compose.yml
 # and deploy it as a stack.
