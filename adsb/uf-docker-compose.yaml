@@ -11,8 +11,6 @@ services:
 ##      - 30005:30005           # Beast output for Server Feeders
 ##      - 30003:30003           # SBS output for ADSBHub
 ##      - 30105:30105           # MLAT input from Server Feeders
-    env_file: 
-      - secrets.enc.env
     environment:
       - LOGLEVEL=error
       - TZ=${FEEDER_TZ}

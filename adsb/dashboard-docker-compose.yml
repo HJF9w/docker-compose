@@ -6,8 +6,6 @@ services:
     image: nginx:1.31.0-alpine3.23
     container_name: dashboard
     restart: unless-stopped
-    env_file:
-      - secrets.enc.env
     networks:
       - caddy_to_adsb
     environment:

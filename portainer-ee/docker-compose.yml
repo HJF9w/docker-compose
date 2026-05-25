@@ -2,8 +2,6 @@ services:
   app:
     image: "portainer/portainer-ee:2.39.2"            ## opal is using the normal version, not alpine. last time I checkt you can't just switch between them.
     restart: always
-    env_file:
-      - secrets.enc.env
     #ports:
     #  - "8000:8000"
     #  - "9000:9000"
@@ -21,8 +19,6 @@ services:
 
   agent:
     image: 'portainer/agent:2.39.2-alpine'
-    env_file:
-      - secrets.enc.env
     environment:
       - EDGE_INSECURE_POLL=1
       - EDGE_KEY=${EDGE_KEY}

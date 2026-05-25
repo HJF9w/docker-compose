@@ -2,8 +2,6 @@ services:
   db:
     image: "postgres:16-alpine3.22"
     restart: "unless-stopped"
-    env_file:
-      - secrets.enc.env
     volumes:
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/db:/var/lib/postgresql/data"
     env_file:
@@ -15,8 +13,7 @@ services:
     image: "vabene1111/recipes:2.6.9"
     restart: "unless-stopped"
     env_file:
-      - secrets.enc.env
-      - .env
+      - "./.env"
     volumes:
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/staticfiles:/opt/recipes/staticfiles"
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/mediafiles:/opt/recipes/mediafiles"
