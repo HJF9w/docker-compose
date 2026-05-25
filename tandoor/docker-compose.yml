@@ -3,10 +3,11 @@ services:
     image: "postgres:16-alpine3.22"
     restart: "unless-stopped"
     env_file:
-      - .env
       - secrets.enc.env
     volumes:
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/db:/var/lib/postgresql/data"
+    env_file:
+      - "./.env"
     networks:
       - "default"
 
