@@ -11,9 +11,9 @@ auto_discovery:
 # These settings are inherited by all discovered stacks.
 # By listing secrets.env here, doco-cd will automatically try to 
 # find and decrypt it for every stack if it exists.
-env_files:
-  - .env
-  - secrets.env
+##env_files:
+##  - .env
+##  - secrets.env
 
 environment:
   BASEPATH: /data
