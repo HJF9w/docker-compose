@@ -1,31 +1,7 @@
-{
-	"data": "ENC[AES256_GCM,data:IqaFJTHHO+q7sXrCdIc4bqKwt4AaK0X33i/mTjFwYQVJ1i1CHo8yn0zfqtY/Ce9+BonwysEwbswYsXp4Yuw0LYsUtA==,iv:x8CCA9UI/XnwvCf4ypxRLb5eKLgLFBaESvBokKXUIWY=,tag:Au5Hhv2RhkYycTa60tB+gw==,type:str]",
-	"sops": {
-		"age": [
-			{
-				"recipient": "age1t4alj695hshvr0udhdnkkkhmjuhwa509uvg4tlz5ql5qm5xv7ykscpgslr",
-				"enc": "-----BEGIN AGE ENCRYPTED FILE-----\nYWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBORWVCaEpZQVJVU240dnZp\ncjl5ZFlKWGRadVNwVFExMW9sWHpKbU9Ia1YwCjNra2tLaFdTb3l2dzBoVjZFV2ti\ncjBkQnVtK293MXJ0aUdrc1lsWjlXTVkKLS0tICtEZ3RHbHlPbzhBNVgvK2pGdmF2\nalF5QXBlY0Y5dXRJeGM3ZHZZMnZ2TE0KjifVMsf7wzekvQNAE8yAWi3zVYQcJpu/\nqcCv9euXizQmFm+l+VI/Dzz4sYTsiOeSYYRVi0u11KU+iKhLr1bZQg==\n-----END AGE ENCRYPTED FILE-----\n"
-			},
-			{
-				"recipient": "age1qv2ypat24vk00cxvz6g526n46gtrrtv0h633kj2atr57k6jdy55s03twhc",
-				"enc": "-----BEGIN AGE ENCRYPTED FILE-----\nYWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSB2VWNUZHRzT0MyZ3ZDTkhB\nTTFVRDRuS09MRmY1TTExcjBDMjZ5SUoxUmxrCmQwYkF0ZlkvOFQzdVZueDBXYVFr\nd2dsclorYWxpWWthZWFWM1RLc2tIR0EKLS0tIDZ2MXJWYW9hdUlhN0VNcFNNNVZ0\nQ0UzY25SdEwzNmZURFhNbUFodFRYQ1EKeU4GSWln1fNpIHidBHBdsF9txib+294L\napvldbVxRCkbLNINVoxFNMXtdRWwe2ka/mrFwSisQs6fB2Mw25VeGA==\n-----END AGE ENCRYPTED FILE-----\n"
-			},
-			{
-				"recipient": "age185yhgg2h849092p3y840tcf2ja3g0y4txuc8fszyap70yzurgg0s5jc3fd",
-				"enc": "-----BEGIN AGE ENCRYPTED FILE-----\nYWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBGaWphakl0ZmRnNmlPbUVm\ncVdKWmNYR3hySFZ4M2k0SzN0VllDT01rYVZBCkRFOWhmSy9lWlZkMzBtSytBclhx\nZ0dwQ05RRDkrNjM3NDcwUWkvaWtCN2sKLS0tIFplcGRhU3JoblRvNU1CNDQ0a0pk\nUXo4TGZQdjR4RVVud0xtUU1lc0NEdncKWgnDvLdZ5I+7OTxSpBTw8R6yzljKp1aY\nQatSFzmPsb8dLX520unf3Ys9mfHZnh6IzKIE6M+4R65/Cj17e2c1ww==\n-----END AGE ENCRYPTED FILE-----\n"
-			},
-			{
-				"recipient": "age16rv0yzq38287sd4mef59lfmnw7awcvlhrn5sugyhc5ajz22jpatq5jye3z",
-				"enc": "-----BEGIN AGE ENCRYPTED FILE-----\nYWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBUL1l5R2xQbmhuUjRYdC82\nQ3M3b3BnY0xQRmxDenpFbE9IWXFEZVNkOENNCmlKTGxtL0R2WEJtUDd5TGZSdTFN\nblBpL0wycmxhWDc4R2lWRnNXMEpKNjgKLS0tIHNmek1TR0E3am8rZ2ZvcGtjdjVa\nSWlvbkY5YjVyRExIQlpjNjRzWDFPUDQKcaB/0brUG8BcYzSBhgU7AUg7Y3dauCeG\nmN/GQw5c3Xq8WukcMV95oB2y4y0EMTfqlPvBx7lIJgAfRx4Fxfei5g==\n-----END AGE ENCRYPTED FILE-----\n"
-			},
-			{
-				"recipient": "age17dkmk5r4zjwkywdw3tl2yjum0adsf0ut02hmfqt4avr05m6s73xqyjx835",
-				"enc": "-----BEGIN AGE ENCRYPTED FILE-----\nYWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSAzTDRaY0hZOE1oazUwb3dn\nRkNxUit5dXV2TUdacTBQaWtORE1xbmZoR3d3CkdRNnBWYUZKU3BxRTdHTnlkK1ZJ\nZmhJTVFDY3d0Znd3QVpxb2o4YkNDRGMKLS0tIDVjTnMxUEFuOTFpbjlsK0Ivd2VC\nUXVVdnN2NFlaTy9NMGI2OERSZGRXWVUKKzqlKg8TbMyIRCalN1c2NQOFobDbm9+3\nrP+0eHzbsdjMIsYjgvzaa9StYqSe6KANFLArN7dvItrD/bVRxO66zg==\n-----END AGE ENCRYPTED FILE-----\n"
-			}
-		],
-		"lastmodified": "2026-05-25T19:18:13Z",
-		"mac": "ENC[AES256_GCM,data:326ef58i9Tt6x64oQdoAWLVjjqBiQF/C1j0TeSCiDyLFd6ePwCxEEQa1uhJ+kr71FtSa4RN/mCA6BOlZVY+dn6iijtJwY0gO5r93oA+gAOteRA2ozehPZM279IajDly79wIx8HrkcsQazAzhby+IZTBl96pdPKJlEwmtNlYQnj4=,iv:YK02D4j0nieYOTkvFpbHoX6X1SduARlVZKmTmrNkpr0=,tag:MBBaUThdzxkM/wjQsAqMaQ==,type:str]",
-		"unencrypted_suffix": "_unencrypted",
-		"version": "3.12.1"
-	}
-}
+# Telegram Notification URL for Apprise
+# This file should be encrypted with SOPS.
+#
+# Format: tgram://bottoken/ChatID
+# Example: tgram://123456789:ABCDefGhIJKlmNoPQRstUVwxyZ/123456789
+
+tgram://your_bot_token_here/your_chat_id_here
