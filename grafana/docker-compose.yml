@@ -57,7 +57,6 @@ services:
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/pgadmin:/var/lib/pgadmin"
     depends_on:
       postgres:
-        condition: service_healthy
     networks:
       - "system_internal"
       - "internal"
