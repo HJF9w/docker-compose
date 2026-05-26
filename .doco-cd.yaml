@@ -44,15 +44,15 @@ environment:
   BASEPATH: /data
   TZ: Europe/Brussels
 
----
-name: "doco-cd"
-working_dir: "doco-cd/"
-compose_files:
-  - docker-compose.yml
-timeout: 300
-environment:
-  BASEPATH: /data
-  TZ: Europe/Brussels
+##---
+##name: "doco-cd"
+##working_dir: "doco-cd/"
+##compose_files:
+##  - docker-compose.yml
+##timeout: 300
+##environment:
+##  BASEPATH: /data
+##  TZ: Europe/Brussels
 
 ---
 name: "esptls"
