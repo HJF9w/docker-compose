@@ -5,8 +5,6 @@ deployments:
     working_dir: "caddy/"
   - name: "system"
     working_dir: "portainer-ee/"
-  - name: "hetzner-ddns"
-    working_dir: "hetzner-ddns/"
 
   - name: "bookstack"
     repository_url: https://github.com/HJF9w/docker-bookstack.git
