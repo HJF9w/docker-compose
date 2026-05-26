@@ -1,16 +1,23 @@
-name: "caddy"
-working_dir: "caddy/"
+##name: "adsb"
+##working_dir: "adsb/"
 ##compose_files:
 ##  - docker-compose.yml
+##  - dashboard-docker-compose.yml
+##  - uf-docker-compose.yaml
+##timeout: 600
+##environment:
+##  BASEPATH: /data
+##  TZ: Europe/Brussels
 
 ---
-name: "hetzner-ddns"
-working_dir: "hetzner-ddns"
+name: "bind9"
+working_dir: "bind9/"
 compose_files:
   - docker-compose.yml
-build:
-  no_cache: true
-  force_image_pull: true
+timeout: 300
+environment:
+  BASEPATH: /data
+  TZ: Europe/Brussels
 
 ---
 name: "bookstack"
@@ -19,15 +26,149 @@ reference: master
 working_dir: .
 compose_files:
   - docker-compose-xenon.yml
-
-
-##auto_discovery:
-##  enabled: true
-##  depth: 1
-##  delete: true
-
 timeout: 300
 environment:
   BASEPATH: /data
   TZ: Europe/Brussels
 
+---
+name: "caddy"
+working_dir: "caddy/"
+compose_files:
+  - docker-compose.yml
+build:
+  no_cache: true
+  force_image_pull: true
+timeout: 600
+environment:
+  BASEPATH: /data
+  TZ: Europe/Brussels
+
+---
+name: "doco-cd"
+working_dir: "doco-cd/"
+compose_files:
+  - docker-compose.yml
+timeout: 300
+environment:
+  BASEPATH: /data
+  TZ: Europe/Brussels
+
+---
+name: "esptls"
+working_dir: "esptls/"
+compose_files:
+  - docker-compose.yml
+build:
+  no_cache: true
+  force_image_pull: true
+timeout: 600
+environment:
+  BASEPATH: /data
+  TZ: Europe/Brussels
+
+---
+name: "grafana"
+working_dir: "grafana/"
+compose_files:
+  - docker-compose.yml
+timeout: 600
+environment:
+  BASEPATH: /data
+  TZ: Europe/Brussels
+
+---
+##name: "hetzner-ddns"
+##working_dir: "hetzner-ddns/"
+##compose_files:
+##  - docker-compose.yml
+##timeout: 300
+##environment:
+##  BASEPATH: /data
+##  TZ: Europe/Brussels
+##
+---
+name: "n8n"
+working_dir: "n8n/"
+compose_files:
+  - docker-compose.yml
+timeout: 600
+environment:
+  BASEPATH: /data
+  TZ: Europe/Brussels
+
+---
+name: "nextcloud"
+working_dir: "nextcloud/"
+compose_files:
+  - docker-compose.yml
+timeout: 600
+environment:
+  BASEPATH: /data
+  TZ: Europe/Brussels
+
+---
+name: "portainer-ee"
+working_dir: "portainer-ee/"
+compose_files:
+  - docker-compose.yml
+timeout: 300
+environment:
+  BASEPATH: /data
+  TZ: Europe/Brussels
+
+---
+name: "searxng"
+working_dir: "searxng/"
+compose_files:
+  - docker-compose.yml
+timeout: 300
+environment:
+  BASEPATH: /data
+  TZ: Europe/Brussels
+
+---
+name: "tandoor"
+working_dir: "tandoor/"
+compose_files:
+  - docker-compose.yml
+timeout: 600
+environment:
+  BASEPATH: /data
+  TZ: Europe/Brussels
+
+---
+name: "twitch-recorder"
+working_dir: "twitch-recorder/"
+compose_files:
+  - docker-compose.yml
+build:
+  no_cache: true
+  force_image_pull: true
+timeout: 600
+environment:
+  BASEPATH: /data
+  TZ: Europe/Brussels
+
+---
+name: "vaultwarden"
+working_dir: "vaultwarden/"
+compose_files:
+  - docker-compose.yml
+timeout: 300
+environment:
+  BASEPATH: /data
+  TZ: Europe/Brussels
+
+---
+name: "video-player"
+working_dir: "video-player/"
+compose_files:
+  - docker-compose.yml
+build:
+  no_cache: true
+  force_image_pull: true
+timeout: 600
+environment:
+  BASEPATH: /data
+  TZ: Europe/Brussels
