@@ -4,7 +4,9 @@ deployments:
   - name: "caddy"
     working_dir: "caddy/"
   - name: "system"
-    working_dir: "portainer-ee"
+    working_dir: "portainer-ee/"
+  - name: "n8n"
+    working_dir: "n8n/"
 
   - name: "bookstack"
     repository_url: https://github.com/HJF9w/docker-bookstack.git
@@ -13,10 +15,10 @@ deployments:
 
 # Auto-discovery will find every subdirectory with a docker-compose.yml
 # and deploy it as a stack.
-auto_discovery:
-  enabled: true
-  depth: 1
-  delete: true
+##auto_discovery:
+##  enabled: true
+##  depth: 1
+##  delete: true
 
 # These settings are inherited by all discovered stacks.
 timeout: 300
