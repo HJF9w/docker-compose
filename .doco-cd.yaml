@@ -1,25 +1,33 @@
-# Global doco-cd configuration
-# This file enables auto-discovery for all stacks in the repository.
-deployments:
-  - name: "caddy"
-    working_dir: "caddy/"
-  - name: "system"
-    working_dir: "portainer-ee/"
+name: "caddy"
+working_dir: "caddy/"
+##compose_files:
+##  - docker-compose.yml
 
-  - name: "bookstack"
-    repository_url: https://github.com/HJF9w/docker-bookstack.git
-    reference: master
-    compose_files: [ "docker-compose-xenon.yml" ]
+---
+name: "hetzner-ddns"
+working_dir: "hetzner-ddns"
+compose_files:
+  - docker-compose.yml
+build:
+  no_cache: true
+  force_image_pull: true
 
-# Auto-discovery will find every subdirectory with a docker-compose.yml
-# and deploy it as a stack.
+---
+name: "bookstack"
+repository: https://github.com/HJF9w/docker-bookstack.git
+reference: master
+working_dir: .
+compose_files:
+  - docker-compose-xenon.yml
+
+
 ##auto_discovery:
 ##  enabled: true
 ##  depth: 1
 ##  delete: true
 
-# These settings are inherited by all discovered stacks.
 timeout: 300
 environment:
   BASEPATH: /data
   TZ: Europe/Brussels
+
