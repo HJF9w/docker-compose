@@ -40,7 +40,7 @@ services:
         max-file: "3"
     networks:
       mac_vlan:
-        ipv4_address: "10.0.42.197"
+        ipv4_address: "10.0.42.198"
       internal:
     depends_on:
       apprise:
