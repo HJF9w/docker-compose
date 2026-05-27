@@ -7,6 +7,8 @@ services:
     container_name: piaware
     hostname: piaware
     restart: unless-stopped
+    healthcheck:
+      disable: true
     env_file:
       - ".env"
       - "secrets.enc.env"
@@ -31,6 +33,8 @@ services:
     container_name: fr24
     hostname: fr24
     restart: unless-stopped
+    healthcheck:
+      disable: true
     env_file:
       - ".env"
       - "secrets.enc.env"
@@ -53,6 +57,8 @@ services:
       - ".env"
       - "secrets.enc.env"
     restart: unless-stopped
+    healthcheck:
+      disable: true
     networks:
       - caddy_to_adsb
       - default
@@ -72,6 +78,8 @@ services:
       - "secrets.enc.env"
     hostname: airnavradar
     restart: unless-stopped
+    healthcheck:
+      disable: true
     ports:
       - 30106:30105
     environment:
@@ -95,6 +103,8 @@ services:
       - "secrets.enc.env"
     hostname: planewatch
     restart: unless-stopped
+    healthcheck:
+      disable: true
     ports:
       - 30107:30105
     environment:
@@ -113,6 +123,8 @@ services:
     image: ghcr.io/sdr-enthusiasts/docker-opensky-network:latest-build-829
     container_name: opensky
     restart: unless-stopped
+    healthcheck:
+      disable: true
     env_file:
       - ".env"
       - "secrets.enc.env"
@@ -149,6 +161,8 @@ services:
       - ".env"
       - "secrets.enc.env"
     restart: unless-stopped
+    healthcheck:
+      disable: true
     networks:
       - caddy_to_adsb
       - default

@@ -3,6 +3,14 @@ working_dir: "adsb/"
 compose_files:
   - docker-compose.yml
 timeout: 600
+reconciliation:
+  enabled: true
+  events:
+    - die
+    - destroy
+    - stop
+    - kill
+    - oom
 environment:
   BASEPATH: /data
   TZ: Europe/Brussels
