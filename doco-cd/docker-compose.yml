@@ -2,9 +2,9 @@ services:
   app:
     image: ghcr.io/kimdre/doco-cd:0.89.0
     restart: always
-##    ports:
-##      - "80:80"     # Webhook endpoint
-##      - "9120:9120" # Prometheus metrics
+    ports:
+      - "80:80"     # Webhook endpoint
+      - "9120:9120" # Prometheus metrics
     environment:
       TZ: Europe/Brussels
       LOG_LEVEL: debug
@@ -28,11 +28,12 @@ services:
       - "./auth_domains.txt:/data/auth_domains.txt:ro"
       - "./apprise_urls.txt:/data/apprise_urls.txt:ro"
     deploy:
-      replicas: 2
+      replicas: 1
       update_config:
         parallelism: 1        # Update 1 container at a time
-        delay: 10s            # Wait 10 seconds between updates
-        order: stop-first     # Stop the old container before starting the new one
+        #delay: 10s            # Wait 10 seconds between updates
+        #order: stop-first     # Stop the old container before starting the new one
+        order: start-first    # Start the new container BEFORE stopping the old one
     healthcheck:
       test: ["CMD", "/doco-cd", "healthcheck"]
       start_period: 15s
