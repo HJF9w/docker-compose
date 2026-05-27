@@ -2,7 +2,25 @@ name: "adsb"
 working_dir: "adsb/"
 compose_files:
   - docker-compose.yml
+timeout: 600
+environment:
+  BASEPATH: /data
+  TZ: Europe/Brussels
+
+---
+name: "adsb-dashboard"
+working_dir: "adsb/"
+compose_files:
   - dashboard-docker-compose.yml
+timeout: 600
+environment:
+  BASEPATH: /data
+  TZ: Europe/Brussels
+
+---
+name: "adsb-uf"
+working_dir: "adsb/"
+compose_files:
   - uf-docker-compose.yaml
 timeout: 600
 environment:
