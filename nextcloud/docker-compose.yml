@@ -61,7 +61,7 @@ services:
       default:
 
   imaginary:
-    image: nextcloud/aio-imaginary:20260515_145717
+    image: nextcloud/aio-imaginary:20260527_140826
     restart: unless-stopped
     env_file:
       - ".env"
