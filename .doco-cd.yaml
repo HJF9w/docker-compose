@@ -129,8 +129,6 @@ working_dir: "nextcloud/"
 compose_files:
   - docker-compose.yml
 timeout: 600
-env_file:
-  - secrets.enc.env
 environment:
   BASEPATH: /data
   TZ: Europe/Brussels
