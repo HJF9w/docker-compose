@@ -13,10 +13,10 @@ services:
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/data:/data"
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/compose:/data/compose/1"
     networks:
-      mac_vlan:
+      system_mac_vlan:
         ipv4_address: "${EXT_IPV4}"
         mac_address: d2:cb:f3:62:49:0a
-      internal:
+      system_internal:
 
   agent:
     image: 'portainer/agent:2.39.2-alpine'
@@ -34,7 +34,7 @@ services:
       - '/var/run/docker.sock:/var/run/docker.sock'
 
 networks:
-  internal:
+  system_internal:
     external: true
-  mac_vlan:
+  system_mac_vlan:
     external: true
