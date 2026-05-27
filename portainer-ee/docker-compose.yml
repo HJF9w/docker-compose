@@ -5,8 +5,9 @@ services:
     #ports:
     #  - "8000:8000"
     #  - "9000:9000"
-    environment: 
-      TRUSTED_ORIGINS: portainer.ioui.eu
+    env_file:
+      - ".env"
+      - "secrets.enc.env"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/data:/data"
@@ -19,10 +20,11 @@ services:
 
   agent:
     image: 'portainer/agent:2.39.2-alpine'
+    env_file:
+      - ".env"
+      - "secrets.enc.env"
     environment:
       - EDGE_INSECURE_POLL=1
-      - EDGE_KEY=${EDGE_KEY}
-      - EDGE_ID=${EDGE_ID}
       - EDGE=1
     restart: always
     volumes:
@@ -33,15 +35,6 @@ services:
 
 networks:
   internal:
-    driver: "bridge"
+    external: true
   mac_vlan:
-    driver: macvlan
-    driver_opts:
-      parent: "${MAC_VLAN_PARENT}"
-    ipam:
-      config:
-      - subnet: "${IPAM_SUBNET}"
-        gateway: "${IPAM_GATEWAY}"
-        ip_range: "${IPAM_IP_RANGE}"
-        aux_addresses:
-          net_address: "${IPAM_NET_ADDRESS}"
+    external: true

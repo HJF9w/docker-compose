@@ -1,0 +1,25 @@
+keys:
+  - &net_sapphire age1t4alj695hshvr0udhdnkkkhmjuhwa509uvg4tlz5ql5qm5xv7ykscpgslr
+  - &net_titanite age1qv2ypat24vk00cxvz6g526n46gtrrtv0h633kj2atr57k6jdy55s03twhc
+  - &titanite age185yhgg2h849092p3y840tcf2ja3g0y4txuc8fszyap70yzurgg0s5jc3fd
+  - &sapphire age16rv0yzq38287sd4mef59lfmnw7awcvlhrn5sugyhc5ajz22jpatq5jye3z
+  - &xenon age1a5q7wddt8k2jfk9r6e4epkedgz0l3yyzxrr9deyfs228w97eys2qtzyl3e
+  - &hrms-ai-test-01 age1jt8qvu4vxxrm34rs4j7y49ns8wmvark6062qkvgp5vpmjvuxa5msfgcs3c
+  - &dock-app-hml-02 age1xv38kvtemmljzvy0exh6ugrkyhcp8rkg8eu7gnudwdg354sr24tqdzed6t
+creation_rules:
+  - path_regex: secrets\.enc\.env$
+    key_groups:
+    - age:
+      - *net_sapphire
+      - *net_titanite
+      - *titanite
+      - *sapphire
+      - *dock-app-hml-02
+  - path_regex: .$
+    key_groups:
+    - age:
+      - *net_sapphire
+      - *net_titanite
+      - *titanite
+      - *sapphire
+      - *dock-app-hml-02

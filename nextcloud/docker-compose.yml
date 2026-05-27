@@ -4,10 +4,9 @@ services:
     restart: unless-stopped
     volumes:
       - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/db:/var/lib/postgresql
-    environment:
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    env_file:
+      - ".env"
+      - "secrets.enc.env"
     networks:
       default:
 
@@ -15,6 +14,9 @@ services:
     image: redis:8.6-alpine3.23
     restart: unless-stopped
     command: redis-server --requirepass ${REDIS_HOST_PASSWORD}
+    env_file:
+      - ".env"
+      - "secrets.enc.env"
     depends_on:
       - db
     volumes:
@@ -27,18 +29,12 @@ services:
     restart: unless-stopped
     volumes:
       - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/app:/var/www/html
+    env_file:
+      - ".env"
+      - "secrets.enc.env"
     environment:
       - POSTGRES_HOST=db
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - REDIS_HOST=redis
-      - REDIS_HOST_PASSWORD=${REDIS_HOST_PASSWORD}
-      - NEXTCLOUD_ADMIN_USER=${NEXTCLOUD_ADMIN_USER}
-      - NEXTCLOUD_ADMIN_PASSWORD=${NEXTCLOUD_ADMIN_PASSWORD}
-      - NEXTCLOUD_TRUSTED_DOMAINS=${NEXTCLOUD_TRUSTED_DOMAINS}
-      - TRUSTED_PROXIES=${TRUSTED_PROXIES}
-      - OVERWRITEHOST=${NEXTCLOUD_HOST}
       - OVERWRITEPROTOCOL=https
       - NC_DEFAULT_PHONE_REGION=DE
       - DEFAULT_PHONE_REGION=DE
@@ -53,6 +49,9 @@ services:
   cron:
     image: nextcloud:33.0-apache
     restart: unless-stopped
+    env_file:
+      - ".env"
+      - "secrets.enc.env"
     volumes:
       - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/app:/var/www/html
     entrypoint: /cron.sh
@@ -64,6 +63,9 @@ services:
   imaginary:
     image: nextcloud/aio-imaginary:20260515_145717
     restart: unless-stopped
+    env_file:
+      - ".env"
+      - "secrets.enc.env"
     environment:
       - PORT=9000
     command: -concurrency 10 -enable-url-source

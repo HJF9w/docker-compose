@@ -1,11 +1,11 @@
 services:
-  # ----------------------------------------------------------------------
-  # TOPOLOGY DASHBOARD
-  # ----------------------------------------------------------------------
   dashboard:
     image: nginx:1.31.1-alpine3.23
     container_name: dashboard
     restart: unless-stopped
+    env_file:
+      - ".env"
+      - "secrets.enc.env"
     networks:
       - caddy_to_adsb
     environment:

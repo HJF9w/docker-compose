@@ -3,6 +3,9 @@ services:
     image: "grafana/grafana:13.0.1-security-01"
     restart: "unless-stopped"
     user: "472"
+    env_file:
+      - ".env"
+      - "secrets.enc.env"
     volumes:
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/grafana:/var/lib/grafana"
       - "./config.yml:/etc/influxdb2/config.yml"
@@ -15,6 +18,9 @@ services:
     ports:
       - "8086:8086"
     restart: "unless-stopped"
+    env_file:
+      - ".env"
+      - "secrets.enc.env"
     volumes:
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/influxdb:/var/lib/influxdb2"
     networks:
@@ -24,11 +30,9 @@ services:
   postgres:
     image: "postgres:18.3-alpine3.23"
     restart: "unless-stopped"
-    environment:
-      - POSTGRES_DB=${POSTGRES_DB:-timeseries}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - TZ=${TZ:-UTC}
+    env_file:
+      - ".env"
+      - "secrets.enc.env"
     volumes:
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/postgres:/var/lib/postgresql"
     healthcheck:
@@ -45,11 +49,9 @@ services:
   pgadmin:
     image: "dpage/pgadmin4:2026-05-06-1"
     restart: "unless-stopped"
-    environment:
-      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL:-admin@example.com}
-      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
-      - PGADMIN_CONFIG_SERVER_MODE=False
-      - TZ=${TZ:-UTC}
+    env_file:
+      - ".env"
+      - "secrets.enc.env"
     volumes:
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/pgadmin:/var/lib/pgadmin"
     depends_on:

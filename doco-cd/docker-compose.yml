@@ -1,0 +1,78 @@
+services:
+  app:
+    image: ghcr.io/kimdre/doco-cd:0.89.0
+    restart: always
+    ports:
+      - "80:80"     # Webhook endpoint
+      - "9120:9120" # Prometheus metrics
+    environment:
+      TZ: ${TZ}
+      LOG_LEVEL: debug
+      PASS_ENV: "true"
+      APPRISE_API_URL: http://apprise:8000/notify
+      APPRISE_NOTIFY_LEVEL: info
+      APPRISE_NOTIFY_URLS_FILE: /run/secrets/apprise_urls.txt
+      GIT_AUTH_DOMAINS_FILE: /run/secrets/auth_domains.txt
+      SOPS_AGE_KEY_FILE: /run/secrets/keys.txt
+      POLL_CONFIG: |
+        - url: "${MY_REPO_URL}"
+          interval: 960
+          reference: opal
+    volumes:
+      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/data:/data"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "/root/.config/sops/age/keys.txt:/run/secrets/keys.txt:ro"
+      - "./auth_domains.txt:/run/secrets/auth_domains.txt:ro"
+      - "./apprise_urls.txt:/run/secrets/apprise_urls.txt:ro"
+    healthcheck:
+      test: ["CMD", "/doco-cd", "healthcheck"]
+      start_period: 15s
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+##      mac_vlan:
+##        ipv4_address: "10.0.42.198"
+      internal:
+    depends_on:
+      apprise:
+        condition: service_healthy
+
+  apprise:
+    image: caronc/apprise:latest
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8000/status >/dev/null || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "2"
+    networks:
+      - internal
+
+networks:
+  internal:
+    driver: "bridge"
+    name: system_internal
+  mac_vlan:
+    driver: macvlan
+    name: system_mac_vlan
+    driver_opts:
+      parent: "${MAC_VLAN_PARENT}"
+    ipam:
+      config:
+        - subnet: "${IPAM_SUBNET}"
+          gateway: "${IPAM_GATEWAY}"
+          ip_range: "${IPAM_IP_RANGE}"
+          aux_addresses:
+            net_address: "${IPAM_NET_ADDRESS}"

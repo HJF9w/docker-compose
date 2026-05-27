@@ -7,6 +7,9 @@ services:
     container_name: piaware
     hostname: piaware
     restart: unless-stopped
+    env_file:
+      - ".env"
+      - "secrets.enc.env"
     ports:
       - 30105:30105
     networks:
@@ -28,6 +31,9 @@ services:
     container_name: fr24
     hostname: fr24
     restart: unless-stopped
+    env_file:
+      - ".env"
+      - "secrets.enc.env"
     ports:
       - 30108:30106
     networks:
@@ -43,6 +49,9 @@ services:
   pfclient:
     image: ghcr.io/sdr-enthusiasts/docker-planefinder:latest-build-534
     container_name: pfclient
+    env_file:
+      - ".env"
+      - "secrets.enc.env"
     restart: unless-stopped
     networks:
       - caddy_to_adsb
@@ -58,6 +67,9 @@ services:
   airnavradar:
     image: ghcr.io/sdr-enthusiasts/docker-airnavradar:latest-build-875
     container_name: airnavradar
+    env_file:
+      - ".env"
+      - "secrets.enc.env"
     hostname: airnavradar
     restart: unless-stopped
     ports:
@@ -78,6 +90,9 @@ services:
   planewatch:
     image: ghcr.io/plane-watch/docker-plane-watch:v0.0.6
     container_name: planewatch
+    env_file:
+      - ".env"
+      - "secrets.enc.env"
     hostname: planewatch
     restart: unless-stopped
     ports:
@@ -98,6 +113,9 @@ services:
     image: ghcr.io/sdr-enthusiasts/docker-opensky-network:latest-build-829
     container_name: opensky
     restart: unless-stopped
+    env_file:
+      - ".env"
+      - "secrets.enc.env"
     environment:
       - BEASTHOST=${FEEDER_IP}
       - TZ=${FEEDER_TZ}
@@ -127,6 +145,9 @@ services:
     image: ghcr.io/sdr-enthusiasts/docker-planefence:latest-build-1194
     container_name: planefence
     hostname: planefence
+    env_file:
+      - ".env"
+      - "secrets.enc.env"
     restart: unless-stopped
     networks:
       - caddy_to_adsb
