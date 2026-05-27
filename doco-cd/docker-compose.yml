@@ -6,7 +6,7 @@ services:
 ##      - "80:80"     # Webhook endpoint
 ##      - "9120:9120" # Prometheus metrics
     environment:
-      TZ: ${TZ}
+      TZ: Europe/Brussels
       LOG_LEVEL: debug
       PASS_ENV: "true"
       APPRISE_API_URL: http://apprise:8000/notify
@@ -46,6 +46,8 @@ services:
   apprise:
     image: caronc/apprise:latest
     restart: always
+    environment:
+      TZ: Europe/Brussels
     healthcheck:
       test: ["CMD-SHELL", "curl -fsS http://localhost:8000/status >/dev/null || exit 1"]
       interval: 30s
