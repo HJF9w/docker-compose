@@ -11,7 +11,7 @@ services:
       - ".env"
       - "secrets.enc.env"
     healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://google.com || exit 1"]
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://127.0.0.1:2019/config/ || exit 1"]
       timeout: 2s
       interval: 1m
       retries: 1
