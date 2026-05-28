@@ -16,13 +16,7 @@ services:
       - "secrets.enc.env"
     environment:
       - LOGLEVEL=error
-      - TZ=${FEEDER_TZ}
       - READSB_DEVICE_TYPE=rtlsdr
-      - READSB_RTLSDR_DEVICE=${ADSB_SDR_SERIAL}
-      - READSB_RTLSDR_PPM=${ADSB_SDR_PPM}
-      - READSB_LAT=${FEEDER_LAT}
-      - READSB_LON=${FEEDER_LONG}
-      - READSB_ALT=${FEEDER_ALT_M}m
       - READSB_RX_LOCATION_ACCURACY=2
       - READSB_STATS_RANGE=true
       - READSB_GAIN=auto
@@ -49,19 +43,11 @@ services:
           mlathub,10.0.42.241,30106,beast_in;
           mlathub,10.0.42.241,30107,beast_in;
           mlathub,10.0.42.241,30108,beast_in
-      - UUID=$${env.ULTRAFEEDER_UUID}
-      - BEASTHOST=${EXT_IPV4}
-      - MLAT_USER=${FEEDER_NAME}
       - UPDATE_TAR1090=true
-      - TAR1090_DEFAULTCENTERLAT=${FEEDER_LAT}
-      - TAR1090_DEFAULTCENTERLON=${FEEDER_LONG}
       - TAR1090_MESSAGERATEINTITLE=true
-      - TAR1090_PAGETITLE=${FEEDER_NAME}
       - TAR1090_PLANECOUNTINTITLE=true
       - TAR1090_ENABLE_AC_DB=true
       - TAR1090_FLIGHTAWARELINKS=true
-      - HEYWHATSTHAT_PANORAMA_ID=${FEEDER_HEYWHATSTHAT_ID}
-      - HEYWHATSTHAT_ALTS=2280,10000,40000 ## Setting this via Portainer appears to be broken, variable values containing `,` don't get parsed
       - TAR1090_SITESHOW=true
       - TAR1090_RANGE_OUTLINE_COLORED_BY_ALTITUDE=true
       - TAR1090_RANGE_OUTLINE_WIDTH=2.0
@@ -69,12 +55,7 @@ services:
       - TAR1090_RANGERINGSCOLORS='#1A237E','#0D47A1','#3e7ad6','#42A5F5','#64B5F6'
       - TAR1090_USEROUTEAPI=true
       - GRAPHS1090_DARKMODE=true
-      - INFLUXDBV2_URL=${INFLUX_URL}
-      - INFLUXDBV2_TOKEN=${INFLUX_TOKEN}
-      - INFLUXDBV2_BUCKET=${INFLUX_BUCKET}
-      - INFLUXDBV2_ORG=${INFLUX_ORG}
       - PROMETHEUS_ENABLE=true
-      - READSB_ENABLE_BIASTEE=${READSB_ENABLE_BIASTEE}
       - TAR1090_CONFIGJS_APPEND=
           window.addEventListener('load', function() {
             var container = document.querySelector('#header_top .buttonContainer');
@@ -95,10 +76,9 @@ services:
             container.appendChild(createBtn('⬅️', 'Full History', '?showTrace=2026-04-27'));
           });
       - PTRACKS=24
-      - READSB_STATS_RANGE=${READSB_STATS_RANGE:-true}
       - READSB_RANGE_OUTLINE_HOURS=24
       - TAR1090_ENABLE_AC_DB=true
-      - READSB_ENABLE_TRACES=${READSB_ENABLE_TRACES:-true} ## high disk usage
+      - READSB_ENABLE_TRACES=true ## high disk usage
       - TAR1090_RANGE_OUTLINE_COLORED_BY_ALTITUDE=true
       - TAR1090_DWDLAYERS=dwd:RX-Produkt,dwd:NowCastMIX-Informationen,dwd:Warnungen_Gemeinden,dwd:Icon_reg025_fd_sl_VMAX_10M,dwd:Icon_reg025_fd_sl_CLCT,dwd:RBSN_VV,dwd:Radar_rv_product_1x1km_ger,dwd:SF-Produkt
       - GRAPHS1090_LARGE_WIDTH=1920
