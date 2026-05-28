@@ -135,8 +135,6 @@ services:
       - LAT=${FEEDER_LAT}
       - LONG=${FEEDER_LONG}
       - ALT=${FEEDER_ALT_M}
-      - OPENSKY_USERNAME=${OPENSKY_USERNAME}
-      - OPENSKY_SERIAL=${OPENSKY_SERIAL}
     tmpfs:
       - /run:exec,size=64M
       - /var/log
