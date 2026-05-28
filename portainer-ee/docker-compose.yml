@@ -18,7 +18,7 @@ services:
       internal:
 
   agent:
-    image: 'portainer/agent:2.39.2-alpine'
+    image: 'portainer/agent:2.42.0-alpine'
     environment:
       - EDGE_INSECURE_POLL=1
       - EDGE_KEY=${EDGE_KEY}
