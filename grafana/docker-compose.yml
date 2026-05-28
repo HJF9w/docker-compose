@@ -14,7 +14,7 @@ services:
       - "system_internal"
 
   db:
-    image: "influxdb:2.9"
+    image: "influxdb:2.9.1"
     ports:
       - "8086:8086"
     restart: "unless-stopped"
