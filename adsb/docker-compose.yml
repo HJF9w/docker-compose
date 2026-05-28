@@ -85,9 +85,9 @@ services:
       disable: true
     ports:
       - 30107:30105
+    entrypoint: ["/bin/sh", "-c", "export ALT=$$FEEDER_ALT_FT; exec /init"]
     environment:
       - DEBUG_LOGGING=true
-      - ALT=${FEEDER_ALT_FT}
     tmpfs:
       - /run:exec,size=64M
       - /var/log
@@ -103,7 +103,7 @@ services:
       - "secrets.enc.env"
     environment:
       - DEBUG_LOGGING=true
-      - ALT=${FEEDER_ALT_M}
+      - ALT=$${env.FEEDER_ALT_M}
     tmpfs:
       - /run:exec,size=64M
       - /var/log
