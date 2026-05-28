@@ -87,7 +87,7 @@ services:
       - 30107:30105
     environment:
       - DEBUG_LOGGING=true
-      - ALT=$${FEEDER_ALT_FT}
+      - ALT=$${env.FEEDER_ALT_FT}
     tmpfs:
       - /run:exec,size=64M
       - /var/log
