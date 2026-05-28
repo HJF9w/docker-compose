@@ -66,7 +66,7 @@ services:
     ports:
       - 30106:30105
     environment:
-      - ALT=${FEEDER_ALT_M}
+      - ALT=$${env.FEEDER_ALT_M}
     volumes: 
       - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/airnavradar:/sys/class/thermal:z
     tmpfs:
