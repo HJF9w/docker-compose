@@ -49,7 +49,7 @@ services:
           mlathub,10.0.42.241,30106,beast_in;
           mlathub,10.0.42.241,30107,beast_in;
           mlathub,10.0.42.241,30108,beast_in
-      - UUID=${ULTRAFEEDER_UUID}
+      - UUID=$${env.ULTRAFEEDER_UUID}
       - BEASTHOST=${EXT_IPV4}
       - MLAT_USER=${FEEDER_NAME}
       - UPDATE_TAR1090=true
