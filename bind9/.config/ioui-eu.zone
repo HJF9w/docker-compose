@@ -4,7 +4,7 @@ $TTL 1m
 $ORIGIN ioui.eu.
 
 @	IN	SOA	ns.ioui.eu. admin.ioui.eu. (
-				2026053011     ; serial
+				2026053012     ; serial
 				12h            ; refresh 12h
 				15m            ; retry 15m
 				1w             ; expire 3w
