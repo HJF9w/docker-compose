@@ -4,7 +4,7 @@ $TTL 1m
 $ORIGIN ioui.eu.
 
 @	IN	SOA	ns.ioui.eu. admin.ioui.eu. (
-				2026053015     ; serial
+				2026053016     ; serial
 				12h            ; refresh 12h
 				15m            ; retry 15m
 				1w             ; expire 3w
@@ -16,8 +16,8 @@ ns		IN	A	10.0.42.254
 
 ; -- Catch all
 *			IN	A	10.0.42.23
-o                       CNAME           o.ioui.eu.
-u                       CNAME           o.
+o                       CNAME           o.ioui.eu
+u                       CNAME           o
 
 ; -- CNAME's for reverse proxy
 xenon-rp	IN	A	10.0.42.23
