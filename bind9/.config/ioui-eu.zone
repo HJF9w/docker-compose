@@ -15,7 +15,6 @@ ns		IN	A	10.0.42.254
 
 ; -- Catch all
 *			IN	A	10.0.42.23
-o                       CNAME   A       o
 
 ; -- CNAME's for reverse proxy
 xenon-rp	IN	A	10.0.42.23
