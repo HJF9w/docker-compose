@@ -4,18 +4,20 @@ $TTL 1m
 $ORIGIN ioui.eu.
 
 @	IN	SOA	ns.ioui.eu. admin.ioui.eu. (
-				2026053014     ; serial
+				2026053015     ; serial
 				12h            ; refresh 12h
 				15m            ; retry 15m
 				1w             ; expire 3w
 				1m )           ; minimum 2h
 
 		IN	NS	ns.ioui.eu.
+		IN	NS	helium.ns.hetzner.de.
 ns		IN	A	10.0.42.254
 
 ; -- Catch all
 *			IN	A	10.0.42.23
 o                       CNAME           o.ioui.eu.
+u                       CNAME           o.
 
 ; -- CNAME's for reverse proxy
 xenon-rp	IN	A	10.0.42.23
