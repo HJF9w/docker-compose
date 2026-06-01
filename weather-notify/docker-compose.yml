@@ -2,7 +2,7 @@ services:
   app:
     build: .
     restart: unless-stopped
-    env_files:
+    env_file:
       - ".env"
       - "secrets.enc.env"
     volumes:
