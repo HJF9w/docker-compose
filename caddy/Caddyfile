@@ -16,7 +16,6 @@
         @it-tools    		host it-tools.ioui.eu
         @kuma    		host kuma.ioui.eu
         @n8n    		host n8n.ioui.eu
-        @n8n    		host n8n.ioui.eu
         @nextcloud              host nextcloud.ioui.eu
         @pdf-tools    		host pdf-tools.ioui.eu
         @portainer    		host portainer.ioui.eu
@@ -24,32 +23,61 @@
         @portainer-xenon        host portainer-xenon.ioui.eu
         @rezepte                host rezepte.ioui.eu
         @searx    		host searx.ioui.eu
-        @searx    		host searx.ioui.eu
         @syncthing    		host syncthing.ioui.eu
-        @twitch    		host twitch.ioui.eu
         @twitch    		host twitch.ioui.eu
         @vaultwarden   		host vaultwarden.ioui.eu
 
-        handle @bookstack     	{ reverse_proxy bookstack-app-1:8080 }
-        handle @fritz     	{ reverse_proxy 10.0.42.1:80 }
-        handle @fritz7170     	{ reverse_proxy 10.0.42.11:80 }
-        handle @fritz7272     	{ reverse_proxy 10.0.42.10:80 }
-        handle @fritz7390     	{ reverse_proxy 10.0.42.12:80 }
-        handle @grafana     	{ reverse_proxy grafana-app-1:3000 }
-        handle @home     	{ reverse_proxy 10.0.42.123:8123 }
-        handle @influxdb     	{ reverse_proxy grafana-db-1:8086 }
-        handle @it-tools     	{ reverse_proxy it-tools-app-1:8080 }
-        handle @kuma     	{ reverse_proxy kuma-app-1:3001 }
-        handle @n8n     	{ reverse_proxy n8n-app-1:443 }
-        handle @n8n     	{ reverse_proxy n8n-app-1:443 }
-        handle @pdf-tools     	{ reverse_proxy pdf-tools-app-1:8080 }
-        handle @portainer     	{ reverse_proxy system-app-1:9000 }
-        handle @searx     	{ reverse_proxy searx-app-1:8080 }
-        handle @searx     	{ reverse_proxy searx_app_1:8080 }
-        handle @syncthing     	{ reverse_proxy syncthing-app-1:8384 }
-        handle @twitch     	{ reverse_proxy video-player-app-1:3000 }
-        handle @twitch     	{ reverse_proxy video-player-app-1:3000 }
-        handle @vaultwarden    	{ reverse_proxy vaultwarden-app-1:80 }
+        handle @bookstack     	{
+		reverse_proxy bookstack-app-1:8080
+	}
+        handle @fritz     	{
+		reverse_proxy 10.0.42.1:80
+	}
+        handle @fritz7170     	{
+		reverse_proxy 10.0.42.11:80
+	}
+        handle @fritz7272     	{
+		reverse_proxy 10.0.42.10:80
+	}
+        handle @fritz7390     	{
+		reverse_proxy 10.0.42.12:80
+	}
+        handle @grafana     	{
+		reverse_proxy grafana-app-1:3000
+	}
+        handle @home     	{
+		reverse_proxy 10.0.42.123:8123
+	}
+        handle @influxdb     	{
+		reverse_proxy grafana-db-1:8086
+	}
+        handle @it-tools     	{
+		reverse_proxy it-tools-app-1:8080
+	}
+        handle @kuma     	{
+		reverse_proxy kuma-app-1:3001
+	}
+        handle @n8n     	{
+		reverse_proxy n8n-app-1:443
+	}
+        handle @pdf-tools     	{
+		reverse_proxy pdf-tools-app-1:8080
+	}
+        handle @portainer     	{
+		reverse_proxy system-app-1:9000
+	}
+        handle @searx     	{
+		reverse_proxy searx_app_1:8080
+	}
+        handle @syncthing     	{
+		reverse_proxy syncthing-app-1:8384
+	}
+        handle @twitch     	{
+		reverse_proxy video-player-app-1:3000
+	}
+        handle @vaultwarden    	{
+		reverse_proxy vaultwarden-app-1:80
+	}
 
         handle @portainer-xenon {
                 reverse_proxy system-app-1:9443 {
@@ -115,13 +143,31 @@
         @vnstat                 host vnstat.adsb.ioui.eu
         @vrs                    host vrs.adsb.ioui.eu
 
-        handle @fr24		{ reverse_proxy fr24:8754 }
-        handle @piaware		{ reverse_proxy piaware:8080 }
-        handle @piaware-status	{ reverse_proxy piaware:80 }
-        handle @planefence	{ reverse_proxy planefence:80 }
-        handle @planefence-conf	{ reverse_proxy planefence:9999 }
-        handle @planefinder	{ reverse_proxy pfclient:30053 }
-        handle @tar1090		{ reverse_proxy adsb-uf-app-1:80 }
-        handle @vnstat		{ reverse_proxy feed.adsb.ioui.eu:8685 }
-        handle @vrs		{ reverse_proxy vrs:8080 }
+        handle @fr24		{
+		reverse_proxy fr24:8754
+	}
+        handle @piaware		{
+		reverse_proxy piaware:8080
+	}
+        handle @piaware-status	{
+		reverse_proxy piaware:80
+	}
+        handle @planefence	{
+		reverse_proxy planefence:80
+	}
+        handle @planefence-conf	{
+		reverse_proxy planefence:9999
+	}
+        handle @planefinder	{
+		reverse_proxy pfclient:30053
+	}
+        handle @tar1090		{
+		reverse_proxy adsb-uf-app-1:80
+	}
+        handle @vnstat		{
+		reverse_proxy feed.adsb.ioui.eu:8685
+	}
+        handle @vrs		{
+		reverse_proxy vrs:8080
+	}
 }
