@@ -62,7 +62,7 @@ ENV CRON_SCHEDULE="" \
     EMAIL_TO=""
 
 # Healthcheck: run the python healthcheck script. Keep intervals reasonable.
-HEALTHCHECK --interval=1m --timeout=10s --start-period=30s --retries=3 \
+HEALTHCHECK --interval=1m --timeout=10s --start-period=10m --retries=3 \
   CMD python /usr/local/bin/healthcheck.py
 
 # Entrypoint
