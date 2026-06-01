@@ -1,0 +1,12 @@
+services:
+  scraper:
+    build: .
+    restart: "unless-stopped"
+    env_file:
+      - "secrets.enc.env"
+    networks:
+      grafana_internal:
+
+networks:
+  grafana_internal:
+    external: true

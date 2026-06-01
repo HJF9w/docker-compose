@@ -1,0 +1,23 @@
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    env_file:
+      - ".env"
+    environment:
+      URL: "https://fam-lange.de/solar.php"
+      IMAGE_URL: "https://fam-lange.de/pic/solar.png"
+      OUTPUT_DIR: "/data"
+      PREFIX: "home"
+      CRON_SCHEDULE: "30 23 * * *"
+      TZ: "Europe/Brussels"
+      RETRIES: "2"
+      RETRY_DELAY: "20"
+    volumes:
+      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/images:/data"
+      #- "./logs:/var/log/solar"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "3"

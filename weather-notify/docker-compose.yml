@@ -1,0 +1,15 @@
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    env_files:
+      - ".env"
+      - "secrets.enc.env"
+    volumes:
+      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/logs:/logs"
+    healthcheck:
+      test: ["CMD-SHELL", "test -w /logs && test -x /usr/local/bin/weather_notifier.py"]
+      interval: 1m
+      timeout: 10s
+      retries: 3
+      start_period: 30s

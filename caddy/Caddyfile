@@ -1,31 +1,72 @@
 *.ioui.eu {
-	tls {
-		dns hetzner {env.HETZNER_DNS_TOKEN}
-		resolvers 1.1.1.1 # use Hetzner NS if dns validation fails 193.47.99.5
+        tls {
+                dns hetzner {env.HETZNER_DNS_TOKEN}
+                resolvers 9.9.9.9 # use Hetzner NS if dns validation fails 193.47.99.5
                 propagation_delay 30s
-	}
-
-        @portainer host portainer.ioui.eu
-        handle @portainer {
-                reverse_proxy system-app-1:9000
         }
 
-        @vaultwarden host vaultwarden.ioui.eu
-        handle @vaultwarden {
-                reverse_proxy vaultwarden-app-1:80
-        }
-        
-        @searx host searx.ioui.eu
-        handle @searx {
-                reverse_proxy searx-app-1:8080
-        }
+        @bookstack    		host bookstack.ioui.eu
+        @fritz    		host fritz.ioui.eu
+        @fritz7170    		host fritz7170.ioui.eu
+        @fritz7272    		host fritz7272.ioui.eu
+        @fritz7390    		host fritz7390.ioui.eu
+        @grafana    		host grafana.ioui.eu
+        @home    		host home.ioui.eu
+        @influxdb    		host influxdb.ioui.eu
+        @it-tools    		host it-tools.ioui.eu
+        @kuma    		host kuma.ioui.eu
+        @n8n    		host n8n.ioui.eu
+        @n8n    		host n8n.ioui.eu
+        @nextcloud              host nextcloud.ioui.eu
+        @pdf-tools    		host pdf-tools.ioui.eu
+        @portainer    		host portainer.ioui.eu
+        @portainer-neon         host portainer-neon.ioui.eu
+        @portainer-xenon        host portainer-xenon.ioui.eu
+        @rezepte                host rezepte.ioui.eu
+        @searx    		host searx.ioui.eu
+        @searx    		host searx.ioui.eu
+        @syncthing    		host syncthing.ioui.eu
+        @twitch    		host twitch.ioui.eu
+        @twitch    		host twitch.ioui.eu
+        @vaultwarden   		host vaultwarden.ioui.eu
 
-        @home host home.ioui.eu
-        handle @home {
-                reverse_proxy 10.0.42.123:8123
-        }
+        handle @bookstack     	{ reverse_proxy bookstack-app-1:8080 }
+        handle @fritz     	{ reverse_proxy 10.0.42.1:80 }
+        handle @fritz7170     	{ reverse_proxy 10.0.42.11:80 }
+        handle @fritz7272     	{ reverse_proxy 10.0.42.10:80 }
+        handle @fritz7390     	{ reverse_proxy 10.0.42.12:80 }
+        handle @grafana     	{ reverse_proxy grafana-app-1:3000 }
+        handle @home     	{ reverse_proxy 10.0.42.123:8123 }
+        handle @influxdb     	{ reverse_proxy grafana-db-1:8086 }
+        handle @it-tools     	{ reverse_proxy it-tools-app-1:8080 }
+        handle @kuma     	{ reverse_proxy kuma-app-1:3001 }
+        handle @n8n     	{ reverse_proxy n8n-app-1:443 }
+        handle @n8n     	{ reverse_proxy n8n-app-1:443 }
+        handle @pdf-tools     	{ reverse_proxy pdf-tools-app-1:8080 }
+        handle @portainer     	{ reverse_proxy system-app-1:9000 }
+        handle @searx     	{ reverse_proxy searx-app-1:8080 }
+        handle @searx     	{ reverse_proxy searx_app_1:8080 }
+        handle @syncthing     	{ reverse_proxy syncthing-app-1:8384 }
+        handle @twitch     	{ reverse_proxy video-player-app-1:3000 }
+        handle @twitch     	{ reverse_proxy video-player-app-1:3000 }
+        handle @vaultwarden    	{ reverse_proxy vaultwarden-app-1:80 }
 
-        @rezepte host rezepte.ioui.eu
+        handle @portainer-xenon {
+                reverse_proxy system-app-1:9443 {
+                      transport http {
+                          tls
+                          tls_insecure_skip_verify
+                      }
+                }
+        }
+        handle @portainer-neon {
+                reverse_proxy 10.0.42.31:9443 {
+                      transport http {
+                          tls
+                          tls_insecure_skip_verify
+                      }
+                }
+        }
         handle @rezepte {
                 reverse_proxy tandoor-app-1:80 ## !!! USE PORT 80, not 8080. Images won't load with 8080 !!! 
                 header / {
@@ -35,8 +76,6 @@
                     header_up X-Forwarded-Proto {scheme}
                 }
         }
-
-        @nextcloud host nextcloud.ioui.eu
         handle @nextcloud {
                 reverse_proxy nextcloud-app-1:80
                 redir /.well-known/carddav /remote.php/dav 301
@@ -58,87 +97,31 @@
                     Referrer-Policy "no-referrer"
                 }
         }
-
-        @n8n host n8n.ioui.eu
-        handle @n8n {
-                reverse_proxy n8n-app-1:443
-        }
-
-        @twitch host twitch.ioui.eu
-        handle @twitch {
-                reverse_proxy video-player-app-1:3000
-        }
-        @nc host nc.ioui.eu
-        handle @nc {
-          reverse_proxy nc-app-1:80 {
-              header_up Host {host}
-              header_up X-Real-IP {remote_host}
-              header_up X-Forwarded-For {remote_host}
-              header_up X-Forwarded-Proto {scheme}
-          }
-          header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
-          redir /.well-known/carddav /remote.php/dav 301
-          redir /.well-known/caldav /remote.php/dav 301
-          header Strict-Transport-Security "max-age=15552000;"
-        }
-        @adsb host adsb.ioui.eu
-        handle @adsb {
-          reverse_proxy dashboard:80
-        }
-        @grafana host grafana.ioui.eu                                                                                                                                                                                                                                                       
-        handle @grafana {
-                reverse_proxy grafana-app-1:3000
-        }
-        @influxdb host influxdb.ioui.eu
-        handle @influxdb {
-                reverse_proxy grafana-db-1:8086
-        }
-        @pgadmin host pgadmin.ioui.eu
-        handle @pgadmin {
-                reverse_proxy grafana-pgadmin-1:80
-        }
 }
 
 *.adsb.ioui.eu {
-	tls {
-		dns hetzner {env.HETZNER_DNS_TOKEN}
-		resolvers 1.1.1.1 # use Hetzner NS if dns validation fails 193.47.99.5
+        tls {
+                dns hetzner {env.HETZNER_DNS_TOKEN}
+                resolvers 9.9.9.9 # use Hetzner NS if dns validation fails 193.47.99.5
                 propagation_delay 30s
-	}
-        @piaware host piaware.adsb.ioui.eu
-        handle @piaware {
-            reverse_proxy piaware:8080
         }
-        @piaware-status host piaware-status.adsb.ioui.eu
-        handle @piaware-status {
-            reverse_proxy piaware:80
-        }
-        @planefinder host planefinder.adsb.ioui.eu
-        handle @planefinder {
-            reverse_proxy pfclient:30053
-        }
-        @planefence host planefence.adsb.ioui.eu
-        handle @planefence {
-            reverse_proxy planefence:80
-        }
-        @planefence-conf host planefence-conf.adsb.ioui.eu
-        handle @planefence-conf {
-            reverse_proxy planefence:9999
-        }
-        @vrs host vrs.adsb.ioui.eu
-        handle @vrs {
-            reverse_proxy vrs:8080
-        }
-        @fr24 host fr24.adsb.ioui.eu
-        handle @fr24 {
-          reverse_proxy fr24:8754
-        }
-        @tar1090 host tar1090.adsb.ioui.eu
-        handle @tar1090 {
-            reverse_proxy adsb-uf-app-1:80
-        }
-        @vnstat host vnstat.adsb.ioui.eu
-        handle @vnstat {
-            reverse_proxy feed.adsb.ioui.eu:8685
-        }
+        @fr24           	host fr24.adsb.ioui.eu
+        @piaware		host piaware.adsb.ioui.eu
+        @piaware-status		host piaware-status.adsb.ioui.eu
+        @planefence		host planefence.adsb.ioui.eu
+        @planefence-conf	host planefence-conf.adsb.ioui.eu
+        @planefinder		host planefinder.adsb.ioui.eu
+        @tar1090		host tar1090.adsb.ioui.eu
+        @vnstat                 host vnstat.adsb.ioui.eu
+        @vrs                    host vrs.adsb.ioui.eu
+
+        handle @fr24		{ reverse_proxy fr24:8754 }
+        handle @piaware		{ reverse_proxy piaware:8080 }
+        handle @piaware-status	{ reverse_proxy piaware:80 }
+        handle @planefence	{ reverse_proxy planefence:80 }
+        handle @planefence-conf	{ reverse_proxy planefence:9999 }
+        handle @planefinder	{ reverse_proxy pfclient:30053 }
+        handle @tar1090		{ reverse_proxy adsb-uf-app-1:80 }
+        handle @vnstat		{ reverse_proxy feed.adsb.ioui.eu:8685 }
+        handle @vrs		{ reverse_proxy vrs:8080 }
 }

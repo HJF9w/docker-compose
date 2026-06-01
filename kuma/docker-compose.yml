@@ -1,0 +1,38 @@
+services:
+
+  app:
+    image: "louislam/uptime-kuma:2.3.2"
+    volumes:
+      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/data:/app/data"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+ #    ports:
+ #      - "3001:3001"
+    hostname: kuma.ioui.eu
+    restart: always
+    env_file:
+      - ".env"
+      - "secrets.enc.env"
+    networks:
+      default:
+      system_internal:
+      bookstack_default:
+
+  mariadb:
+    image: "mariadb:12.2.2-noble"
+    restart: always
+    env_file:
+      - ".env"
+      - "secrets.enc.env"
+    volumes:
+      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/mysql:/var/lib/mysql"
+    networks:
+      default:
+
+networks:
+  default:
+  system_internal:
+    external: true
+  bookstack_default:
+    external: true
+
+

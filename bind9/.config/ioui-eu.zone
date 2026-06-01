@@ -4,7 +4,7 @@ $TTL 1m
 $ORIGIN ioui.eu.
 
 @	IN	SOA	ns.ioui.eu. admin.ioui.eu. (
-				2026053017     ; serial
+				2026060114     ; serial
 				12h            ; refresh 12h
 				15m            ; retry 15m
 				1w             ; expire 3w
@@ -15,7 +15,7 @@ $ORIGIN ioui.eu.
 ns		IN	A	10.0.42.254
 
 ; -- Catch all
-*			IN	A	10.0.42.23
+*			IN	A	10.0.42.225
 o                       IN      NS      hydrogen.ns.hetzner.com.
 o                       IN      NS      oxygen.ns.hetzner.com.
 o                       IN      NS      helium.ns.hetzner.de.

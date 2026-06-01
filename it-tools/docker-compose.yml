@@ -1,0 +1,11 @@
+services:
+  app:
+    image: "sharevb/it-tools:2026.1.4"
+    restart: unless-stopped
+    networks:
+      system_internal:
+
+
+networks:
+  system_internal:
+    external: true

@@ -80,6 +80,19 @@ environment:
 ##  BASEPATH: /data
 ##  TZ: Europe/Brussels
 
+---
+name: "email-cleaner"
+working_dir: "email-cleaner/"
+compose_files:
+  - docker-compose.yml
+build:
+  no_cache: true
+  force_image_pull: true
+timeout: 600
+environment:
+  BASEPATH: /data
+  TZ: Europe/Brussels
+
 ##---
 ##name: "esptls"
 ##working_dir: "esptls/"
@@ -114,6 +127,26 @@ environment:
   TZ: Europe/Brussels
 
 ---
+name: "it-tools"
+working_dir: "it-tools/"
+compose_files:
+  - docker-compose.yml
+timeout: 300
+environment:
+  BASEPATH: /data
+  TZ: Europe/Brussels
+
+---
+name: "kuma"
+working_dir: "kuma"
+compose_files:
+  - docker-compose.yml
+timeout: 300
+environment:
+  BASEPATH: /data
+  TZ: Europe/Brussels
+
+---
 name: "n8n"
 working_dir: "n8n/"
 compose_files:
@@ -134,6 +167,16 @@ environment:
   TZ: Europe/Brussels
 
 ---
+name: "pdf-tools"
+working_dir: "pdf-tools/"
+compose_files:
+  - docker-compose.yml
+timeout: 300
+environment:
+  BASEPATH: /data
+  TZ: Europe/Brussels
+
+---
 name: "system"
 working_dir: "portainer-ee/"
 compose_files:
@@ -144,8 +187,44 @@ environment:
   TZ: Europe/Brussels
 
 ---
+name: "scraper-lange"
+working_dir: "scraper-lange/"
+compose_files:
+  - docker-compose.yml
+timeout: 600
+build:
+  no_cache: true
+  force_image_pull: true
+environment:
+  BASEPATH: /data
+  TZ: Europe/Brussels
+
+---
 name: "searxng"
 working_dir: "searxng/"
+compose_files:
+  - docker-compose.yml
+timeout: 300
+environment:
+  BASEPATH: /data
+  TZ: Europe/Brussels
+
+---
+name: "solar-downloader"
+working_dir: "solar-downloader/"
+compose_files:
+  - docker-compose.yml
+timeout: 600
+build:
+  no_cache: true
+  force_image_pull: true
+environment:
+  BASEPATH: /data
+  TZ: Europe/Brussels
+
+---
+name: "syncthing"
+working_dir: "syncthing"
 compose_files:
   - docker-compose.yml
 timeout: 300
@@ -198,3 +277,17 @@ environment:
 ##environment:
 ##  BASEPATH: /data
 ##  TZ: Europe/Brussels
+
+---
+name: "weather-notify"
+working_dir: "weather-notify"
+compose_files:
+  - docker-compose.yml
+timeout: 600
+build:
+  no_cache: true
+  force_image_pull: true
+environment:
+  BASEPATH: /data
+  TZ: Europe/Brussels
+

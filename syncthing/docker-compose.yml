@@ -1,0 +1,29 @@
+---
+services:
+  app:
+    image: "syncthing/syncthing:2.1"
+    hostname: "syncthing.ioui.eu"
+    environment:
+      - "PUID=1000"
+      - "PGID=1000"
+      - "STGUIADDRESS=syncthing-app-1:8384"
+    env_file:
+      - ".env"
+    volumes:
+      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/syncthing:/var/syncthing"
+    restart: unless-stopped
+    healthcheck:
+      test: curl -fkLsS -m 2 syncthing-app-1:8384/rest/noauth/health | grep -o --color=never OK || exit 1
+      interval: 1m
+      timeout: 10s
+      retries: 3
+    networks:
+      system_mac_vlan:
+        ipv4_address: "${EXT_IPV4}"
+      system_internal:
+
+networks:
+  system_mac_vlan:
+    external: true
+  system_internal:
+    external: true
