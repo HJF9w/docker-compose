@@ -1,6 +1,6 @@
 services:
   app:
-    image: "portainer/portainer-ee:2.39.2-alpine"
+    image: "portainer/portainer-ee:2.39.3-alpine"
     restart: always
     environment:
       - TRUSTED_ORIGINS=portainer-xenon.ioui.eu
