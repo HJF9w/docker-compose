@@ -22,7 +22,7 @@ services:
       default:
 
   app:
-    image: nextcloud:33.0.4-apache
+    image: nextcloud:33.0.5-apache
     restart: unless-stopped
     volumes:
       - ${BASEPATH}/nextcloud:/var/www/html
@@ -43,7 +43,7 @@ services:
       default:
 
   cron:
-    image: nextcloud:33.0.4-apache
+    image: nextcloud:33.0.5-apache
     restart: unless-stopped
     volumes:
       - ${BASEPATH}/nextcloud:/var/www/html
