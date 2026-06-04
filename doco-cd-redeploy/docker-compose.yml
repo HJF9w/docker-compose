@@ -24,7 +24,7 @@ services:
     volumes:
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/data:/data"
       - "/var/run/docker.sock:/var/run/docker.sock"
-      - "/root/.config/sops/age:/run/secrets/age:ro"
+      - "/root/.config/sops/age:/run/secrets:ro"
       - "./auth_domains.txt:/run/secrets/auth_domains.txt:ro"
     healthcheck:
       test: ["CMD", "/doco-cd", "healthcheck"]
