@@ -4,7 +4,7 @@ $TTL 1m
 $ORIGIN ioui.eu.
 
 @	IN	SOA	ns.ioui.eu. admin.ioui.eu. (
-				2026060114     ; serial
+				2026060417     ; serial
 				12h            ; refresh 12h
 				15m            ; retry 15m
 				1w             ; expire 3w
@@ -21,9 +21,8 @@ o                       IN      NS      oxygen.ns.hetzner.com.
 o                       IN      NS      helium.ns.hetzner.de.
 
 ; -- CNAME's for reverse proxy
-xenon-rp	IN	A	10.0.42.23
+xenon-rp	IN	A	10.0.42.22
 opal-rp 	IN	A	10.0.42.225
-
 
 ; -- Devices
 fritz7170	IN	A	10.0.42.11
@@ -35,9 +34,9 @@ opal		IN	A	10.0.42.224
 ; -- my DNS Records
 bind		IN	A	10.0.42.26
 allsky		IN	CNAME	neon
-feed.adsb       IN      A       10.0.42.228
-
-; -- new opal
+feed.adsb       IN      A       10.0.42.23
+adsb            IN      CNAME   xenon-rp
+*.adsb          IN      CNAME   xenon-rp
 vaultwarden	IN	CNAME	opal-rp
 nextcloud	IN	CNAME	opal-rp
 portainer	IN	CNAME	opal-rp
@@ -47,8 +46,6 @@ twitch          IN      CNAME   opal-rp
 home            IN      CNAME   opal-rp
 n8n             IN      CNAME   opal-rp
 nc              IN      CNAME   opal-rp
-adsb            IN      CNAME   opal-rp
-*.adsb          IN      CNAME   opal-rp
 grafana         IN      CNAME   opal-rp
 influxdb        IN      CNAME   opal-rp
 pgadmin         IN      CNAME   opal-rp
@@ -56,7 +53,3 @@ pgadmin         IN      CNAME   opal-rp
 ;address	IN	A	10.0.0.1 ; easy Load Balancing
 ;			IN	A	10.0.0.2
 ;			IN	A	10.0.0.3
-
-@       60      IN      MX      10 mail
-mail    60      IN      A       91.2.110.40
-91.2.110.40		IN	PTR	mail
