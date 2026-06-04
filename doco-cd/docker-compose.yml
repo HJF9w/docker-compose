@@ -13,15 +13,15 @@ services:
       APPRISE_NOTIFY_LEVEL: info
       APPRISE_NOTIFY_URLS_FILE: /run/secrets/apprise_urls.txt
       GIT_AUTH_DOMAINS_FILE: /run/secrets/auth_domains.txt
-      SOPS_AGE_KEY_FILE: /run/secrets/age/keys.txt
+      SOPS_AGE_KEY_FILE: /run/secrets/keys.txt
       POLL_CONFIG: |
         - url: "${MY_REPO_URL}"
           interval: 960
-          reference: opal
+          reference: xenon
     volumes:
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/data:/data"
       - "/var/run/docker.sock:/var/run/docker.sock"
-      - "/root/.config/sops/age:/run/secrets/age:ro"
+      - "/root/.config/sops/age/keys.txt:/run/secrets/keys.txt:ro"
       - "./auth_domains.txt:/run/secrets/auth_domains.txt:ro"
       - "./apprise_urls.txt:/run/secrets/apprise_urls.txt:ro"
     healthcheck:
