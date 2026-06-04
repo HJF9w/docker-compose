@@ -52,7 +52,7 @@ services:
     environment:
       - ALT=$${env.FEEDER_ALT_M}
     volumes: 
-      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/airnavradar:/sys/class/thermal:z
+      - /sys/class/thermal/thermal_zone0/temp:/sys/class/thermal/thermal_zone0/temp:roz
     tmpfs:
       - /run:exec,size=64M
       - /var/log
