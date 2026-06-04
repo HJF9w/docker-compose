@@ -1,0 +1,23 @@
+keys:
+  - &net_sapphire age1t4alj695hshvr0udhdnkkkhmjuhwa509uvg4tlz5ql5qm5xv7ykscpgslr
+  - &net_titanite age1qv2ypat24vk00cxvz6g526n46gtrrtv0h633kj2atr57k6jdy55s03twhc
+  - &titanite age185yhgg2h849092p3y840tcf2ja3g0y4txuc8fszyap70yzurgg0s5jc3fd
+  - &sapphire age16rv0yzq38287sd4mef59lfmnw7awcvlhrn5sugyhc5ajz22jpatq5jye3z
+  - &xenon age1w80342058gdjahkltx5mzmwxd2468we6dulwpnexfgghwxg3vy5selda0d
+creation_rules:
+  - path_regex: secrets\.enc\.env$
+    key_groups:
+    - age:
+      - *net_sapphire
+      - *net_titanite
+      - *titanite
+      - *sapphire
+      - *xenon
+  - path_regex: .$
+    key_groups:
+    - age:
+      - *net_sapphire
+      - *net_titanite
+      - *titanite
+      - *sapphire
+      - *xenon

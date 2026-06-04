@@ -1,0 +1,87 @@
+services:
+  ultrafeeder:
+    image: ghcr.io/sdr-enthusiasts/docker-adsb-ultrafeeder:telegraf-build-932
+    restart: unless-stopped
+    device_cgroup_rules:
+      - 'c 189:* rwm'
+##    ports:
+##      - 8080:80               # tar1090 map UI
+##      - 9273-9274:9273-9274   # Prometheus stats interface
+##      # Expose data ports for the server to connect to:
+##      - 30005:30005           # Beast output for Server Feeders
+##      - 30003:30003           # SBS output for ADSBHub
+##      - 30105:30105           # MLAT input from Server Feeders
+    env_file:
+      - ".env"
+      - "secrets.enc.env"
+    environment:
+      - LOGLEVEL=error
+      - READSB_DEVICE_TYPE=rtlsdr
+      - READSB_RX_LOCATION_ACCURACY=2
+      - READSB_STATS_RANGE=true
+      - READSB_GAIN=auto
+      - UPDATE_TAR1090=true
+      - TAR1090_MESSAGERATEINTITLE=true
+      - TAR1090_PLANECOUNTINTITLE=true
+      - TAR1090_ENABLE_AC_DB=true
+      - TAR1090_FLIGHTAWARELINKS=true
+      - TAR1090_SITESHOW=true
+      - TAR1090_RANGE_OUTLINE_COLORED_BY_ALTITUDE=true
+      - TAR1090_RANGE_OUTLINE_WIDTH=2.0
+      - TAR1090_RANGERINGSDISTANCES=10,25,50,100,175
+      - TAR1090_RANGERINGSCOLORS='#1A237E','#0D47A1','#3e7ad6','#42A5F5','#64B5F6'
+      - TAR1090_USEROUTEAPI=true
+      - GRAPHS1090_DARKMODE=true
+      - PROMETHEUS_ENABLE=true
+      - TAR1090_CONFIGJS_APPEND=
+          window.addEventListener('load', function() {
+            var container = document.querySelector('#header_top .buttonContainer');
+            if (!container) return;
+            function createBtn(text, title, url) {
+              var btn = document.createElement('span');
+              btn.className = 'button inActiveButton';
+              btn.title = title;
+              btn.style.marginLeft = '5px';
+              btn.innerHTML = '<span class="buttonText">' + text + '</span>';
+              btn.onclick = function() { window.location.href = url; };
+              return btn;
+            }
+            container.appendChild(createBtn('🔄', 'Replay Mode', '?replay'));
+            container.appendChild(createBtn('⏺️', 'Heatmap', '?heatmap=99999&realHeat&heatDuration=24&heatEnd=0'));
+            container.appendChild(createBtn('🅾️', 'Heatdot', '?heatmap=99999&heatDuration=24&heatEnd=0'));
+            container.appendChild(createBtn('🔀', 'pTracks (Coverage)', '?pTracks=24'));
+            container.appendChild(createBtn('⬅️', 'Full History', '?showTrace=2026-04-27'));
+          });
+      - PTRACKS=24
+      - READSB_RANGE_OUTLINE_HOURS=24
+      - TAR1090_ENABLE_AC_DB=true
+      - READSB_ENABLE_TRACES=true ## high disk usage?
+      - TAR1090_RANGE_OUTLINE_COLORED_BY_ALTITUDE=true
+      - TAR1090_DWDLAYERS=dwd:RX-Produkt,dwd:NowCastMIX-Informationen,dwd:Warnungen_Gemeinden,dwd:Icon_reg025_fd_sl_VMAX_10M,dwd:Icon_reg025_fd_sl_CLCT,dwd:RBSN_VV,dwd:Radar_rv_product_1x1km_ger,dwd:SF-Produkt
+      - GRAPHS1090_LARGE_WIDTH=1920
+      - GRAPHS1090_LARGE_HEIGHT=1080
+      - GRAPHS1090_SMALL_WIDTH=1920
+      - GRAPHS1090_SMALL_HEIGHT=1080
+      #- GRAPHS1090_REDUCE_IO=true
+      #- GRAPHS1090_REDUCE_IO_FLUSH_IVAL=1h
+    volumes:
+      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/ultrafeeder/globe_history:/var/globe_history
+      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/ultrafeeder/graphs1090:/var/lib/collectd
+      - /proc/diskstats:/proc/diskstats:ro
+      - /dev/bus/usb:/dev/bus/usb
+    tmpfs:
+      - /run:exec,size=256M
+      - /tmp:size=128M
+      - /var/log:size=32M
+    networks:
+      system_mac_vlan:
+        ipv4_address: "${EXT_IPV4}"
+        mac_address: "64:16:7F:49:1D:F2"
+      system_internal:
+
+
+networks:
+  system_mac_vlan:
+    external: true
+  system_internal:
+    external: true

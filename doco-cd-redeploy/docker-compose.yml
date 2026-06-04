@@ -1,0 +1,39 @@
+services:
+  app:
+    image: ghcr.io/kimdre/doco-cd:0.90.1
+    restart: always
+    environment:
+      TZ: Europe/Brussels
+      LOG_LEVEL: debug
+      PASS_ENV: "true"
+      GIT_AUTH_DOMAINS_FILE: /run/secrets/auth_domains.txt
+      SOPS_AGE_KEY_FILE: /run/secrets/keys.txt
+      POLL_CONFIG: |
+        - url: "${MY_REPO_URL}"
+          interval: 960
+          reference: opal
+          deployments:
+            - name: "doco-cd"
+              working_dir: "doco-cd/"
+              compose_files:
+                - docker-compose.yml
+              timeout: 300
+              environment:
+                BASEPATH: /data
+                TZ: Europe/Brussels
+    volumes:
+      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/data:/data"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "/root/.config/sops/age/keys.txt:/run/secrets/keys.txt:ro"
+      - "../doco-cd/auth_domains.txt:/run/secrets/auth_domains.txt:ro"
+    healthcheck:
+      test: ["CMD", "/doco-cd", "healthcheck"]
+      start_period: 15s
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"

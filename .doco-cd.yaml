@@ -1,0 +1,66 @@
+name: "adsb"
+working_dir: "adsb/"
+compose_files:
+  - docker-compose.yml
+timeout: 600
+reconciliation:
+  enabled: false
+##  events:
+##    - die
+##    - destroy
+##    - stop
+##    - kill
+##    - oom
+environment:
+  BASEPATH: /data
+  TZ: Europe/Brussels
+
+---
+name: "adsb-dashboard"
+working_dir: "adsb/"
+compose_files:
+  - dashboard-docker-compose.yml
+timeout: 600
+environment:
+  BASEPATH: /data
+  TZ: Europe/Brussels
+
+---
+name: "adsb-uf"
+working_dir: "adsb/"
+compose_files:
+  - uf-docker-compose.yaml
+timeout: 600
+environment:
+  BASEPATH: /data
+  TZ: Europe/Brussels
+
+---
+name: "caddy"
+working_dir: "caddy/"
+compose_files:
+  - docker-compose.yaml
+timeout: 300
+environment:
+  BASEPATH: /data
+  TZ: Europe/Brussels
+
+##---
+##name: "doco-cd" ## Isn't yet supported, causes weird errors and shuts itself down
+##working_dir: "doco-cd/"
+##compose_files:
+##  - docker-compose.yml
+##timeout: 300
+##environment:
+##  BASEPATH: /data
+##  TZ: Europe/Brussels
+
+---
+name: "doco-cd-redeploy"
+working_dir: "doco-cd-redeploy/"
+compose_files:
+  - docker-compose.yml
+timeout: 300
+environment:
+  BASEPATH: /data
+  TZ: Europe/Brussels
