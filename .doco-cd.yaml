@@ -29,7 +29,7 @@ environment:
 name: "adsb-uf"
 working_dir: "adsb/"
 compose_files:
-  - uf-docker-compose.yaml
+  - uf-docker-compose.yml
 timeout: 600
 environment:
   BASEPATH: /data
@@ -39,7 +39,7 @@ environment:
 name: "caddy"
 working_dir: "caddy/"
 compose_files:
-  - docker-compose.yaml
+  - docker-compose.yml
 timeout: 300
 environment:
   BASEPATH: /data
