@@ -1,5 +1,0 @@
-bs4
-influxdb-client
-requests
-croniter
-psycopg[binary]
