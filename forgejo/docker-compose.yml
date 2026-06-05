@@ -37,7 +37,7 @@ services:
       - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/mysql:/var/lib/mysql
 
   redis:
-    image: valkey:9.1.0-alpine3.23
+    image: valkey/valkey:9.1.0-alpine3.23
     networks:
       - default
     restart: unless-stopped
