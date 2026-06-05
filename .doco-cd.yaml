@@ -3,7 +3,6 @@
 ##compose_files:
 ##  - docker-compose.yml
 ##timeout: 600
-##destroy: true
 ##reconciliation:
 ##  enabled: false
 ####  events:
@@ -22,7 +21,6 @@
 ##compose_files:
 ##  - dashboard-docker-compose.yml
 ##timeout: 600
-##destroy: true
 ##environment:
 ##  BASEPATH: /data
 ##  TZ: Europe/Brussels
@@ -33,7 +31,6 @@
 ##compose_files:
 ##  - uf-docker-compose.yaml
 ##timeout: 600
-##destroy: true
 ##environment:
 ##  BASEPATH: /data
 ##  TZ: Europe/Brussels
@@ -44,7 +41,6 @@ working_dir: "bind9/"
 compose_files:
   - docker-compose.yml
 timeout: 300
-destroy: true
 environment:
   BASEPATH: /data
   TZ: Europe/Brussels
@@ -57,7 +53,6 @@ working_dir: .
 compose_files:
   - docker-compose-xenon.yml
 timeout: 300
-destroy: true
 environment:
   BASEPATH: /data
   TZ: Europe/Brussels
@@ -71,7 +66,6 @@ build:
   no_cache: true
   force_image_pull: true
 timeout: 600
-destroy: true
 environment:
   BASEPATH: /data
   TZ: Europe/Brussels
@@ -82,7 +76,6 @@ environment:
 ##compose_files:
 ##  - docker-compose.yml
 ##timeout: 300
-##destroy: true
 ##environment:
 ##  BASEPATH: /data
 ##  TZ: Europe/Brussels
@@ -96,7 +89,6 @@ build:
   no_cache: true
   force_image_pull: true
 timeout: 600
-destroy: true
 environment:
   BASEPATH: /data
   TZ: Europe/Brussels
@@ -110,7 +102,6 @@ environment:
 ##  no_cache: true
 ##  force_image_pull: true
 ##timeout: 600
-##destroy: true
 ##environment:
 ##  BASEPATH: /data
 ##  TZ: Europe/Brussels
@@ -121,7 +112,6 @@ working_dir: "grafana/"
 compose_files:
   - docker-compose.yml
 timeout: 600
-destroy: true
 environment:
   BASEPATH: /data
   TZ: Europe/Brussels
@@ -132,7 +122,6 @@ working_dir: "hetzner-ddns/"
 compose_files:
   - docker-compose.yml
 timeout: 300
-destroy: true
 environment:
   BASEPATH: /data
   TZ: Europe/Brussels
@@ -143,7 +132,6 @@ working_dir: "it-tools/"
 compose_files:
   - docker-compose.yml
 timeout: 300
-destroy: true
 environment:
   BASEPATH: /data
   TZ: Europe/Brussels
@@ -154,7 +142,6 @@ working_dir: "kuma"
 compose_files:
   - docker-compose.yml
 timeout: 300
-destroy: true
 environment:
   BASEPATH: /data
   TZ: Europe/Brussels
@@ -165,7 +152,6 @@ working_dir: "n8n/"
 compose_files:
   - docker-compose.yml
 timeout: 600
-destroy: true
 environment:
   BASEPATH: /data
   TZ: Europe/Brussels
@@ -176,7 +162,6 @@ working_dir: "nextcloud/"
 compose_files:
   - docker-compose.yml
 timeout: 600
-destroy: true
 environment:
   BASEPATH: /data
   TZ: Europe/Brussels
@@ -187,7 +172,6 @@ working_dir: "pdf-tools/"
 compose_files:
   - docker-compose.yml
 timeout: 300
-destroy: true
 environment:
   BASEPATH: /data
   TZ: Europe/Brussels
@@ -198,7 +182,6 @@ working_dir: "portainer-ee/"
 compose_files:
   - docker-compose.yml
 timeout: 300
-destroy: true
 environment:
   BASEPATH: /data
   TZ: Europe/Brussels
@@ -209,7 +192,6 @@ working_dir: "scraper-lange/"
 compose_files:
   - docker-compose.yml
 timeout: 600
-destroy: true
 build:
   no_cache: true
   force_image_pull: true
@@ -223,7 +205,6 @@ working_dir: "searxng/"
 compose_files:
   - docker-compose.yml
 timeout: 300
-destroy: true
 environment:
   BASEPATH: /data
   TZ: Europe/Brussels
@@ -234,7 +215,6 @@ working_dir: "solar-downloader/"
 compose_files:
   - docker-compose.yml
 timeout: 600
-destroy: true
 build:
   no_cache: true
   force_image_pull: true
@@ -248,7 +228,6 @@ working_dir: "syncthing"
 compose_files:
   - docker-compose.yml
 timeout: 300
-destroy: true
 environment:
   BASEPATH: /data
   TZ: Europe/Brussels
@@ -259,7 +238,6 @@ working_dir: "tandoor/"
 compose_files:
   - docker-compose.yml
 timeout: 600
-destroy: true
 environment:
   BASEPATH: /data
   TZ: Europe/Brussels
@@ -273,7 +251,6 @@ environment:
 ##  no_cache: true
 ##  force_image_pull: true
 ##timeout: 600
-##destroy: true
 ##environment:
 ##  BASEPATH: /data
 ##  TZ: Europe/Brussels
@@ -284,7 +261,6 @@ working_dir: "vaultwarden/"
 compose_files:
   - docker-compose.yml
 timeout: 300
-destroy: true
 environment:
   BASEPATH: /data
   TZ: Europe/Brussels
@@ -298,7 +274,6 @@ environment:
 ##  no_cache: true
 ##  force_image_pull: true
 ##timeout: 600
-##destroy: true
 ##environment:
 ##  BASEPATH: /data
 ##  TZ: Europe/Brussels
@@ -309,7 +284,6 @@ working_dir: "weather-notify"
 compose_files:
   - docker-compose.yml
 timeout: 600
-destroy: true
 build:
   no_cache: true
   force_image_pull: true
