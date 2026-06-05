@@ -22,6 +22,7 @@ services:
         mac_address: "86:D0:BD:81:3B:92"
       system_internal:
       to_adsb:
+      to_forgejo:
 
 networks:
   system_internal:
@@ -29,4 +30,5 @@ networks:
   system_mac_vlan:
     external: true
   to_adsb:
+  to_forgejo:
 

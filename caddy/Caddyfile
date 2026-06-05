@@ -9,6 +9,7 @@
         @fritz    		host fritz.ioui.eu
         @fritz7170    		host fritz7170.ioui.eu
         @fritz7272    		host fritz7272.ioui.eu
+        @git                    host git.ioui.eu
         @fritz7390    		host fritz7390.ioui.eu
         @grafana    		host grafana.ioui.eu
         @home    		host home.ioui.eu
@@ -38,6 +39,9 @@
 	}
         handle @fritz7272     	{
 		reverse_proxy 10.0.42.10:80
+	}
+        handle @git             {
+		reverse_proxy forgejo-app-1:3000
 	}
         handle @fritz7390     	{
 		reverse_proxy 10.0.42.12:80
@@ -125,49 +129,4 @@
                     Referrer-Policy "no-referrer"
                 }
         }
-}
-
-*.adsb.ioui.eu {
-        tls {
-                dns hetzner {env.HETZNER_DNS_TOKEN}
-                resolvers 9.9.9.9 # use Hetzner NS if dns validation fails 193.47.99.5
-                propagation_delay 30s
-        }
-        @fr24           	host fr24.adsb.ioui.eu
-        @piaware		host piaware.adsb.ioui.eu
-        @piaware-status		host piaware-status.adsb.ioui.eu
-        @planefence		host planefence.adsb.ioui.eu
-        @planefence-conf	host planefence-conf.adsb.ioui.eu
-        @planefinder		host planefinder.adsb.ioui.eu
-        @tar1090		host tar1090.adsb.ioui.eu
-        @vnstat                 host vnstat.adsb.ioui.eu
-        @vrs                    host vrs.adsb.ioui.eu
-
-        handle @fr24		{
-		reverse_proxy fr24:8754
-	}
-        handle @piaware		{
-		reverse_proxy piaware:8080
-	}
-        handle @piaware-status	{
-		reverse_proxy piaware:80
-	}
-        handle @planefence	{
-		reverse_proxy planefence:80
-	}
-        handle @planefence-conf	{
-		reverse_proxy planefence:9999
-	}
-        handle @planefinder	{
-		reverse_proxy pfclient:30053
-	}
-        handle @tar1090		{
-		reverse_proxy adsb-uf-app-1:80
-	}
-        handle @vnstat		{
-		reverse_proxy feed.adsb.ioui.eu:8685
-	}
-        handle @vrs		{
-		reverse_proxy vrs:8080
-	}
 }

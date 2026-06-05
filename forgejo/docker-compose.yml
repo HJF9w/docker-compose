@@ -1,0 +1,53 @@
+services:
+  app:
+    image: codeberg.org/forgejo/forgejo:15.0.2
+    env_file:
+      - "secrets.enc.env"
+      - ".env"
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+    restart: unless-stopped
+    networks:
+      system_mac_vlan:
+        ipv4_address: "${EXT_IPV4}"
+        mac_address: 64:16:7F:69:CC:F6
+      default:
+      caddy-to-forgejo:
+    volumes:
+      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/data:/data
+      - /etc/localtime:/etc/localtime:ro
+##    ports:
+##      - "3000:3000"
+##      - "222:22"
+    depends_on:
+      - db
+      - redis
+
+  db:
+    image: mariadb:12.3.2-noble
+    restart: unless-stopped
+    env_file:
+      - "secrets.enc.env"
+      - ".env"
+    networks:
+      - system_mac_vlan
+      - default
+    volumes:
+      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/mysql:/var/lib/mysql
+
+  redis:
+    image: valkey:9.1.0-alpine3.23
+    networks:
+      - default
+    restart: unless-stopped
+    env_file:
+      - "secrets.enc.env"
+
+networks:
+  default:
+  system_mac_vlan:
+    external: true
+  caddy-to-forgejo:
+    external: true
+
