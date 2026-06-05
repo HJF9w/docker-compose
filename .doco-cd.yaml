@@ -93,6 +93,16 @@ environment:
   BASEPATH: /data
   TZ: Europe/Brussels
 
+---
+name: "forgejo"
+working_dir: "forgejo/"
+compose_files:
+  - docker-compose.yml
+timeout: 300
+environment:
+  BASEPATH: /data
+  TZ: Europe/Brussels
+
 ##---
 ##name: "esptls"
 ##working_dir: "esptls/"
