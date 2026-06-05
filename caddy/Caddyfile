@@ -10,6 +10,7 @@
         @fritz7170    		host fritz7170.ioui.eu
         @fritz7272    		host fritz7272.ioui.eu
         @git                    host git.ioui.eu
+        @forgejo                host forgejo.ioui.eu
         @fritz7390    		host fritz7390.ioui.eu
         @grafana    		host grafana.ioui.eu
         @home    		host home.ioui.eu
@@ -41,6 +42,9 @@
 		reverse_proxy 10.0.42.10:80
 	}
         handle @git             {
+		reverse_proxy forgejo-app-1:3000
+	}
+        handle @forgejo         {
 		reverse_proxy forgejo-app-1:3000
 	}
         handle @fritz7390     	{
