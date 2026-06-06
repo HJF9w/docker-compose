@@ -31,7 +31,6 @@ services:
       - "secrets.enc.env"
       - ".env"
     networks:
-      - system_mac_vlan
       - default
     volumes:
       - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/mysql:/var/lib/mysql
