@@ -46,7 +46,7 @@ services:
   dind:
     image: docker:29.5.3-dind-alpine3.23
     privileged: 'true'
-    command: ['dockerd', '-H', 'tcp://0.0.0.0:2375', '--tls=false', '--dns=9.9.9.9']
+    command: ['dockerd', '-H', 'tcp://0.0.0.0:2375', '--tls=false']
     restart: unless-stopped
     networks:
       - default
