@@ -43,6 +43,33 @@ services:
     env_file:
       - "secrets.enc.env"
 
+  dind:
+    image: docker:dind
+    privileged: 'true'
+    command: ['dockerd', '-H', 'tcp://0.0.0.0:2375', '--tls=false']
+    restart: unless-stopped
+    networks:
+      - default
+
+  runner:
+    image: data.forgejo.org/forgejo/runner:12
+    networks:
+      - default
+    env_file:
+      - ".env"
+      - "secrets.enc.env"
+    depends_on:
+      dind:
+        condition: service_started
+    environment:
+      DOCKER_HOST: tcp://dind:2375
+    user: 1000:1000
+    volumes:
+      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/runner:/data
+      - ./runner-config.enc.yml:/data/runner-config.yml
+    restart: unless-stopped
+    command: 'forgejo-runner daemon --config runner-config.yml'
+
 networks:
   default:
   system_mac_vlan:
