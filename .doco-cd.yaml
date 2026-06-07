@@ -81,6 +81,16 @@ environment:
 ##  TZ: Europe/Brussels
 
 ---
+name: "doco-cd-redeploy"
+working_dir: "doco-cd-redeploy/"
+compose_files:
+  - docker-compose.yml
+timeout: 300
+environment:
+  BASEPATH: /data
+  TZ: Europe/Brussels
+
+---
 name: "email-cleaner"
 working_dir: "email-cleaner/"
 compose_files:
