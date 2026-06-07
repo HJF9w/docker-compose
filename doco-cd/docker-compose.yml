@@ -37,9 +37,6 @@ services:
         max-file: "3"
     networks:
       internal:
-##      mac_vlan:
-##        ipv4_address: "10.0.42.198"
-      internal:
     depends_on:
       apprise:
         condition: service_healthy
