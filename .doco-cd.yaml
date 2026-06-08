@@ -220,7 +220,7 @@ environment:
   TZ: Europe/Brussels
 
 ---
-name: "searxng"
+name: "searx"
 working_dir: "searxng/"
 compose_files:
   - docker-compose.yml
