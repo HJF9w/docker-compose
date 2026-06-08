@@ -75,7 +75,7 @@
 		reverse_proxy system-app-1:9000
 	}
         handle @searx     	{
-		reverse_proxy searx_app_1:8080
+		reverse_proxy searx-app-1:8080
 	}
         handle @syncthing     	{
 		reverse_proxy syncthing-app-1:8384
