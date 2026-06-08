@@ -7,6 +7,13 @@ updates:
     schedule:
       interval: "daily"
 
+  - package-ecosystem: "docker"
+    target-branch: "master"
+    directories:
+      - "**/*"
+    schedule:
+      interval: "daily"
+
   ## Main
   - package-ecosystem: "docker-compose"
     target-branch: "main"
