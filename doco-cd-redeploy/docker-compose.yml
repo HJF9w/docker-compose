@@ -6,6 +6,9 @@ services:
       TZ: Europe/Brussels
       LOG_LEVEL: debug
       PASS_ENV: "true"
+      APPRISE_API_URL: http://apprise:8000/notify
+      APPRISE_NOTIFY_LEVEL: info
+      APPRISE_NOTIFY_URLS_FILE: /run/secrets/apprise_urls.txt
       GIT_AUTH_DOMAINS_FILE: /run/secrets/auth_domains.txt
       SOPS_AGE_KEY_FILE: /run/secrets/keys.txt
       POLL_CONFIG: |
@@ -26,6 +29,7 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "/root/.config/sops/age/keys.txt:/run/secrets/keys.txt:ro"
       - "./auth_domains.txt:/run/secrets/auth_domains.txt:ro"
+      - "./apprise_urls.txt:/run/secrets/apprise_urls.txt:ro"
     healthcheck:
       test: ["CMD", "/doco-cd", "healthcheck"]
       start_period: 15s
@@ -37,3 +41,23 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+    depends_on:
+      apprise:
+        condition: service_healthy
+
+  apprise:
+    image: caronc/apprise:v1.5.0
+    restart: always
+    environment:
+      TZ: Europe/Brussels
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8000/status >/dev/null || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "2"
