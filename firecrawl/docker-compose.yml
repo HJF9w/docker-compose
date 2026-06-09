@@ -1,0 +1,69 @@
+# Firecrawl Self-Hosted - Opal Server
+# Uses pre-built images from GitHub Container Registry
+# See: https://github.com/firecrawl/firecrawl/blob/main/SELF_HOST.md
+
+version: '3.8'
+
+services:
+  playwright-service:
+    image: ghcr.io/firecrawl/playwright-service:latest
+    container_name: firecrawl-playwright
+    restart: unless-stopped
+    networks:
+      - firecrawl
+    environment:
+      # Optional: configure proxy if needed
+      # PROXY_SERVER:
+      # PROXY_USERNAME:
+      # PROXY_PASSWORD:
+      MAX_CONCURRENT_PAGES: 10
+    # Resource limits - adjust based on your server specs
+    cpus: 2.0
+    mem_limit: 4G
+    tmpfs:
+      - /tmp/.cache:noexec,nosuid,size=1g
+
+  api:
+    image: ghcr.io/firecrawl/firecrawl:latest
+    container_name: firecrawl-api
+    restart: unless-stopped
+    depends_on:
+      redis:
+        condition: service_started
+      playwright-service:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - firecrawl
+    ports:
+      - "${PORT:-3002}:3002"
+    # Resource limits - adjust based on server specs
+    cpus: 4.0
+    mem_limit: 8G
+
+  redis:
+    image: redis:alpine
+    container_name: firecrawl-redis
+    restart: unless-stopped
+    networks:
+      - firecrawl
+    command: redis-server --bind 0.0.0.0
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: firecrawl-rabbitmq
+    restart: unless-stopped
+    networks:
+      - firecrawl
+    command: rabbitmq-server
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "check_running"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+networks:
+  firecrawl:
+    driver: bridge
