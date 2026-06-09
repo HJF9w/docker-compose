@@ -40,7 +40,7 @@ services:
       - /var/log
 
   pfclient:
-    image: ghcr.io/sdr-enthusiasts/docker-planefinder:latest-build-534
+    image: ghcr.io/sdr-enthusiasts/docker-planefinder:latest-build-536
     container_name: pfclient
     env_file:
       - ".env"
