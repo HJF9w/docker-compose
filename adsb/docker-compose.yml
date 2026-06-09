@@ -22,7 +22,7 @@ services:
       - /var/log
 
   fr24:
-    image: ghcr.io/sdr-enthusiasts/docker-flightradar24:latest-build-852
+    image: ghcr.io/sdr-enthusiasts/docker-flightradar24:latest-build-850
     container_name: fr24
     hostname: fr24
     restart: unless-stopped
@@ -93,7 +93,7 @@ services:
       - /var/log
 
   opensky:
-    image: ghcr.io/sdr-enthusiasts/docker-opensky-network:latest-build-831
+    image: ghcr.io/sdr-enthusiasts/docker-opensky-network:latest-build-829
     container_name: opensky
     restart: unless-stopped
     healthcheck:
@@ -120,7 +120,7 @@ services:
   # VISUALIZATION
   # ----------------------------------------------------------------------
   planefence:
-    image: ghcr.io/sdr-enthusiasts/docker-planefence:latest-build-1196
+    image: ghcr.io/sdr-enthusiasts/docker-planefence:latest-build-1195
     container_name: planefence
     hostname: planefence
     env_file:
