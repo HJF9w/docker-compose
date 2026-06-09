@@ -1,6 +1,6 @@
 services:
   app:
-    image: ghcr.io/sdr-enthusiasts/docker-adsb-ultrafeeder:telegraf-build-932
+    image: ghcr.io/sdr-enthusiasts/docker-adsb-ultrafeeder:telegraf-build-933
     restart: unless-stopped
     device_cgroup_rules:
       - 'c 189:* rwm'
