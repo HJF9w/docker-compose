@@ -1,5 +1,5 @@
 # Use a recent Alpine
-FROM alpine:3.23
+FROM alpine:3.24
 
 # install required packages:
 # - bash : run your bash script
