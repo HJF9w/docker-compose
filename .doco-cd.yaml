@@ -50,6 +50,15 @@ name: "bookstack"
 repository_url: https://github.com/HJF9w/docker-bookstack.git
 reference: master
 working_dir: .
+reconciliation:
+  enabled: true
+  events:
+    - die
+    - destroy
+    - stop
+    - kill
+    - oom
+    - unhealthy
 compose_files:
   - docker-compose-xenon.yml
 timeout: 300
