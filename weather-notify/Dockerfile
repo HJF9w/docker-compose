@@ -1,5 +1,5 @@
 # Use Python 3.12 on Alpine as requested
-FROM python:3.14.5-alpine
+FROM python:3.15.0b2-alpine
 
 # Metadata
 LABEL maintainer="you@example.com" \
