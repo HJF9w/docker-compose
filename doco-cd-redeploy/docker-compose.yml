@@ -20,6 +20,11 @@ services:
               working_dir: "doco-cd/"
               compose_files:
                 - docker-compose.yml
+              reconciliation:
+                enabled: true
+                restart_timeout: 45
+                restart_limit: 5
+                restart_window: 600
               timeout: 300
               environment:
                 BASEPATH: /data

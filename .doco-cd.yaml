@@ -59,6 +59,9 @@ reconciliation:
     - kill
     - oom
     - unhealthy
+  restart_timeout: 45
+  restart_limit: 5
+  restart_window: 600
 compose_files:
   - docker-compose-xenon.yml
 timeout: 300
@@ -94,6 +97,11 @@ name: "doco-cd-redeploy"
 working_dir: "doco-cd-redeploy/"
 compose_files:
   - docker-compose.yml
+reconciliation:
+  enabled: true
+  restart_timeout: 45
+  restart_limit: 5
+  restart_window: 600
 timeout: 300
 environment:
   BASEPATH: /data
