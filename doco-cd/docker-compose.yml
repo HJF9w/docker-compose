@@ -46,6 +46,7 @@ services:
     restart: always
     environment:
       TZ: Europe/Brussels
+      APPRISE_STATEFUL_MODE: false
     healthcheck:
       test: ["CMD-SHELL", "curl -fsS http://localhost:8000/status >/dev/null || exit 1"]
       interval: 30s
