@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   db:
-    image: "mongo:8.2.10"
+    image: "mongo:8.2.11"
     restart: "unless-stopped"
     env_file: .env
     volumes:
