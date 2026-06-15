@@ -96,7 +96,7 @@ services:
   # VISUALIZATION
   # ----------------------------------------------------------------------
   planefence:
-    image: ghcr.io/sdr-enthusiasts/docker-planefence:latest-build-1196
+    image: ghcr.io/sdr-enthusiasts/docker-planefence:latest-build-1197
     env_file:
       - ".env"
       - "secrets.enc.env"
