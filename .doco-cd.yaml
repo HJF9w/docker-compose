@@ -45,29 +45,29 @@ environment:
   BASEPATH: /data
   TZ: Europe/Brussels
 
----
-name: "bookstack"
-repository_url: https://github.com/HJF9w/docker-bookstack.git
-reference: master
-working_dir: .
-reconciliation:
-  enabled: true
-  events:
-    - die
-    - destroy
-    - stop
-    - kill
-    - oom
-    - unhealthy
-  restart_timeout: 45
-  restart_limit: 5
-  restart_window: 600
-compose_files:
-  - docker-compose-local.yml
-timeout: 300
-environment:
-  BASEPATH: /data
-  TZ: Europe/Brussels
+#---
+#name: "bookstack"
+#repository_url: https://github.com/HJF9w/docker-bookstack.git
+#reference: master
+#working_dir: .
+#reconciliation:
+#  enabled: true
+#  events:
+#    - die
+#    - destroy
+#    - stop
+#    - kill
+#    - oom
+#    - unhealthy
+#  restart_timeout: 45
+#  restart_limit: 5
+#  restart_window: 600
+#compose_files:
+#  - docker-compose-local.yml
+#timeout: 300
+#environment:
+#  BASEPATH: /data
+#  TZ: Europe/Brussels
 
 ---
 name: "caddy"
