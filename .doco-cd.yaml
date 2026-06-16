@@ -214,6 +214,16 @@ environment:
   TZ: Europe/Brussels
 
 ---
+name: "rustdesk"
+working_dir: "rustdesk/"
+compose_files:
+  - docker-compose.yml
+timeout: 300
+environment:
+  BASEPATH: /data
+  TZ: Europe/Brussels
+
+---
 name: "system"
 working_dir: "portainer-ee/"
 compose_files:
