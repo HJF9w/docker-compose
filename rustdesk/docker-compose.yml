@@ -2,7 +2,7 @@
 services:
   hbbs:
     image: rustdesk/rustdesk-server:1.1.15
-    command: 'hbbs -r 0.0.0.0:21117 -k $(echo "$PUBKEY")'
+    command: 'hbbs -r 0.0.0.0:21117 -k $(echo "$$PUBKEY")'
     env_file:
       - "secrets.enc.env"
       - ".env"
@@ -21,7 +21,7 @@ services:
 
   hbbr:
     image: rustdesk/rustdesk-server:1.1.15
-    command: 'hbbr -k $(echo "$PUBKEY")'
+    command: 'hbbr -k $(echo "$$PUBKEY")'
     env_file:
       - "secrets.enc.env"
       - ".env"
