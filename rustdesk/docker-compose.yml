@@ -3,6 +3,9 @@ services:
   hbbs:
     image: rustdesk/rustdesk-server:1.1.15
     command: hbbs -r 0.0.0.0:21117 -k $PUBKEY
+    env_file:
+      - "secrets.enc.env"
+      - ".env"
     volumes:
       - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/data:/root
       - ./id_ed25519.enc:/root/id_ed25519
@@ -19,6 +22,9 @@ services:
   hbbr:
     image: rustdesk/rustdesk-server:1.1.15
     command: hbbr -k $PUBKEY
+    env_file:
+      - "secrets.enc.env"
+      - ".env"
     ports:
       - 21117:21117 #Relay service
       ##- 21119:21119 #WebSocket for the Web Client (don't expose if not used)
