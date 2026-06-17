@@ -2,18 +2,28 @@
 services:
   hbbs:
     image: rustdesk/rustdesk-server:latest
-    command: hbbs
+    command: hbbs -r 0.0.0.0:21117 -k HvxXcbhSNGSqfyryt1zimkccya25dnpCTw1Y7WQ7ygk=
     volumes:
       - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/data:/root
-    network_mode: "host"
+      - ./id_ed25519.enc:/root/id_ed25519
+      - ./id_ed25519.enc.pub:/root/id_ed25519.pub
+    ports:
+      ##- 21114:21114 # Only in Pro Version
+      - 21115:21115 #used for the NAT type test
+      - 21116:21116 #ID registration+heartbeat and for TCP hole punching+connection service
+      ##- 21118:21118 #WebSocket for the Web Client (don't expose if not used)
     depends_on:
       - hbbr
     restart: unless-stopped
 
   hbbr:
     image: rustdesk/rustdesk-server:latest
-    command: hbbr
+    command: hbbr -k HvxXcbhSNGSqfyryt1zimkccya25dnpCTw1Y7WQ7ygk=
+    ports:
+      - 21117:21117 #Relay service
+      ##- 21119:21119 #WebSocket for the Web Client (don't expose if not used)
     volumes:
       - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/data:/root
-    network_mode: "host"
+      - ./id_ed25519.enc:/root/id_ed25519
+      - ./id_ed25519.enc.pub:/root/id_ed25519.pub
     restart: unless-stopped
