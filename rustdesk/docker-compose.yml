@@ -6,7 +6,7 @@ services:
     volumes:
       - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/data:/root
       - ./id_ed25519.enc:/root/id_ed25519
-      - ./id_ed25519.enc.pub:/root/id_ed25519.pub
+      - ./id_ed25519.pub.enc:/root/id_ed25519.pub
     ports:
       ##- 21114:21114 # Only in Pro Version
       - 21115:21115 #used for the NAT type test
@@ -25,5 +25,5 @@ services:
     volumes:
       - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/data:/root
       - ./id_ed25519.enc:/root/id_ed25519
-      - ./id_ed25519.enc.pub:/root/id_ed25519.pub
+      - ./id_ed25519.pub.enc:/root/id_ed25519.pub
     restart: unless-stopped
