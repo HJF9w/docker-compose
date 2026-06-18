@@ -47,7 +47,7 @@ services:
         ipv4_address: "${POSTGRES_EXT_IPV4}"
 
   pgadmin:
-    image: "dpage/pgadmin4:2026-05-06-1"
+    image: "dpage/pgadmin4:2026-06-17-2"
     restart: "unless-stopped"
     env_file:
       - ".env"
