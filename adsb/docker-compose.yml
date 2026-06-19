@@ -18,7 +18,7 @@ services:
       - /var/log
 
   fr24:
-    image: ghcr.io/sdr-enthusiasts/docker-flightradar24:latest-build-852
+    image: ghcr.io/sdr-enthusiasts/docker-flightradar24:latest-build-854
     restart: unless-stopped
     env_file:
       - ".env"
