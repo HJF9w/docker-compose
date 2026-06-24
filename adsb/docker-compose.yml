@@ -120,7 +120,7 @@ services:
   # VISUALIZATION
   # ----------------------------------------------------------------------
   planefence:
-    image: ghcr.io/sdr-enthusiasts/docker-planefence:latest-build-1199
+    image: ghcr.io/sdr-enthusiasts/docker-planefence:latest-build-1200
     container_name: planefence
     hostname: planefence
     env_file:
