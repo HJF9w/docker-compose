@@ -19,7 +19,7 @@ services:
       system_internal:
 
   agent:
-    image: 'portainer/agent:2.39.3-alpine'
+    image: 'portainer/agent:2.39.4-alpine'
     env_file:
       - ".env"
       - "secrets.enc.env"
