@@ -1,7 +1,7 @@
 ---
 services:
   app:
-    image: "stirlingtools/stirling-pdf:2.13.1-fat"
+    image: "stirlingtools/stirling-pdf:2.13.2-fat"
     volumes:
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/trainingData:/usr/share/tesseract-ocr/4.00/tessdata" #Required for extra OCR languages
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/extraConfigs:/configs"
