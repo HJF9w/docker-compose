@@ -10,7 +10,7 @@ default: &defaults
   default_scope: 'f'
 
   # name of this foodcoop
-  name: fm-coop
+  name: fm-coop-test2
   # foodcoop contact information (used for FAX messages)
   contact:
     street: Grüne Straße 103
@@ -165,10 +165,10 @@ default: &defaults
     email_prefix: "[Foodsoft]"
 
   # http config for this host to generate links in emails (uses environment config when not set)
-  #protocol: http
-  #host: localhost
+  protocol: http
+  host: coop.fairmarkt
   #port: 3000
-  #script_name: "/"
+  script_name: "/"
 
   # default to allow automatically adding new articles on sync only when less than 200 articles in total
   #shared_supplier_article_sync_limit: 200
