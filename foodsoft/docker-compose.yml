@@ -65,3 +65,8 @@ services:
       test: ["CMD", "redis-cli", "ping"]
     networks:
       default:
+
+networks:
+  default:
+  system_internal:
+    external: true
