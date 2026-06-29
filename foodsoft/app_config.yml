@@ -17,11 +17,11 @@ default: &defaults
     zip_code: "10997"
     city: Berlin
     country: Deutschland
-    email: foodsoft@foodcoop.test
+    email: foodsoft@coop.fairmarkt
     phone: "030 323 23249"
 
   # Homepage
-  homepage: http://www.foodcoop.test
+  homepage: http://coop.fairmarkt/
 
   # foodsoft documentation URL
   help_url: https://github.com/foodcoops/foodsoft/wiki/Doku
@@ -33,7 +33,7 @@ default: &defaults
   #foodsoft_url: https://github.com/foodcoops/foodsoft
 
   # URL to redirect to after logging out
-  # logout_redirect_url: https://foodcoop.test
+  # logout_redirect_url: https://coop.fairmarkt
 
   # Default language
   default_locale: de
@@ -127,7 +127,7 @@ default: &defaults
   #  order_by_articles: true
 
   # Page footer (html allowed). Default is a Foodsoft footer. Set to `blank` for no footer.
-  #page_footer: <a href="http://www.foodcoop.test/">FC Test</a> is supported by <a href="http://www.hoster.test/">Hoster</a>.
+  #page_footer: <a href="http://www.coop.fairmarkt/">FC Test</a> is supported by <a href="http://www.hoster.test/">Hoster</a>.
 
   # Custom CSS to add
   #custom_css: 'body { background-color: #fcffba; }'
@@ -148,10 +148,10 @@ default: &defaults
   #  ......
 
   # email address to be used as sender
-  email_sender: foodsoft@foodcoop.test
+  email_sender: foodsoft@coop.fairmarkt
 
   # domain to be used for reply emails
-  #reply_email_domain: reply.foodcoop.test
+  #reply_email_domain: reply.coop.fairmarkt
 
   # If your foodcoop uses a mailing list instead of internal messaging system
   #mailing_list: list@example.org
@@ -160,8 +160,8 @@ default: &defaults
   # Config for the exception_notification plugin
   notification:
     error_recipients:
-      - admin@foodcoop.test
-    sender_address: "\"Foodsoft Error\" <foodsoft@foodcoop.test>"
+      - admin@coop.fairmarkt
+    sender_address: "\"Foodsoft Error\" <foodsoft@coop.fairmarkt>"
     email_prefix: "[Foodsoft]"
 
   # http config for this host to generate links in emails (uses environment config when not set)
