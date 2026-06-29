@@ -54,7 +54,7 @@ services:
     # Removed port 8084 to route via Caddy
 
   airnavradar:
-    image: ghcr.io/sdr-enthusiasts/docker-airnavradar:latest-build-877
+    image: ghcr.io/sdr-enthusiasts/docker-airnavradar:latest-build-879
     container_name: airnavradar
     env_file:
       - ".env"
