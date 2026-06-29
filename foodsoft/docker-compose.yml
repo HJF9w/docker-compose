@@ -6,6 +6,8 @@ services:
     restart: unless-stopped
 #    ports:
 #      - "3000:3000"
+    env_file:
+      - ".env"
     environment:
         - SECRET_KEY_BASE=${SECRET_KEY_BASE:-random30CharacterString1234567}
         - DATABASE_URL=${DATABASE_URL:-mysql2://user:password@foodsoft-db-1/foodsoft?encoding=utf8/}
@@ -21,6 +23,8 @@ services:
     image: foodcoops/foodsoft:4.9.2
     command: "./proc-start worker"
     restart: unless-stopped
+    env_file:
+      - ".env"
     environment:
         - SECRET_KEY_BASE=${SECRET_KEY_BASE:-random30CharacterString1234567}
         - DATABASE_URL=${DATABASE_URL:-mysql2://user:password@foodsoft-db-1/foodsoft?encoding=utf8/}
@@ -35,6 +39,8 @@ services:
     image: foodcoops/foodsoft:4.9.2
     command: "./proc-start cron"
     restart: unless-stopped
+    env_file:
+      - ".env"
     environment:
         - SECRET_KEY_BASE=${SECRET_KEY_BASE:-random30CharacterString1234567}
         - DATABASE_URL=${DATABASE_URL:-mysql2://user:password@foodsoft-db-1/foodsoft?encoding=utf8/}
@@ -50,6 +56,8 @@ services:
     restart: unless-stopped
     volumes:
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/db:/var/lib/mysql"
+    env_file:
+      - ".env"
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
@@ -61,6 +69,8 @@ services:
   redis:
     image: redis:8.8-alpine3.23
     restart: unless-stopped
+    env_file:
+      - ".env"
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
     networks:
