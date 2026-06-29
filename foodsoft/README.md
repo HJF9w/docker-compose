@@ -1,0 +1,1 @@
+docker run --name foodsoft_setup --rm --network foodsoft_default -e SECRET_KEY_BASE= -e DATABASE_URL="mysql2://:@foodsoft-db-1/foodsoft?encoding=utf8" -e REDIS_URL=foodsoft-redis-1 -v ./app_config.yml:/usr/src/app/config/app_config.yml:ro foodcoops/foodsoft:latest bundle exec rake db:setup

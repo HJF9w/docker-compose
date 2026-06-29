@@ -1,0 +1,67 @@
+---
+name: foodsoft
+services:
+  app:
+    image: foodcoops/foodsoft:4.9.2
+    restart: unless-stopped
+#    ports:
+#      - "3000:3000"
+    environment:
+        - SECRET_KEY_BASE=${SECRET_KEY_BASE:-random30CharacterString1234567}
+        - DATABASE_URL=${DATABASE_URL:-mysql2://user:password@foodsoft-db-1/foodsoft?encoding=utf8/}
+        - REDIS_URL=${REDIS_URL:-foodsoft-redis-1}
+        - RAILS_FORCE_SSL=${RAILS_FORCE_SSL:-false}
+    volumes:
+        - "./app_config.yml:/usr/src/app/config/app_config.yml:ro"
+    networks:
+      default:
+      system_internal:
+
+  worker:
+    image: foodcoops/foodsoft:4.9.2
+    command: "./proc-start worker"
+    restart: unless-stopped
+    environment:
+        - SECRET_KEY_BASE=${SECRET_KEY_BASE:-random30CharacterString1234567}
+        - DATABASE_URL=${DATABASE_URL:-mysql2://user:password@foodsoft-db-1/foodsoft?encoding=utf8/}
+        - REDIS_URL=${REDIS_URL:-foodsoft-redis-1}
+        - RAILS_FORCE_SSL=${RAILS_FORCE_SSL:-false}
+    volumes:
+        - "./app_config.yml:/usr/src/app/config/app_config.yml:ro"
+    networks:
+      default:
+
+  cron:
+    image: foodcoops/foodsoft:4.9.2
+    command: "./proc-start cron"
+    restart: unless-stopped
+    environment:
+        - SECRET_KEY_BASE=${SECRET_KEY_BASE:-random30CharacterString1234567}
+        - DATABASE_URL=${DATABASE_URL:-mysql2://user:password@foodsoft-db-1/foodsoft?encoding=utf8/}
+        - REDIS_URL=${REDIS_URL:-foodsoft-redis-1}
+        - RAILS_FORCE_SSL=${RAILS_FORCE_SSL:-false}
+    volumes:
+        - "./app_config.yml:/usr/src/app/config/app_config.yml:ro"
+    networks:
+      default:
+
+  db:
+    image: mariadb:12.3
+    restart: unless-stopped
+    volumes:
+      - ./db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE:-foodsoft}
+      - MYSQL_USER=${MYSQL_USER}
+    networks:
+      default:
+
+  redis:
+    image: redis:8.8-alpine3.23
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+    networks:
+      default:
