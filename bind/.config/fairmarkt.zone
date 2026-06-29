@@ -3,7 +3,7 @@ $TTL 5m
 $ORIGIN fairmarkt.
 
 @       IN      SOA     ns.fairmarkt. admin.fairmarkt. (
-                                2024041715     ; serial
+                                2026062912     ; serial
                                 12h            ; refresh 12h
                                 15m            ; retry 15m
                                 1w             ; expire 3w
@@ -16,6 +16,10 @@ ns              IN      A       192.168.178.221
 *               IN      A       192.168.178.222
 
 ; -- add your DNS Records
+
+; Foodsoft
+coop            IN      A       192.168.178.222
+
 ; freenas
 freenas		IN	A	192.168.178.222
 nas		IN	CNAME	freenas
