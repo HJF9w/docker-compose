@@ -148,7 +148,7 @@ default: &defaults
   #  ......
 
   # email address to be used as sender
-  email_sender: foodsoft@coop.fairmarkt
+  email_sender: maurice@fairmarkt.net
 
   # domain to be used for reply emails
   #reply_email_domain: reply.coop.fairmarkt
@@ -161,7 +161,7 @@ default: &defaults
   notification:
     error_recipients:
       - admin@coop.fairmarkt
-    sender_address: "\"Foodsoft Error\" <foodsoft@coop.fairmarkt>"
+    sender_address: "maurice@fairmarkt.net"
     email_prefix: "[Foodsoft]"
 
   # http config for this host to generate links in emails (uses environment config when not set)
