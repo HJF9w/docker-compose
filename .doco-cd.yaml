@@ -130,18 +130,18 @@ environment:
   BASEPATH: /data
   TZ: Europe/Brussels
 
-##---
-##name: "esptls"
-##working_dir: "esptls/"
-##compose_files:
-##  - docker-compose.yml
-##build:
-##  no_cache: true
-##  force_image_pull: true
-##timeout: 600
-##environment:
-##  BASEPATH: /data
-##  TZ: Europe/Brussels
+---
+name: "esptls"
+working_dir: "esptls/"
+compose_files:
+  - docker-compose.yml
+build:
+  no_cache: true
+  force_image_pull: true
+timeout: 600
+environment:
+  BASEPATH: /data
+  TZ: Europe/Brussels
 
 ---
 name: "grafana"
