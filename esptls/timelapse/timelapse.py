@@ -7,45 +7,59 @@ PROCESSED_DIR = '/data/processed'
 VIDEO_DIR = '/data/videos'
 
 def create_timelapse():
-    yesterday = (datetime.now() - timedelta(days=1)).strftime('%Y%m%d')
-    print(f"Starting timelapse for {yesterday}...")
+    today = datetime.now().strftime('%Y%m%d')
     
-    # Find all processed files for yesterday
-    files = sorted([f for f in os.listdir(PROCESSED_DIR) if f.startswith(yesterday)])
-    
-    if not files:
-        print(f"No files found for {yesterday}")
-        return
+    # Find all unique dates in processed directory
+    dates = set()
+    if os.path.exists(PROCESSED_DIR):
+        for f in os.listdir(PROCESSED_DIR):
+            if f.endswith('_processed.jpg') and len(f) >= 8:
+                dates.add(f[:8])
+                
+    for date_str in sorted(dates):
+        if date_str >= today:
+            continue
+            
+        print(f"Starting timelapse for {date_str}...")
+        files = sorted([f for f in os.listdir(PROCESSED_DIR) if f.startswith(date_str) and f.endswith('_processed.jpg')])
+        
+        if not files:
+            continue
 
-    # Create a concat file for ffmpeg
-    concat_file = f"/tmp/{yesterday}_list.txt"
-    with open(concat_file, 'w') as f:
-        for filename in files:
-            f.write(f"file '{os.path.join(PROCESSED_DIR, filename)}'\n")
-            f.write(f"duration 0.03333\n") # 10 fps
+        # Create a concat file for ffmpeg
+        concat_file = f"/tmp/{date_str}_list.txt"
+        with open(concat_file, 'w') as f:
+            for filename in files:
+                f.write(f"file '{os.path.join(PROCESSED_DIR, filename)}'\n")
+                f.write(f"duration 0.03333\n") # 10 fps
 
-    output_video = os.path.join(VIDEO_DIR, f"{yesterday}_timelapse.mp4")
-    
-    # FFmpeg command
-    cmd = [
-        'ffmpeg', '-y',
-        '-f', 'concat', '-safe', '0',
-        '-i', concat_file,
-        '-c:v', 'libx264',
-        '-crf', '26',
-        '-preset', 'slow',
-        '-vf', 'format=yuv420p',
-        output_video
-    ]
-    
-    try:
-        subprocess.run(cmd, check=True)
-        print(f"Timelapse created: {output_video}")
-    except Exception as e:
-        print(f"FFmpeg error: {e}")
-    finally:
-        if os.path.exists(concat_file):
-            os.remove(concat_file)
+        output_video = os.path.join(VIDEO_DIR, f"{date_str}_timelapse.mp4")
+        
+        # FFmpeg command
+        cmd = [
+            'ffmpeg', '-y',
+            '-f', 'concat', '-safe', '0',
+            '-i', concat_file,
+            '-c:v', 'libx264',
+            '-crf', '26',
+            '-preset', 'slow',
+            '-vf', 'format=yuv420p',
+            output_video
+        ]
+        
+        try:
+            subprocess.run(cmd, check=True)
+            print(f"Timelapse created: {output_video}")
+            for filename in files:
+                try:
+                    os.remove(os.path.join(PROCESSED_DIR, filename))
+                except FileNotFoundError:
+                    pass
+        except Exception as e:
+            print(f"FFmpeg error: {e}")
+        finally:
+            if os.path.exists(concat_file):
+                os.remove(concat_file)
 
 if __name__ == "__main__":
     os.makedirs(VIDEO_DIR, exist_ok=True)

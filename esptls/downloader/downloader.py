@@ -37,6 +37,13 @@ def download_files():
         size = f_info['size']
         
         if name in synced:
+            # Try to delete it again if it was protected before
+            try:
+                del_r = requests.get(f'http://{ESP_IP}/file_delete?path=/{name}', timeout=10)
+                if del_r.status_code == 200 and "Error" not in del_r.text:
+                    print(f"Successfully deleted previously synced file {name}")
+            except Exception as e:
+                pass
             continue
             
         new_count += 1
@@ -58,11 +65,12 @@ def download_files():
             if os.path.getsize(local_path) == size:
                 # Delete from ESP
                 del_r = requests.get(f'http://{ESP_IP}/file_delete?path=/{name}', timeout=10)
-                if del_r.status_code == 200:
+                if del_r.status_code == 200 and "Error" not in del_r.text:
                     add_synced_file(name)
                     print(f"Successfully synced and deleted {name}")
                 else:
-                    print(f"Warning: Downloaded {name} but failed to delete from ESP (Status: {del_r.status_code})")
+                    add_synced_file(name)
+                    print(f"Warning: Downloaded {name} but failed to delete from ESP. (Will retry later) Response: {del_r.text}")
             
         except Exception as e:
             print(f"Error downloading {name}: {e}")
