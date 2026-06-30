@@ -30,6 +30,8 @@ services:
   timelapse:
     build: ./timelapse
     restart: unless-stopped
+    cpu_shares: 800 #default 1024, higher numbers = higher priority
+    cpus: 3
     volumes:
       - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/data/processed:/data/processed
       - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/data/videos:/data/videos
