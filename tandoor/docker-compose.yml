@@ -11,7 +11,7 @@ services:
       - "default"
 
   app:
-    image: "vabene1111/recipes:2.6.11"
+    image: "vabene1111/recipes:2.6.12"
     restart: "unless-stopped"
     env_file:
       - ".env"
