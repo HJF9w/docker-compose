@@ -136,31 +136,39 @@ def run_processor():
         current_set = [first_file]
         last_dt = dt
         
-        # Look for matching files in the same mode and close in time
+        # Look for matching files in the same mode
         for next_file in all_files[1:]:
             if len(current_set) >= target: break
             ndt, nmode = get_metadata_from_filename(next_file)
             
-            # Group if same mode and within 65 seconds of last image
-            if nmode == mode and (ndt - last_dt).total_seconds() <= 65:
+            # Group if same mode
+            if nmode == mode:
                 current_set.append(next_file)
-                last_dt = ndt
             else:
                 break
         
         if len(current_set) == target:
             process_set(current_set)
         else:
-            # Check age using local time (since filename is local)
-            now = datetime.now().astimezone()
-            age = (now - dt).total_seconds()
-            if age > 600:
-                print(f"Processing incomplete set (orphan, age {int(age)}s): {current_set}")
+            # We have an incomplete set. Is there a mode transition?
+            if len(all_files) > len(current_set):
+                # The next available file has a different mode, so this is a transition
+                print(f"Processing incomplete set due to mode transition: {current_set}")
                 process_set(current_set)
             else:
-                if len(all_files) > 1: # Only log if there are other files but they didn't match
-                    print(f"Waiting for set: {mode} {len(current_set)}/{target} (First: {first_file}, Age: {int(age)}s)")
-                time.sleep(5)
+                # No transition yet, just waiting for the next images to download
+                now = datetime.now().astimezone()
+                age = (now - dt).total_seconds()
+                
+                # If we've waited an extremely long time (e.g., 2 hours), flush it anyway
+                # to prevent the pipeline from stalling forever if the camera dies.
+                if age > 7200:
+                    print(f"Processing incomplete set due to extreme age ({int(age)}s): {current_set}")
+                    process_set(current_set)
+                else:
+                    if len(all_files) > 1: # Only log if there are other files
+                        print(f"Waiting for set: {mode} {len(current_set)}/{target} (First: {first_file}, Age: {int(age)}s)")
+                    time.sleep(5)
         
         time.sleep(1)
 
