@@ -3,6 +3,7 @@ import time
 import subprocess
 import requests
 from datetime import datetime, timedelta, timezone
+from zoneinfo import ZoneInfo
 from influxdb_client import InfluxDBClient
 from PIL import Image, ImageDraw, ImageFont
 
@@ -13,6 +14,7 @@ INFLUX_URL = os.getenv('INFLUX_URL')
 INFLUX_TOKEN = os.getenv('INFLUX_TOKEN')
 INFLUX_ORG = os.getenv('INFLUX_ORG')
 INFLUX_BUCKET = os.getenv('INFLUX_BUCKET')
+LOCAL_TZ = ZoneInfo(os.getenv('TZ', 'Europe/Brussels'))
 
 print(f"Processor starting. Raw: {RAW_DIR}, Processed: {PROCESSED_DIR}")
 
@@ -22,10 +24,8 @@ query_api = client.query_api()
 def get_metadata_from_filename(filename):
     parts = filename.split('_')
     dt_str = parts[0] + parts[1]
-    dt = datetime.strptime(dt_str, '%Y%m%d%H%M%S')
-    # dt is naive local time (matching ESP/Container TZ)
-    # We attach local timezone info so astimezone(timezone.utc) works correctly
-    dt = dt.astimezone().replace(tzinfo=None).astimezone() 
+    # Filenames are UTC timestamps from the ESP
+    dt = datetime.strptime(dt_str, '%Y%m%d%H%M%S').replace(tzinfo=timezone.utc)
     mode = parts[2].split('.')[0]
     return dt, mode
 
@@ -85,7 +85,9 @@ def process_set(files):
     sorted_files = sorted(files)
     for f in sorted_files:
         dt, _ = get_metadata_from_filename(f)
-        text_lines.append(dt.strftime('%Y-%m-%d %H:%M:%S'))
+        # Convert UTC to local time for display
+        local_dt = dt.astimezone(LOCAL_TZ)
+        text_lines.append(local_dt.strftime('%Y-%m-%d %H:%M:%S'))
     
     if influx_data:
         text_lines.append(f"CPU: {influx_data.get('temp_cpu', 'N/A')}°C")
