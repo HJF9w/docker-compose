@@ -2,6 +2,9 @@ services:
   ultrafeeder:
     image: ghcr.io/sdr-enthusiasts/docker-adsb-ultrafeeder:telegraf-build-938
     restart: unless-stopped
+    dns:
+      - "10.0.42.254"
+      - "10.0.42.1"
     device_cgroup_rules:
       - 'c 189:* rwm'
 ##    ports:
