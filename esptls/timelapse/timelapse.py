@@ -41,8 +41,8 @@ def create_timelapse():
             '-f', 'concat', '-safe', '0',
             '-i', concat_file,
             '-c:v', 'libx264',
-            '-crf', '26',
-            '-preset', 'slow',
+            '-crf', '30',
+            '-preset', 'medium',
             '-vf', 'format=yuv420p',
             output_video
         ]
