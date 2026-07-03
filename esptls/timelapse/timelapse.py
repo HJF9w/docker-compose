@@ -40,6 +40,7 @@ def create_timelapse():
             'ffmpeg', '-y',
             '-f', 'concat', '-safe', '0',
             '-i', concat_file,
+            '-movflags', '+faststart',
             '-c:v', 'libx264',
             '-crf', '30',
             '-preset', 'medium',

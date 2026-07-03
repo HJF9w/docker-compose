@@ -13,6 +13,8 @@ POLL_INTERVAL = int(os.getenv("TELEGRAM_POLL_INTERVAL", "30"))
 SETTLED_SECONDS = int(os.getenv("TELEGRAM_SETTLED_SECONDS", "30"))
 REQUEST_TIMEOUT = int(os.getenv("TELEGRAM_REQUEST_TIMEOUT", "300"))
 API_BASE = os.getenv("TELEGRAM_API_BASE", "https://api.telegram.org")
+VIDEO_WIDTH = int(os.getenv("TELEGRAM_VIDEO_WIDTH", "1600"))
+VIDEO_HEIGHT = int(os.getenv("TELEGRAM_VIDEO_HEIGHT", "1200"))
 
 
 def load_state():
@@ -58,6 +60,8 @@ def send_video(path, bot_token, chat_id):
         "chat_id": chat_id,
         "caption": filename,
         "supports_streaming": "true",
+        "width": VIDEO_WIDTH,     # Added width
+        "height": VIDEO_HEIGHT,   # Added height
     }
 
     with open(path, "rb") as video:
