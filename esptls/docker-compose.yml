@@ -38,3 +38,12 @@ services:
     env_file:
       - ".env"
       - "secrets.enc.env"
+
+  telegram-sender:
+    build: ./sender
+    restart: unless-stopped
+    volumes:
+      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/data/videos:/data/videos
+    env_file:
+      - ".env"
+      - "secrets.enc.env"
