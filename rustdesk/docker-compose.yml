@@ -1,0 +1,44 @@
+---
+services:
+  hbbs:
+    image: rustdesk/rustdesk-server:1.1.15
+    command: 'hbbs -k _'
+    #command: 'hbbs -r 0.0.0.0:21117 -k _' # Set Relay servers
+    env_file:
+      - ".env"
+    volumes:
+      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/data:/root
+      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/id_ed25519:/root/id_ed25519
+      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/id_ed25519.pub:/root/id_ed25519.pub
+    ports:
+      ##- 21114:21114 # Only in Pro Version
+      - 21115:21115 #used for the NAT type test
+      - 21116:21116 #ID registration+heartbeat and for TCP hole punching+connection service
+      ##- 21118:21118 #WebSocket for the Web Client (don't expose if not used)
+    depends_on:
+      - hbbr
+    restart: unless-stopped
+    network:
+      system_mac_vlan:
+        ipv4_address: ${HBBS_MAC_VLAN_IPV4}
+
+  hbbr:
+    image: rustdesk/rustdesk-server:1.1.15
+    command: 'hbbr -k _'
+    env_file:
+      - ".env"
+    ports:
+      - 21117:21117 #Relay service
+      ##- 21119:21119 #WebSocket for the Web Client (don't expose if not used)
+    volumes:
+      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/data:/root
+      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/id_ed25519:/root/id_ed25519
+      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/id_ed25519.pub:/root/id_ed25519.pub
+    restart: unless-stopped
+    network:
+      system_mac_vlan:
+        ipv4_address: ${HBBR_MAC_VLAN_IPV4}
+
+networks:
+  system_mac_vlan:
+    external: true
