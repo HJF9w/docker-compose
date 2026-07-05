@@ -18,7 +18,7 @@ services:
     depends_on:
       - hbbr
     restart: unless-stopped
-    network:
+    networks:
       system_mac_vlan:
         ipv4_address: ${HBBS_MAC_VLAN_IPV4}
 
@@ -35,7 +35,7 @@ services:
       - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/id_ed25519:/root/id_ed25519
       - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/id_ed25519.pub:/root/id_ed25519.pub
     restart: unless-stopped
-    network:
+    networks:
       system_mac_vlan:
         ipv4_address: ${HBBR_MAC_VLAN_IPV4}
 
