@@ -1,6 +1,6 @@
 services:
   ultrafeeder:
-    image: ghcr.io/sdr-enthusiasts/docker-adsb-ultrafeeder:telegraf-build-938
+    image: ghcr.io/sdr-enthusiasts/docker-adsb-ultrafeeder:telegraf-build-940
     restart: unless-stopped
     dns:
       - "10.0.42.254"
