@@ -9,6 +9,10 @@ services:
  #      - "3001:3001"
     hostname: kuma.ioui.eu
     restart: always
+    logging:
+      options:
+        max-size: "10M"
+        max-file: "3"
     env_file:
       - ".env"
       - "secrets.enc.env"
@@ -20,6 +24,10 @@ services:
   mariadb:
     image: "mariadb:12.3.2-noble"
     restart: always
+    logging:
+      options:
+        max-size: "10M"
+        max-file: "3"
     env_file:
       - ".env"
       - "secrets.enc.env"
