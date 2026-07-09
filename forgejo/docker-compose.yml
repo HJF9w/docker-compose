@@ -1,6 +1,6 @@
 services:
   app:
-    image: codeberg.org/forgejo/forgejo:15.0.3
+    image: codeberg.org/forgejo/forgejo:15.0.4
     env_file:
       - "secrets.enc.env"
       - ".env"
