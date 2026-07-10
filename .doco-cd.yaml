@@ -338,3 +338,17 @@ environment:
   BASEPATH: /data
   TZ: Europe/Brussels
 
+---
+name: "tl-conv"
+working_dir: "tl-conv"
+compose_files:
+  - docker-compose.yml
+timeout: 600
+build:
+  no_cache: true
+  force_image_pull: true
+environment:
+  BASEPATH: /data
+  TZ: Europe/Brussels
+
+
