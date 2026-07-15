@@ -32,7 +32,7 @@ services:
       - /var/log
 
   pfclient:
-    image: ghcr.io/sdr-enthusiasts/docker-planefinder:latest-build-538
+    image: ghcr.io/sdr-enthusiasts/docker-planefinder:latest-build-540
     env_file:
       - ".env"
       - "secrets.enc.env"
