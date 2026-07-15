@@ -3,7 +3,7 @@ services:
   # COMMERCIAL & OTHER ADS-B FEEDERS
   # ----------------------------------------------------------------------
   piaware:
-    image: ghcr.io/sdr-enthusiasts/docker-piaware:latest-build-663
+    image: ghcr.io/sdr-enthusiasts/docker-piaware:latest-build-665
     restart: unless-stopped
     env_file:
       - ".env"
