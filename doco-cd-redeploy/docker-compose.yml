@@ -4,6 +4,7 @@ services:
     restart: always
     environment:
       TZ: Europe/Brussels
+      SCHEDULER_ENABLED: false ## Disable on redeploy stack to avoid duplicate schedule jobs https://doco.cd/latest/Advanced/Job-Scheduling/
       LOG_LEVEL: debug
       PASS_ENV: "true"
       GIT_AUTH_DOMAINS_FILE: /run/secrets/auth_domains.txt
