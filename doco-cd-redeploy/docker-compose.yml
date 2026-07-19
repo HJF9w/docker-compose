@@ -4,6 +4,7 @@ services:
     restart: always
     environment:
       TZ: Europe/Brussels
+      SCHEDULER_ENABLED: false ## Disable on redeploy stack to avoid duplicate schedule jobs https://doco.cd/latest/Advanced/Job-Scheduling/
       LOG_LEVEL: debug
       PASS_ENV: "true"
       APPRISE_API_URL: http://apprise:8000/notify
