@@ -148,6 +148,7 @@ environment:
 ---
 name: "n8n"
 working_dir: "n8n/"
+destroy: true
 compose_files:
   - docker-compose.yml
 timeout: 600
