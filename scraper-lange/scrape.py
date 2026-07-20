@@ -67,6 +67,32 @@ def run_with_db_retries(args, conn, subject, func, default=None, body_prefix="")
                 send_error_email(args, subject, f"{body_prefix}{e}")
                 return default
 
+def filter_fam_lange(data):
+    """Drop obviously wrong Fam-Lange data points before ingestion."""
+    rejected = []
+
+    try:
+        airpressure = float(data["airpressure"])
+        if not (850 <= airpressure <= 1100):
+            rejected.append(f"airpressure={airpressure}")
+            del data["airpressure"]
+    except (KeyError, ValueError):
+        pass
+
+    try:
+        temperature = float(data["temperature"])
+        if temperature == 0.0:
+            rejected.append(f"temperature={temperature}")
+            del data["temperature"]
+    except (KeyError, ValueError):
+        pass
+
+    if rejected:
+        log_message("WARN", f"Filtered out invalid Fam-Lange values: {', '.join(rejected)}")
+
+    return data
+
+
 def fetch_soup(session, url):
     resp = session.get(url, timeout=10)
     resp.raise_for_status()
@@ -869,6 +895,7 @@ def main():
     fam_data = run_with_retries(args, "Fam-Lange Weather Error",
                                 lambda: parse_fam_lange(fetch_soup(sess_wx, "https://fam-lange.de/wetter.php")),
                                 default={})
+    fam_data = filter_fam_lange(fam_data)
     log_message("INFO", f"Fam-Lange weather metrics fetched: {len(fam_data)}")
 
     log_message("INFO", "Fetching PegelOnline data")
