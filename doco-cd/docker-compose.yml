@@ -1,6 +1,6 @@
 services:
   app:
-    image: ghcr.io/kimdre/doco-cd:0.95.0
+    image: ghcr.io/kimdre/doco-cd:0.98.0
     restart: always
 ##    ports:
 ##      - "80:80"     # Webhook endpoint
