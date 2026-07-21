@@ -146,17 +146,6 @@ environment:
   TZ: Europe/Brussels
 
 ---
-name: "n8n"
-working_dir: "n8n/"
-destroy: true
-compose_files:
-  - docker-compose.yml
-timeout: 600
-environment:
-  BASEPATH: /data
-  TZ: Europe/Brussels
-
----
 name: "nextcloud"
 working_dir: "nextcloud/"
 compose_files:
