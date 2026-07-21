@@ -1,7 +1,7 @@
 ---
 services:
   hbbs:
-    image: rustdesk/rustdesk-server:1.1.15
+    image: rustdesk/rustdesk-server:1.1.16
     #command: 'hbbs -k _'
     command: 'hbbs -r fairmarkt.ddns.net:21117 -k _' # Set Relay servers
     env_file:
@@ -23,7 +23,7 @@ services:
         ipv4_address: ${HBBS_MAC_VLAN_IPV4}
 
   hbbr:
-    image: rustdesk/rustdesk-server:1.1.15
+    image: rustdesk/rustdesk-server:1.1.16
     command: 'hbbr -k _'
     env_file:
       - ".env"
