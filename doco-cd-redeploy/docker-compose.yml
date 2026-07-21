@@ -1,6 +1,6 @@
 services:
   app:
-    image: ghcr.io/kimdre/doco-cd:0.98.0
+    image: ghcr.io/kimdre/doco-cd:0.99.1
     restart: always
     environment:
       TZ: Europe/Brussels
