@@ -1,6 +1,6 @@
 services:
   app:
-    image: 'ubuntu/bind9:9.20-24.10_beta'
+    image: 'ubuntu/bind9:9.20-26.04_stable'
     environment:
       - BIND9_USER=root
       - TZ=Europe/Berlin
