@@ -24,7 +24,7 @@ write_api = client.write_api(write_options=SYNCHRONOUS)
 def scrape():
     ts = datetime.now().strftime('%H:%M:%S')
     try:
-        r = requests.get(f'http://{ESP_IP}/status', timeout=10, auth=auth)
+        r = requests.get(f'http://{ESP_IP}/status', timeout=30, auth=auth)
         r.raise_for_status()
         data = r.json()
         print(f"[{ts}] Status fetched from ESP. RSSI: {data.get('wifi_rssi', 'N/A')}")

@@ -26,7 +26,7 @@ def add_synced_file(filename):
 def download_files():
     print(f"--- Checking for new files at {datetime.now().strftime('%H:%M:%S')} ---")
     try:
-        r = requests.get(f'http://{ESP_IP}/file_list', timeout=10, auth=auth)
+        r = requests.get(f'http://{ESP_IP}/file_list', timeout=30, auth=auth)
         r.raise_for_status()
         files = r.json()
         print(f"Found {len(files)} files on ESP")
@@ -44,7 +44,7 @@ def download_files():
         if name in synced:
             # Try to delete it again if it was protected before
             try:
-                del_r = requests.get(f'http://{ESP_IP}/file_delete?path=/{name}', timeout=10, auth=auth)
+                del_r = requests.get(f'http://{ESP_IP}/file_delete?path=/{name}', timeout=30, auth=auth)
                 if del_r.status_code == 200 and "Error" not in del_r.text:
                     print(f"Successfully deleted previously synced file {name}")
             except Exception as e:
@@ -55,7 +55,7 @@ def download_files():
         print(f"Downloading {name} ({size} bytes)...")
         try:
             # Download
-            dr = requests.get(f'http://{ESP_IP}/file?path=/{name}', timeout=30, auth=auth)
+            dr = requests.get(f'http://{ESP_IP}/file?path=/{name}', timeout=40, auth=auth)
             dr.raise_for_status()
             
             if len(dr.content) != size:
@@ -69,7 +69,7 @@ def download_files():
             # Verify local file exists and is correct size
             if os.path.getsize(local_path) == size:
                 # Delete from ESP
-                del_r = requests.get(f'http://{ESP_IP}/file_delete?path=/{name}', timeout=10, auth=auth)
+                del_r = requests.get(f'http://{ESP_IP}/file_delete?path=/{name}', timeout=30, auth=auth)
                 if del_r.status_code == 200 and "Error" not in del_r.text:
                     add_synced_file(name)
                     print(f"Successfully synced and deleted {name}")
