@@ -1,6 +1,5 @@
 import os
 import time
-import subprocess
 import requests
 from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
@@ -130,31 +129,19 @@ def process_set(files):
             print("No valid or recoverable files left in the set.")
             return
 
-        # 2. Fuse if multiple
+        # 2. Open first image
         img = None
-        if len(files) > 1:
-            input_paths = [os.path.join(RAW_DIR, f) for f in files]
-            fused_tmp = "/tmp/fused.jpg"
-            print(f"Executing: enfuse --output={fused_tmp} {' '.join(input_paths)}")
-            try:
-                subprocess.run(['enfuse', '--output=' + fused_tmp] + input_paths, check=True)
-                img = Image.open(fused_tmp)
-            except Exception as e:
-                print(f"Enfuse failed: {e}. Falling back to first image: {files[0]}")
-                img = None
-                
-        if img is None:
-            try:
-                img = Image.open(os.path.join(RAW_DIR, files[0]))
-            except Exception as e:
-                print(f"Failed to open first image {files[0]}: {e}. Skipping set and cleaning up.")
-                send_telegram_message(f"Failed to open/process first image {files[0]}. Skipping and deleting set: {files}. Error: {e}")
-                for f in files:
-                    try:
-                        os.remove(os.path.join(RAW_DIR, f))
-                    except Exception:
-                        pass
-                return
+        try:
+            img = Image.open(os.path.join(RAW_DIR, files[0]))
+        except Exception as e:
+            print(f"Failed to open first image {files[0]}: {e}. Skipping set and cleaning up.")
+            send_telegram_message(f"Failed to open/process first image {files[0]}. Skipping and deleting set: {files}. Error: {e}")
+            for f in files:
+                try:
+                    os.remove(os.path.join(RAW_DIR, f))
+                except Exception:
+                    pass
+            return
 
         # 3. Overlay Metadata
         draw = ImageDraw.Draw(img)
@@ -217,10 +204,10 @@ def run_processor():
             time.sleep(10)
             cleanup_processed()
             continue
-            
+
         first_file = all_files[0]
         try:
-            dt, mode = get_metadata_from_filename(first_file)
+            get_metadata_from_filename(first_file)
         except Exception as e:
             print(f"Invalid filename format: {first_file}. Error: {e}. Deleting file.")
             send_telegram_message(f"Deleted file {first_file} due to invalid filename format. Error: {e}")
@@ -229,53 +216,8 @@ def run_processor():
             except Exception:
                 pass
             continue
-        
-        target = 1
-        if mode == 'night': target = 3
-        elif mode in ['sunset', 'sunrise']: target = 2
-        
-        current_set = [first_file]
-        last_dt = dt
-        
-        # Look for matching files in the same mode
-        for next_file in all_files[1:]:
-            if len(current_set) >= target: break
-            try:
-                ndt, nmode = get_metadata_from_filename(next_file)
-            except Exception as e:
-                # If a file has an invalid filename format, we break here so that
-                # it is processed and deleted in the next main loop iteration.
-                break
-            
-            # Group if same mode
-            if nmode == mode:
-                current_set.append(next_file)
-            else:
-                break
-        
-        if len(current_set) == target:
-            process_set(current_set)
-        else:
-            # We have an incomplete set. Is there a mode transition?
-            if len(all_files) > len(current_set):
-                # The next available file has a different mode, so this is a transition
-                print(f"Processing incomplete set due to mode transition: {current_set}")
-                process_set(current_set)
-            else:
-                # No transition yet, just waiting for the next images to download
-                now = datetime.now().astimezone()
-                age = (now - dt).total_seconds()
-                
-                # If we've waited an extremely long time (e.g., 2 hours), flush it anyway
-                # to prevent the pipeline from stalling forever if the camera dies.
-                if age > 7200:
-                    print(f"Processing incomplete set due to extreme age ({int(age)}s): {current_set}")
-                    process_set(current_set)
-                else:
-                    if len(all_files) > 1: # Only log if there are other files
-                        print(f"Waiting for set: {mode} {len(current_set)}/{target} (First: {first_file}, Age: {int(age)}s)")
-                    time.sleep(5)
-        
+
+        process_set([first_file])
         time.sleep(1)
 
 if __name__ == "__main__":
