@@ -64,6 +64,20 @@ def get_influx_data(image_time):
         print(f"Influx query error: {e}")
         return {}
 
+def format_bytes(size_bytes):
+    try:
+        size = float(size_bytes)
+    except (ValueError, TypeError):
+        return str(size_bytes) if size_bytes is not None else "N/A"
+    if size >= 1024**3:
+        return f"{size / 1024**3:.2f} GiB"
+    elif size >= 1024**2:
+        return f"{size / 1024**2:.2f} MiB"
+    elif size >= 1024:
+        return f"{size / 1024:.2f} KiB"
+    else:
+        return f"{size:.0f} B"
+
 def process_set(files):
     if not files: return
     
@@ -166,6 +180,18 @@ def process_set(files):
             text_lines.append(f"CPU: {influx_data.get('temp_cpu', 'N/A')}°C")
             text_lines.append(f"Ext: {influx_data.get('temp_ext', 'N/A')}°C")
             text_lines.append(f"RSSI: {influx_data.get('wifi_rssi', 'N/A')}dBm")
+            
+            yavg = influx_data.get('yavg', 'N/A')
+            text_lines.append(f"{yavg} : {influx_data.get('yavg_low', 'N/A')}/{influx_data.get('yavg_target', 'N/A')}/{influx_data.get('yavg_high', 'N/A')}")
+            
+            storage_percent = influx_data.get('storage_percent', 'N/A')
+            storage_used = influx_data.get('storage_used', 0)
+            storage_total = influx_data.get('storage_total', 0)
+            text_lines.append(f"{storage_percent}% : {format_bytes(storage_used)}/{format_bytes(storage_total)}")
+            
+            mode = influx_data.get('mode', 'N/A')
+            interval = influx_data.get('interval', 'N/A')
+            text_lines.append(f"Mode: {mode} every {interval}s")
         
         y_offset = img.height - (len(text_lines) * 25) - 10
         for line in text_lines:
