@@ -1,6 +1,7 @@
 import os
 import time
 import requests
+from requests.auth import HTTPDigestAuth
 from influxdb_client import InfluxDBClient, Point, WritePrecision
 from influxdb_client.client.write_api import SYNCHRONOUS
 from datetime import datetime
@@ -10,6 +11,10 @@ URL = os.getenv('INFLUX_URL')
 TOKEN = os.getenv('INFLUX_TOKEN')
 ORG = os.getenv('INFLUX_ORG')
 BUCKET = os.getenv('INFLUX_BUCKET')
+ESP_USER = os.getenv('ESP_USER')
+ESP_PASS = os.getenv('ESP_PASS')
+
+auth = HTTPDigestAuth(ESP_USER, ESP_PASS) if ESP_USER and ESP_PASS else None
 
 print(f"Scraper starting. ESP_IP: {ESP_IP}, Influx: {URL}")
 
@@ -19,7 +24,7 @@ write_api = client.write_api(write_options=SYNCHRONOUS)
 def scrape():
     ts = datetime.now().strftime('%H:%M:%S')
     try:
-        r = requests.get(f'http://{ESP_IP}/status', timeout=10)
+        r = requests.get(f'http://{ESP_IP}/status', timeout=10, auth=auth)
         r.raise_for_status()
         data = r.json()
         print(f"[{ts}] Status fetched from ESP. RSSI: {data.get('wifi_rssi', 'N/A')}")
