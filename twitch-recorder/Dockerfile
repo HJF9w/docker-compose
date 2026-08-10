@@ -1,5 +1,5 @@
 # Use Alpine as base
-FROM python:3.14.6-alpine
+FROM python:3.14.7-alpine
 
 # Set environment variables
 ENV TZ=UTC \
