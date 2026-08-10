@@ -1,4 +1,4 @@
-FROM python:3.14.6-alpine
+FROM python:3.14.7-alpine
 
 # Install build dependencies required by some Python packages and tzdata
 # We include rust/cargo because some packages (cryptography, wheels) may require it on musl builds.
