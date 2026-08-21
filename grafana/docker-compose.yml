@@ -1,6 +1,6 @@
 services:
   app:
-    image: "grafana/grafana:13.1.4"
+    image: "grafana/grafana:13.2.0"
     restart: "unless-stopped"
     logging:
       options:
