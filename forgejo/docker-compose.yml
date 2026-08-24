@@ -70,6 +70,18 @@ services:
     restart: unless-stopped
     command: 'forgejo-runner daemon --config runner-config.yml'
 
+  renovate:
+    image: ghcr.io/renovatebot/renovate:44.40.0
+    environment:
+      RENOVATE_CONFIG_FILE: /config.js
+    volumes:
+      - ./config.enc.js:/config.js:ro
+      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/renovate:/data
+    networks:
+      - default:
+    restart: unless-stopped
+    depends_on: app
+
 networks:
   default:
   system_mac_vlan:
