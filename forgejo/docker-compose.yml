@@ -80,6 +80,11 @@ services:
     networks:
       default:
     restart: unless-stopped
+    labels:
+      cd.doco.job.enabled: "true"
+      cd.doco.job.schedule: "*/30 * * * *"
+      cd.doco.job.wait_running_jobs: "false"
+      cd.doco.job.skip_running: "true"
     depends_on:
       - app
 
