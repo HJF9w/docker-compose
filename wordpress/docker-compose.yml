@@ -11,7 +11,7 @@ services:
       - internal
 
   app:
-    image: "wordpress:7.0-php8.2-apache"
+    image: "wordpress:7.1-php8.2-apache"
     restart: unless-stopped
     #ports:
     #  - "8080:80"
