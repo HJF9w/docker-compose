@@ -79,7 +79,7 @@ services:
       - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/renovate:/data
     networks:
       default:
-    restart: unless-stopped
+    restart: no # Required for doco-cd job schedules
     labels:
       cd.doco.job.enabled: "true"
       cd.doco.job.schedule: "*/30 * * * *"
