@@ -78,9 +78,10 @@ services:
       - ./config.enc.js:/config.js:ro
       - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/renovate:/data
     networks:
-      - default:
+      default:
     restart: unless-stopped
-    depends_on: app
+    depends_on:
+      - app
 
 networks:
   default:
