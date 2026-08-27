@@ -1,6 +1,6 @@
 services:
   app:
-    image: 'portainer/portainer-ee:2.39.6'
+    image: 'portainer/portainer-ee:2.44.0'
     restart: always
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock'
