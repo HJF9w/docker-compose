@@ -22,7 +22,7 @@ services:
       bookstack_default:
 
   mariadb:
-    image: "mariadb:12.3.2-noble"
+    image: "mariadb:12.3.3-noble"
     restart: always
     logging:
       options:
