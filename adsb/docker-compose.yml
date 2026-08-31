@@ -42,7 +42,7 @@ services:
       - default
 
   airnavradar:
-    image: ghcr.io/sdr-enthusiasts/docker-airnavradar:latest-build-883
+    image: ghcr.io/sdr-enthusiasts/docker-airnavradar:latest-build-884
     env_file:
       - ".env"
       - "secrets.enc.env"
