@@ -73,7 +73,7 @@ services:
       - /var/log
 
   opensky:
-    image: ghcr.io/sdr-enthusiasts/docker-opensky-network:latest-build-845
+    image: ghcr.io/sdr-enthusiasts/docker-opensky-network:latest-build-847
     restart: unless-stopped
     env_file:
       - ".env"
