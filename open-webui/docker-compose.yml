@@ -1,6 +1,6 @@
 services:
   app:
-    image: "ghcr.io/open-webui/open-webui:v0.11.2"
+    image: "ghcr.io/open-webui/open-webui:v0.11.3"
 ##    ports: ## not needet when using network mode host
 ##      - "8080:8080"
     network_mode: "host"
