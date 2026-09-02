@@ -1,4 +1,4 @@
-FROM alpine:3.21
+FROM alpine:3.24
 
 # Install unbound, ca-certificates (for DoT TLS verification), tzdata, and bind-tools (for healthcheck / debugging)
 RUN apk add --no-cache \
