@@ -1,6 +1,6 @@
 services:
   app:
-    image: "nickfedor/watchtower:1.21.2"
+    image: "nickfedor/watchtower:1.22.0"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
     environment:
