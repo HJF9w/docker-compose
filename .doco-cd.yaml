@@ -264,6 +264,16 @@ environment:
   BASEPATH: /data
   TZ: Europe/Brussels
 
+---
+name: "vikunja"
+working_dir: "vikunja/"
+compose_files:
+  - docker-compose.yml
+timeout: 300
+environment:
+  BASEPATH: /data
+  TZ: Europe/Brussels
+
 ##---
 ##name: "video-player"
 ##working_dir: "video-player/"

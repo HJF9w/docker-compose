@@ -28,6 +28,7 @@
         @syncthing    		host syncthing.ioui.eu
         @twitch    		host twitch.ioui.eu
         @vaultwarden   		host vaultwarden.ioui.eu
+        @vikunja                host vikunja.ioui.eu
 
         handle @bookstack     	{
 		reverse_proxy bookstack-app-1:8080
@@ -85,6 +86,9 @@
 	}
         handle @vaultwarden    	{
 		reverse_proxy vaultwarden-app-1:80
+	}
+        handle @vikunja {
+		reverse_proxy vikunja-app-1:3456
 	}
 
         handle @portainer-xenon {
