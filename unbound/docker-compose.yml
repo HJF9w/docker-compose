@@ -1,0 +1,20 @@
+services:
+  app:
+    build: .
+    restart: always
+    env_file:
+      - ".env"
+    environment:
+      - TZ=${TZ:-Europe/Berlin}
+    volumes:
+      - "./unbound.enc.conf:/etc/unbound/unbound.conf:ro"
+    networks:
+      system_mac_vlan:
+        ipv4_address: "${EXT_IPV4}"
+      unbound_to_bind:
+
+networks:
+  system_mac_vlan:
+    external: true
+  unbound_to_bind:
+    external: true

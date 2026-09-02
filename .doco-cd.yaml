@@ -303,4 +303,15 @@ environment:
   BASEPATH: /data
   TZ: Europe/Brussels
 
-
+---
+name: "unbound"
+working_dir: "unbound/"
+compose_files:
+  - docker-compose.yml
+timeout: 600
+build:
+  no_cache: true
+  force_image_pull: true
+environment:
+  BASEPATH: /data
+  TZ: Europe/Brussels
