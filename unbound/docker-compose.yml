@@ -11,10 +11,10 @@ services:
     networks:
       system_mac_vlan:
         ipv4_address: "${EXT_IPV4}"
-      unbound_to_bind:
+      bind_to_unbound:
 
 networks:
   system_mac_vlan:
     external: true
-  unbound_to_bind:
+  bind_to_unbound:
     external: true
