@@ -52,7 +52,7 @@ services:
       default:
 
   db:
-    image: mariadb:12.3
+    image: mariadb:13.0
     restart: unless-stopped
     volumes:
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/db:/var/lib/mysql"
