@@ -11,6 +11,8 @@ services:
       PASS_ENV: "true"
       APPRISE_API_URL: http://apprise:8000/notify
       APPRISE_NOTIFY_LEVEL: info
+      MAX_CONCURRENT_DEPLOYMENTS: "1"
+      MAX_CONCURRENT_PREDEPLOYMENTS: "1"
       APPRISE_NOTIFY_URLS_FILE: /run/secrets/apprise_urls.txt
       GIT_AUTH_DOMAINS_FILE: /run/secrets/auth_domains.txt
       SOPS_AGE_KEY_FILE: /run/secrets/keys.txt
