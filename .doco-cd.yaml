@@ -46,17 +46,6 @@ environment:
   TZ: Europe/Brussels
 
 ---
-name: "doco-cd-redeploy"
-working_dir: "doco-cd-redeploy/"
-compose_files:
-  - docker-compose.yml
-timeout: 300
-destroy: true
-environment:
-  BASEPATH: /data
-  TZ: Europe/Brussels
-  
----
 name: "doco-cd"
 working_dir: "doco-cd/"
 compose_files:
