@@ -16,6 +16,8 @@ services:
       APPRISE_NOTIFY_URLS_FILE: /run/secrets/apprise_urls.txt
       GIT_AUTH_DOMAINS_FILE: /run/secrets/auth_domains.txt
       SOPS_AGE_KEY_FILE: /run/secrets/keys.txt
+      SELF_UPDATE_ENABLED: true
+      SELF_UPDATE_STRATEGY: applier
       POLL_CONFIG: |
         - url: "https://github.com/HJF9w/docker-bookstack.git"
           interval: 960
