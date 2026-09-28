@@ -36,22 +36,6 @@ environment:
   TZ: Europe/Brussels
 
 ---
-name: "doco-cd-redeploy"
-working_dir: "doco-cd-redeploy/"
-destroy: true
-compose_files:
-  - docker-compose.yml
-reconciliation:
-  enabled: true
-  restart_timeout: 45
-  restart_limit: 5
-  restart_window: 600
-timeout: 300
-environment:
-  BASEPATH: /data
-  TZ: Europe/Brussels
-
----
 name: "email-cleaner"
 working_dir: "email-cleaner/"
 compose_files:
