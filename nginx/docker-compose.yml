@@ -1,6 +1,6 @@
 services:
   app:
-    image: 'jc21/nginx-proxy-manager:2.15.1'
+    image: 'jc21/nginx-proxy-manager:2.16.0'
     restart: always
     healthcheck:
       test: curl --fail http://127.0.1.1:81 || exit 1
