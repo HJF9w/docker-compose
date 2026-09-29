@@ -1,0 +1,73 @@
+name: "bind"
+working_dir: "bind9/"
+compose_files:
+  - docker-compose.yml
+timeout: 300
+
+---
+name: "doco-cd"
+working_dir: "doco-cd/"
+compose_files:
+  - docker-compose.yml
+reconciliation:
+  enabled: true
+  restart_timeout: 45
+  restart_limit: 5
+  restart_window: 600
+timeout: 300
+
+---
+name: "foodsoft"
+working_dir: "foodsoft/"
+compose_files:
+  - docker-compose.yml
+timeout: 600
+
+---
+name: "kuma"
+working_dir: "kuma"
+compose_files:
+  - docker-compose.yml
+timeout: 300
+
+---
+name: "nextcloud"
+working_dir: "nextcloud/"
+compose_files:
+  - docker-compose.yml
+timeout: 600
+
+---
+name: "nginx"
+working_dir: "nginx/"
+compose_files:
+  - docker-compose.yml
+timeout: 300
+
+---
+name: "paperless"
+working_dir: "paperless-ngx"
+compose_files:
+  - docker-compose.yml
+timeout: 300
+
+---
+name: "rustdesk"
+working_dir: "rustdesk/"
+compose_files:
+  - docker-compose.yml
+timeout: 300
+
+---
+name: "system"
+working_dir: "portainer-ee/"
+compose_files:
+  - docker-compose.yml
+timeout: 300
+
+---
+name: "wordpress"
+working_dir: "wordpress/"
+compose_files:
+  - docker-compose.yml
+timeout: 300
