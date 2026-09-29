@@ -54,7 +54,6 @@ working_dir: "forgejo/"
 compose_files:
   - docker-compose.yml
 timeout: 300
-destroy: true
 environment:
   BASEPATH: /data
   TZ: Europe/Brussels
