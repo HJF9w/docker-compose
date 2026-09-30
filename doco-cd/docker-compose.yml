@@ -46,7 +46,7 @@ services:
         condition: service_healthy
 
   apprise:
-    image: caronc/apprise:v1.5.4
+    image: caronc/apprise:v2.0.0
     restart: always
     environment:
       TZ: Europe/Brussels
