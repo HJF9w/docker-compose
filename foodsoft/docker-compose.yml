@@ -15,6 +15,8 @@ services:
         - RAILS_FORCE_SSL=${RAILS_FORCE_SSL:-false}
     volumes:
         - "./app_config.yml:/usr/src/app/config/app_config.yml:ro"
+    depends_on:
+      - worker
     networks:
       default:
       system_internal:

@@ -16,14 +16,3 @@ networks:
     external: true
   system_mac_vlan:
     external: true
-##  mac_vlan:
-##    driver: macvlan
-##    driver_opts:
-##      parent: ens18
-##    ipam:
-##      config:
-##      - subnet: ${subnet_default} 
-##        gateway: ${gateway_default}
-##        ip_range: ${ip_range}
-##        aux_addresses:
-##          net_address: ${host_address}
