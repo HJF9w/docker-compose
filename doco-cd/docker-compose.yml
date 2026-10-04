@@ -1,6 +1,6 @@
 services:
   app:
-    image: ghcr.io/kimdre/doco-cd:0.122.1
+    image: ghcr.io/kimdre/doco-cd:0.123.0
     restart: always
 ##    ports:
 ##      - "80:80"     # Webhook endpoint
@@ -48,7 +48,7 @@ services:
         condition: service_healthy
 
   apprise:
-    image: caronc/apprise:v1.5.4
+    image: caronc/apprise:v2.0.0
     restart: always
     environment:
       TZ: Europe/Brussels
