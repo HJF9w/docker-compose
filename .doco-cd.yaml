@@ -21,6 +21,7 @@ name: "foodsoft"
 working_dir: "foodsoft/"
 compose_files:
   - docker-compose.yml
+destroy: true
 timeout: 600
 
 ---
