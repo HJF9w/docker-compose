@@ -27,7 +27,7 @@ services:
     volumes:
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/data:/data"
       - "/var/run/docker.sock:/var/run/docker.sock"
-      - "/root/.config/sops/age/keys.txt:/run/secrets/keys.txt:ro"
+      - "/var/lib/age/keys.txt:/run/secrets/keys.txt:ro"
       - "./auth_domains.txt:/run/secrets/auth_domains.txt:ro"
       - "./apprise_urls.txt:/run/secrets/apprise_urls.txt:ro"
     healthcheck:
