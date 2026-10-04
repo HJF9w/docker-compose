@@ -14,7 +14,7 @@ services:
       MAX_CONCURRENT_PREDEPLOYMENTS: "1"
       APPRISE_NOTIFY_LEVEL: info
       APPRISE_NOTIFY_URLS_FILE: /run/secrets/apprise_urls.txt
-      APPRISE_NOTIFY_BODY_TEMPLATE: "{{ .DefaultBody }}\nhost: FairMarkt"
+      APPRISE_NOTIFY_BODY_TEMPLATE: "🟢🟢🟢 ########## 🟢🟢🟢\n🟢🟢🟢 host: FairMarkt 🟢🟢🟢\n🟢🟢🟢 ########## 🟢🟢🟢\n\n🟢🟢🟢 ########## 🟢🟢🟢\n🟢🟢🟢 host: FairMarkt 🟢🟢🟢\n🟢🟢🟢 ########## 🟢🟢🟢\n\n{{ .DefaultBody }}\n"
       GIT_AUTH_DOMAINS_FILE: /run/secrets/auth_domains.txt
       SOPS_AGE_KEY_FILE: /run/secrets/keys.txt
       SELF_UPDATE_ENABLED: true
