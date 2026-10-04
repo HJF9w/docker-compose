@@ -1,5 +1,5 @@
 name: "bind"
-working_dir: "bind9/"
+working_dir: "bind/"
 compose_files:
   - docker-compose.yml
 timeout: 300
