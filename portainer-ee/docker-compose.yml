@@ -6,9 +6,9 @@ services:
       - '/var/run/docker.sock:/var/run/docker.sock'
       - '${BASEPATH}/portainer/data:/data'
     networks:
-      mac_vlan:
+      system_mac_vlan:
         ipv4_address: ${portainer_mac_vlan_ipv4}
-      internal:
+      system_internal:
 
 
 networks:
