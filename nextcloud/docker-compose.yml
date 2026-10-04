@@ -5,7 +5,7 @@ services:
     restart: unless-stopped
     volumes:
       - ${BASEPATH}/nextcloud_db:/var/lib/mysql
-      - "./my.cnf:/etc/mysql/conf.d:ro"
+      - "./my.cnf:/etc/mysql/conf.d/my.cnf:ro"
     environment: ## Exec into db container as root -u 0 and use mariadb -u root -p where -p is MYSQL_ROOT_PASSWORD
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_PASSWORD=test
