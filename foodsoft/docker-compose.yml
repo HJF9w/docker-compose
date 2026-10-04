@@ -16,7 +16,8 @@ services:
     volumes:
         - "./app_config.yml:/usr/src/app/config/app_config.yml:ro"
     depends_on:
-      - worker
+      worker:
+        condition: service_started
     networks:
       default:
       system_internal:
