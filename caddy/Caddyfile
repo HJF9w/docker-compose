@@ -7,7 +7,7 @@
 
         @bookstack    		host bookstack.ioui.eu
         @fritz    		host fritz.ioui.eu
-        @fritz7170    		host fritz7170.ioui.eu
+        @fritz7530    		host fritz7530.ioui.eu
         @fritz7272    		host fritz7272.ioui.eu
         @git                    host git.ioui.eu
         @forgejo                host forgejo.ioui.eu
@@ -36,7 +36,7 @@
         handle @fritz     	{
 		reverse_proxy 10.0.42.1:80
 	}
-        handle @fritz7170     	{
+        handle @fritz7530     	{
 		reverse_proxy 10.0.42.11:80
 	}
         handle @fritz7272     	{
