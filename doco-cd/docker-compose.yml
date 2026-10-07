@@ -31,12 +31,6 @@ services:
       - "/root/.config/sops/age/keys.txt:/run/secrets/keys.txt:ro"
       - "./auth_domains.txt:/run/secrets/auth_domains.txt:ro"
       - "./apprise_urls.txt:/run/secrets/apprise_urls.txt:ro"
-    healthcheck:
-      test: ["CMD", "/doco-cd", "healthcheck"]
-      start_period: 15s
-      interval: 30s
-      timeout: 5s
-      retries: 3
     logging:
       driver: "json-file"
       options:
