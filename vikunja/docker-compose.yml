@@ -1,7 +1,7 @@
 ---
 services:
   app:
-    image: vikunja/vikunja:2.6.0
+    image: vikunja/vikunja:2.7.0
     env_file:
       - ".env"
       - "secrets.enc.env"
