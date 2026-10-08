@@ -53,6 +53,13 @@ compose_files:
 timeout: 300
 
 ---
+name: "forgejo"
+working_dir: "forgejo"
+compose_files:
+  - docker-compose.yml
+timeout: 600
+
+---
 name: "rustdesk"
 working_dir: "rustdesk/"
 compose_files:

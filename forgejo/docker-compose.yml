@@ -1,0 +1,98 @@
+services:
+  app:
+    image: codeberg.org/forgejo/forgejo:16.0.5
+    env_file:
+      - "secrets.enc.env"
+      - ".env"
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+    restart: unless-stopped
+    networks:
+      system_mac_vlan:
+        ipv4_address: "${EXT_IPV4}"
+        mac_address: 64:16:7F:69:CC:A2
+      default:
+      nginx_to_forgejo:
+    volumes:
+      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/data:/data
+      - /etc/localtime:/etc/localtime:ro
+##    ports:
+##      - "3000:3000"
+##      - "222:22"
+    depends_on:
+      - db
+      - redis
+
+  db:
+    image: postgres:14.24-alpine3.23
+    restart: unless-stopped
+    env_file:
+      - "secrets.enc.env"
+      - ".env"
+    networks:
+      - default
+    volumes:
+      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/db:/var/lib/postgresql/data
+
+  redis:
+    image: valkey/valkey:9.1.0-alpine3.23
+    networks:
+      - default
+    restart: unless-stopped
+    env_file:
+      - "secrets.enc.env"
+
+  dind:
+    image: docker:29.5.3-dind-alpine3.23
+    privileged: 'true'
+    command: ['dockerd', '-H', 'tcp://0.0.0.0:2375', '--tls=false']
+    restart: unless-stopped
+    networks:
+      - default
+
+  runner:
+    image: data.forgejo.org/forgejo/runner:13.2.0
+    networks:
+      - default
+    env_file:
+      - ".env"
+      - "secrets.enc.env"
+    depends_on:
+      dind:
+        condition: service_started
+    environment:
+      DOCKER_HOST: tcp://dind:2375
+    user: 1000:1000
+    volumes:
+      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/runner:/data
+      - ./runner-config.enc.yml:/data/runner-config.yml
+    restart: unless-stopped
+    command: 'forgejo-runner daemon --config runner-config.yml'
+
+  renovate:
+    image: ghcr.io/renovatebot/renovate:44.142.1
+    environment:
+      RENOVATE_CONFIG_FILE: /config.js
+    volumes:
+      - ./config.enc.js:/config.js:ro
+      - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/renovate:/data
+    networks:
+      default:
+    restart: no # Required for doco-cd job schedules
+    labels:
+      cd.doco.job.enabled: "true"
+      cd.doco.job.schedule: "*/30 * * * *"
+      cd.doco.job.wait_running_jobs: "false"
+      cd.doco.job.skip_running: "true"
+      cd.doco.job.notify_on: "failure"
+    depends_on:
+      - app
+
+networks:
+  default:
+  system_mac_vlan:
+    external: true
+  nginx_to_forgejo:
+    external: true
+

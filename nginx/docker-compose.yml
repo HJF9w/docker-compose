@@ -15,9 +15,11 @@ services:
       system_mac_vlan:
         ipv4_address: ${NGINX_SYSTEM_MAC_VLAN_IPV4}
       system_internal:
+      to_forgejo:
 
 networks:
   system_internal:
     external: true
   system_mac_vlan:
     external: true
+  to_forgejo:
