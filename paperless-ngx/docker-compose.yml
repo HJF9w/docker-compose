@@ -34,13 +34,13 @@ services:
       - 'default'
 
   tika:
-    image: 'apache/tika:4.0.0-1-full'
+    image: 'apache/tika:4.1.0-1-full'
     restart: 'unless-stopped'
     networks:
       - 'default'
 
   server:
-    image: 'ghcr.io/paperless-ngx/paperless-ngx:3.2.1'
+    image: 'ghcr.io/paperless-ngx/paperless-ngx:3.3.0'
     restart: 'unless-stopped'
     depends_on:
       - db
