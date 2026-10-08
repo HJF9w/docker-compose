@@ -15,12 +15,12 @@ services:
       APPRISE_NOTIFY_LEVEL: info
       APPRISE_NOTIFY_URLS_FILE: /run/secrets/apprise_urls.txt
       APPRISE_NOTIFY_BODY_TEMPLATE: "🟩🥬🌳\n🟢💚🟢    Host: FairMarkt\n🌳🍏🟩\n\n{{ .DefaultBody }}\n"
-      SYNC_WINDOWS: |
-        - name: business-hours
-          kind: deny
-          schedule: "0 7 * * 1-5"
-          duration: 12h
-          manual_sync: true
+#      SYNC_WINDOWS: |
+#        - name: business-hours
+#          kind: deny
+#          schedule: "0 7 * * 1-5"
+#          duration: 12h
+#          manual_sync: true
       GIT_AUTH_DOMAINS_FILE: /run/secrets/auth_domains.txt
       SOPS_AGE_KEY_FILE: /run/secrets/keys.txt
       SELF_UPDATE_ENABLED: true

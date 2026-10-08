@@ -57,6 +57,7 @@ name: "forgejo"
 working_dir: "forgejo"
 compose_files:
   - docker-compose.yml
+destroy: true
 timeout: 600
 
 ---
