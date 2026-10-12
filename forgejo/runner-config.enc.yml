@@ -22,6 +22,7 @@ runner:
     capacity: ENC[AES256_GCM,data:wQ==,iv:Te0Gt2HFPjUK44iJS8JFM5y69TGXaRJfs+R6qOHQCsU=,tag:NaKbXNW6z7c4bDvdrqc7zQ==,type:int]
     #ENC[AES256_GCM,data:q4dRFqXyAxj5GF98XIE5mwJWtMKk6czld8RkPXaN/8+/ctnWOIKCAB4=,iv:fqugf84n18FYaknR4oy4j/yYhUr7luEozRlC216q+jg=,tag:5/Y5HVwptfUEjcLpbTtEeg==,type:comment]
     envs:
+        DOCKER_HOST: ENC[AES256_GCM,data:/HQK7u9hB4vG0tmLY66HvMw=,iv:F2y4JOqoDE/EZb7txhfc7ucGDXNKh3lhWericWPRhUk=,tag:dIy3LHipOmbbtUnhqVD9Lw==,type:str]
         A_TEST_ENV_NAME_1: ENC[AES256_GCM,data:1xdQD+YmEzZJa6okJ8ydXKrU,iv:kOXAnCSYM7XKRTY+FSYDoYjPhF77GWS9JA8aYaJYa/0=,tag:A/vAg2Fckn/UZtUphz2Q5g==,type:str]
         A_TEST_ENV_NAME_2: ENC[AES256_GCM,data:DDhLK+6kpImQMVbCVyPQYWpI,iv:+1KPwMpnTKXajlRhBS6Mv5D3DV2KFIogQNP3asn2JhM=,tag:HbGD0+XO9cDOvDDRkzB7Zg==,type:str]
     #ENC[AES256_GCM,data:LbpfEuYGSSYrzo24g0yVtrbEGCx94yV35WjiT1xal+7gElOYduiSnAejOByitV1cq0c5EAE=,iv:ZBk1EKN2gLbEbI7JShZPYsewMGsujT7Pp1w3dOkNT9A=,tag:2vB3oK5oj1ED9XBs9+loZA==,type:comment]
@@ -60,6 +61,7 @@ runner:
     labels:
         - ENC[AES256_GCM,data:1uepKKEF9qrWhDzP9MWRyzhZtg4X/eCWezT6+mKgOJaeIrGOXRkwd4Yb,iv:ioEINePUauN1X9VD3usvGBzhaYBm2wHmoxF+IS6kCpI=,tag:/Tuz6fPV5tS6/O/nsdjXRA==,type:str]
         - ENC[AES256_GCM,data:x4ilR9CQudTveYbWO7K0qXWPzcusfbBb8hrYWA6kA4ia/lQLgK7GHyJyrF3ZvoZx9iSFzptlrJJjt/hw,iv:SmnZuE+EAybL2eVLG695nVTEp0AzEXyuB8BR28qCgPk=,tag:80Adh4LyUyyPLuWDVcYt9g==,type:str]
+        - ENC[AES256_GCM,data:VzVpnPV9HAClbFY3KVlixzuipPCtQRyZEOTdkAUKy04ZiAONnjwMawRUZkFOhRocDKgGAPI=,iv:2blC/Ol/xmZ01oPxie+qr93fOP6xO6K7I8SZYYF4SXQ=,tag:lKWEOBHlhApHnHIrVKN6fg==,type:str]
 cache:
     #
     #ENC[AES256_GCM,data:il8pSC4q5rmaOkX3QMegNPhdPRCtspJfcO3DwN6I7oaPBBxZY0J1OkDJ5jwBg6FfjzL5CEeOIwJhaDT65C/IVeoJ8ZfOKgdp4LofBqSNMMd6,iv:DGGymEorZrRvwXtbLfHLPkheYKKHWDQiYEZiWJMzZ/E=,tag:psapRCLFs9SctONYyt/R4A==,type:comment]
@@ -183,7 +185,7 @@ container:
     #ENC[AES256_GCM,data:kqq3k6YjOz6IUy28r0oh0Cua15LwVvYgBydpJyIAYrTOntpbi+Zv9Xi5wRdyxjVQsqNr8Io3xTWI02XCqaZWDu+NKGoXu6FES2ftzAVi3VTLXrVQDV6PBl77Wt63TSbFNzraVn0Qq/hkHjXdj4+w9yib0vcCnMCqdA==,iv:2ZyZLjD90N0nve2KDAj2LJb63eB84gRirjbe3C121DA=,tag:ThpBXu/2EmoA2z8+vd1ujQ==,type:comment]
     privileged: ENC[AES256_GCM,data:dAKYfcI=,iv:iPw5reC0Moqxdw6AX+SU6u5Qgwhq7QtQgh4YJUkXW4A=,tag:xkkqW3PCjuJDaN0SNg4hcw==,type:bool]
     #ENC[AES256_GCM,data:nEoHzSI2MPsiR1/MktvBjyqJeLoeUVZTsfDRYh0FUlVg9rK4PHoPojFixBSEzMcl2TvaOShgyA3gCfaqZEi55G1OVj5HWomgaSSpkqYp8uxbhuSH5Kcc4SbqdC7765zUiUGj/8aD7Kf4RJTlFg4=,iv:rxDG1DYtvxb8u829HpMo+dcO/nZPCy989KrOY4eoCEo=,tag:2Iu2K84Rub+WMtw/xU9rOA==,type:comment]
-    options: null
+    options: ENC[AES256_GCM,data:VWYprN2Yzjgcb87HpZ7XXM3Hq+j+hnlf0beqeBXm,iv:7lgYjsIs9l5hMCbpGWblX1z69GPtQ135INxznDViLAs=,tag:iDgDePdUD4OaORVWxnO8PQ==,type:str]
     #ENC[AES256_GCM,data:eSshb857bdWdK+9tGOWqjtIDx0KvhoTXLZ7uek2hkai4hI+w3MoLfcDTUAoHPzbeFLvt,iv:g1roDxTiC0zrS0Zgz8MkuAv/D7fc8diZrPlUPqd/bLA=,tag:sJz0LC78fpR38LZqfW+cHA==,type:comment]
     #ENC[AES256_GCM,data:4mzS88ZTWf/kC7Fi+lKs6RV1ncew6snRoAyPhmKFGaW0ZYi1ckWLLw==,iv:339HOKu+UfLOvG0FzwPOg/Of2z1A/GUmYYJ2fAM1/3w=,tag:DCUQHOgmI1tcOjwhJgOOvg==,type:comment]
     workdir_parent: null
@@ -300,7 +302,7 @@ sops:
             jkeo0UrXTvj3Vo42ivkKVggHjd5aHYqtymOEARNdU7kIMB2VJS6ANg==
             -----END AGE ENCRYPTED FILE-----
           recipient: age1xv38kvtemmljzvy0exh6ugrkyhcp8rkg8eu7gnudwdg354sr24tqdzed6t
-    lastmodified: "2026-06-07T12:39:27Z"
-    mac: ENC[AES256_GCM,data:3L4sDpZTRFnakRAx7+XKdMBYTa+tOcVISiVGTQcqExLcCmMyPlfzERqOzHHBjRjv5A/k4EA/mYiURLfjAfqJQUTbELxvCnwSQDQoqUlhV+qJo2VAVOaLc7bAIKPRJ4KX5knbD4SxADrVK74ejdcBcMl+6zjDDnC0+mzpJgGWx64=,iv:Qn5w9UE9XrlCoOgZ+CBfqJoKtOXt8brAUQ0E43abteo=,tag:J7thZqS2VPVwexoYizKUug==,type:str]
+    lastmodified: "2026-10-12T13:22:45Z"
+    mac: ENC[AES256_GCM,data:MPam1HzRLGgV6QKjSbS/aD7LAJI1IhNIyydcyfTk9I/L489oq5i9SrRQVTGPIWAlEDuUSW7NkYTqQY2eQEfwjOnoNcwq8A6p+pxqu84w8ofcx14Fuqa39+aZjppDlIcMWR78HTUl0Bl5kieljxHgv4IeNLz41kuRgUWCRSMWex0=,iv:Q+CPShaLJubVZoP4++WCSizhDs4lIgx/BxNcXpSf40E=,tag:6TyHduF0b4u7P9lcgTyLaA==,type:str]
     unencrypted_suffix: _unencrypted
-    version: 3.13.1
+    version: 3.13.3
