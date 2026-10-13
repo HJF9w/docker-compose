@@ -16,6 +16,7 @@ services:
       APPRISE_NOTIFY_URLS_FILE: /run/secrets/apprise_urls.txt
       GIT_AUTH_DOMAINS_FILE: /run/secrets/auth_domains.txt
       SOPS_AGE_KEY_FILE: /run/secrets/keys.txt
+      API_SECRET_FILE: /run/secrets/api.txt
       SELF_UPDATE_ENABLED: true
       SELF_UPDATE_STRATEGY: applier
       POLL_CONFIG: |
@@ -31,6 +32,7 @@ services:
       - "/root/.config/sops/age/keys.txt:/run/secrets/keys.txt:ro"
       - "./auth_domains.txt:/run/secrets/auth_domains.txt:ro"
       - "./apprise_urls.txt:/run/secrets/apprise_urls.txt:ro"
+      - "./api.txt:/run/secrets/api.txt:ro"
     logging:
       driver: "json-file"
       options:
