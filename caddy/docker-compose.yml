@@ -32,5 +32,5 @@ networks:
     external: true
   to_adsb:
   to_forgejo:
-  to_goodweathernotify
+  to_goodweathernotify:
 

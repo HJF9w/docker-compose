@@ -83,7 +83,7 @@ environment:
 
 ---
 name: "goodweathernotify"
-working_dir: "goodweathernotify/"
+working_dir: "goodWeatherNotify/"
 compose_files:
   - docker-compose.yml
 timeout: 300
