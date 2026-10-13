@@ -23,6 +23,7 @@ services:
       system_internal:
       to_adsb:
       to_forgejo:
+      to_goodweathernotify:
 
 networks:
   system_internal:
@@ -31,4 +32,5 @@ networks:
     external: true
   to_adsb:
   to_forgejo:
+  to_goodweathernotify
 

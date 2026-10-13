@@ -82,6 +82,16 @@ environment:
   TZ: Europe/Brussels
 
 ---
+name: "goodweathernotify"
+working_dir: "goodweathernotify/"
+compose_files:
+  - docker-compose.yml
+timeout: 300
+environment:
+  BASEPATH: /data
+  TZ: Europe/Brussels
+
+---
 name: "hetzner-ddns"
 working_dir: "hetzner-ddns/"
 compose_files:

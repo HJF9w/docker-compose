@@ -13,6 +13,7 @@
         @forgejo                host forgejo.ioui.eu
         @fritz7390    		host fritz7390.ioui.eu
         @grafana    		host grafana.ioui.eu
+        @goodweathernotify      host goodweathernotify.ioui.eu
         @home    		host home.ioui.eu
         @influxdb    		host influxdb.ioui.eu
         @it-tools    		host it-tools.ioui.eu
@@ -53,6 +54,9 @@
 	}
         handle @grafana     	{
 		reverse_proxy grafana-app-1:3000
+	}
+        handle @goodweathernotify 	{
+		reverse_proxy goodweathernotify-app-1:8000
 	}
         handle @home     	{
 		reverse_proxy 10.0.42.123:8123

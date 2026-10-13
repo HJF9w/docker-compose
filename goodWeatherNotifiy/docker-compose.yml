@@ -1,0 +1,31 @@
+---
+services:
+  app:
+    image: git.ioui.eu/ioui/goodweathernotify:0.1.0
+    restart: unless-stopped
+    env_file:
+      - ".env"
+      - "secrets.enc.env"
+    environment:
+      TZ: "Europe/Brussels"
+    user: "1000:1000"
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - "no-new-privileges:true"
+    cap_drop:
+      - ALL
+    volumes:
+      - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/data:/data"
+    networks:
+      caddy_to_goodweathernotify:
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  caddy_to_goodweathernotify:
+    external: true
