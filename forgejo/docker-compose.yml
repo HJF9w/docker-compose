@@ -83,7 +83,8 @@ services:
     labels:
       cd.doco.job.enabled: "true"
       cd.doco.job.schedule: "*/30 * * * *"
-      cd.doco.job.wait_running_jobs: "false"
+      cd.doco.job.execution_mode: "restart"
+      #cd.doco.job.wait_running_jobs: "false"
       cd.doco.job.skip_running: "true"
       cd.doco.job.notify_on: "failure"
     depends_on:
