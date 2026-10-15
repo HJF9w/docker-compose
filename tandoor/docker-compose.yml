@@ -1,6 +1,6 @@
 services:
   db:
-    image: "postgres:16-alpine3.22"
+    image: "postgres:16-alpine3.22@sha256:786dab398303b8ce7cb76b407bb21ef2e4dfbbbd4c6abcf3d29b3130467ffdbc"
     restart: "unless-stopped"
     env_file:
       - ".env"
@@ -11,7 +11,7 @@ services:
       - "default"
 
   app:
-    image: "vabene1111/recipes:2.6.15"
+    image: "vabene1111/recipes:2.6.15@sha256:2e759dd1478a2ed119ee474e28522079fb1cfa50b3fd25cba89f6b9a67abad72"
     restart: "unless-stopped"
     env_file:
       - ".env"

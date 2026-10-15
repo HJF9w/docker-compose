@@ -1,6 +1,6 @@
 services:
   app:
-    image: "vaultwarden/server:1.37.4-alpine"
+    image: "vaultwarden/server:1.37.4-alpine@sha256:19ea2b669945d842dadc3d500f2d6a795866a003330f59a47b9634658bae98bb"
       #environment:
       #- ADMIN_TOKEN=123 # use to access the /admin pannel
       #  - DOMAIN=https://speicher.ddns.net

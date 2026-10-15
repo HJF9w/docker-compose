@@ -1,6 +1,6 @@
 services:
   app:
-    image: "filiparag/hetzner_ddns:1.1.0"
+    image: "filiparag/hetzner_ddns:1.1.0@sha256:c67330cc9bc7f2ca2042f1a15528e49fb320de4651f41f72a5715ed2a67a0f5c"
     #image: "filiparag/hetzner_ddns:1.0.1-arm64"
     restart: always
     volumes:

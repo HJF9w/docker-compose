@@ -1,6 +1,6 @@
 services:
   db:
-    image: postgres:18.3-alpine3.23
+    image: postgres:18.3-alpine3.23@sha256:54451ecb8ab38c24c3ec123f2fd501303a3a1856a5c66e98cecf2460d5e1e9d7
     restart: unless-stopped
     volumes:
       - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/db:/var/lib/postgresql
@@ -11,7 +11,7 @@ services:
       default:
 
   redis:
-    image: redis:8.10-alpine3.23
+    image: redis:8.10-alpine3.23@sha256:3811787313eba226a2ef38658c6ccb91cd5e110edc89c37767de373120a0e5a0
     restart: unless-stopped
     command: /bin/sh -c 'exec redis-server --requirepass "$$REDIS_HOST_PASSWORD"'
     env_file:
@@ -47,7 +47,7 @@ services:
       system_internal:
 
   cron:
-    image: nextcloud:35.0-apache
+    image: nextcloud:35.0-apache@sha256:8f2f0e93aca5e9457019933936dea1f313052e72c696b4aecb31580a208b859f
     restart: unless-stopped
     env_file:
       - ".env"
@@ -61,7 +61,7 @@ services:
       default:
 
   imaginary:
-    image: nextcloud/aio-imaginary:20260929_105435
+    image: nextcloud/aio-imaginary:20260929_105435@sha256:0e32abf8b2198e53b6395983e2c046dad53d82cfd2ad227d731425f6296f1cf9
     restart: unless-stopped
     env_file:
       - ".env"
