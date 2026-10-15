@@ -1,7 +1,7 @@
 ---
 services:
   app:
-    image: forgejo.ioui.eu/ioui/goodweathernotify:0.3.0
+    image: forgejo.ioui.eu/ioui/goodweathernotify:0.3.0@sha256:720b6e140e0dadeb2a0f2f231b82cc6e6698e585e302b73e69bd67ee6b55bd13
     restart: unless-stopped
     env_file:
       - ".env"

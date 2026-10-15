@@ -1,7 +1,7 @@
 ---
 services:
   hbbs:
-    image: rustdesk/rustdesk-server:1.1.16
+    image: rustdesk/rustdesk-server:1.1.16@sha256:8ecdab65deb7c84652a626380e31d11a8f1fbafd97916d57f95c20628f943c00
     command: 'hbbs -k _'
     #command: 'hbbs -r 0.0.0.0:21117 -k _' # Set Relay servers
     env_file:
@@ -21,7 +21,7 @@ services:
     restart: unless-stopped
 
   hbbr:
-    image: rustdesk/rustdesk-server:1.1.16
+    image: rustdesk/rustdesk-server:1.1.16@sha256:8ecdab65deb7c84652a626380e31d11a8f1fbafd97916d57f95c20628f943c00
     command: 'hbbr -k _'
     env_file:
       - "secrets.enc.env"

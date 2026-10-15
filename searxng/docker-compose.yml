@@ -1,7 +1,7 @@
 version: '3'
 services:
   app:
-    image: 'searxng/searxng'
+    image: 'searxng/searxng@sha256:ad273460b12390ab1ad9c6ea630dafed39045ab0b9096a85ca31f5246517c670'
     restart: unless-stopped
     environment:
       - 'BASE_URL=https://searx.ioui.eu'
