@@ -19,7 +19,7 @@ services:
       system_internal:
 
   agent:
-    image: 'portainer/agent:2.45.1-alpine'
+    image: 'portainer/agent:2.45.2-alpine@sha256:d4f03ec3ae2a8630394bb41df09788af3228ceb891f15b89ba6205bca07ada19'
     env_file:
       - ".env"
       - "secrets.enc.env"
