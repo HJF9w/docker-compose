@@ -6,8 +6,9 @@
   ],
   "baseBranches": [
     "main",
-    "ui",
-    "db"
+    "master",
+    "xenon"
+    "opal"
   ],
 "labels": ["dependencies"]
 }
