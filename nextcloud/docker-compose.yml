@@ -25,7 +25,7 @@ services:
       default:
 
   app:
-    image: nextcloud:35.0.0-apache
+    image: nextcloud:35.0.1-apache@sha256:8f2f0e93aca5e9457019933936dea1f313052e72c696b4aecb31580a208b859f
     restart: unless-stopped
     volumes:
       - ${BASEPATH}/${COMPOSE_PROJECT_NAME}/app:/var/www/html
