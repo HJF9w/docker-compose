@@ -23,8 +23,8 @@ services:
         - url: "https://github.com/HJF9w/docker-bookstack.git"
           interval: 960
           reference: master
-        - url: "${MY_REPO_URL}"
-          interval: 960
+        - url: "https://forgejo.ioui.eu/IOUI/docker-compose.git"
+          interval: 360
           reference: opal
     volumes:
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/data:/data"
