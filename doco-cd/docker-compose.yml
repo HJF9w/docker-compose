@@ -23,7 +23,7 @@ services:
         - url: "https://github.com/HJF9w/docker-bookstack.git"
           interval: 900
           reference: master
-        - url: "https://forgejo.ioui.eu/IOUI/docker-compose.git"
+        - url: "ssh://git@git.ioui.eu/IOUI/docker-compose.git"
           interval: 360
           reference: opal
     volumes:
