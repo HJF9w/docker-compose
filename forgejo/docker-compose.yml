@@ -71,7 +71,7 @@ services:
     command: 'forgejo-runner daemon --config runner-config.yml'
 
   renovate:
-    image: ghcr.io/renovatebot/renovate:44.164.6@sha256:a77b3f9602ddc451425e35b28e1784e56102c41149d467f1e573f891fd3556ad
+    image: ghcr.io/renovatebot/renovate:44.164.9@sha256:47c12c371ed8199fd21d058cabca23e1e04c5211c1e27d78b6ee6cf191544f5c
     environment:
       RENOVATE_CONFIG_FILE: /config.js
     volumes:
