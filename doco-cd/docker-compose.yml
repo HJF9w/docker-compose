@@ -19,8 +19,8 @@ services:
       SELF_UPDATE_ENABLED: true
       SELF_UPDATE_STRATEGY: applier
       POLL_CONFIG: |
-        - url: "${MY_REPO_URL}"
-          interval: 960
+        - url: "git@git.ioui.eu/IOUI/docker-compose.git"
+          interval: 360
           reference: xenon
     volumes:
       - "${BASEPATH}/${COMPOSE_PROJECT_NAME}/data:/data"
