@@ -21,13 +21,14 @@ services:
 #          schedule: "0 7 * * 1-5"
 #          duration: 12h
 #          manual_sync: true
+      API_SECRET_FILE: /run/secrets/api.txt
       GIT_AUTH_DOMAINS_FILE: /run/secrets/auth_domains.txt
       SOPS_AGE_KEY_FILE: /run/secrets/keys.txt
       SELF_UPDATE_ENABLED: true
       SELF_UPDATE_STRATEGY: applier
       POLL_CONFIG: |
-        - url: "${MY_REPO_URL}"
-          interval: 960
+        - url: "ssh://git@git.fairmarkt/FairMarkt/docker-compose.git"
+          interval: 360
           reference: main
     #command: "apply-self --bootstrap" #for first setup
     volumes:
@@ -36,6 +37,7 @@ services:
       - "/var/lib/age/keys.txt:/run/secrets/keys.txt:ro"
       - "./auth_domains.txt:/run/secrets/auth_domains.txt:ro"
       - "./apprise_urls.txt:/run/secrets/apprise_urls.txt:ro"
+      - "./api.txt:/run/secrets/api.txt:ro"
     logging:
       driver: "json-file"
       options:
