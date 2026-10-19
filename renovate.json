@@ -1,0 +1,32 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    "config:best-practices"
+  ],
+  "schedule": [ "* 8,17 * * *" ],
+  "baseBranchPatterns": [
+    "master",
+  ],
+  "labels": ["dependencies"],
+  "dependencyDashboard": true,
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["digest"],
+      "schedule": ["* 10 * * 1,4"]
+    },
+    {
+      "description": "Require manual approval for Postgres major updates, but allow minor/patch",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["postgres", "bitnami/postgresql"],
+      "matchUpdateTypes": ["major"],
+      "dependencyDashboardApproval": true
+    },
+    {
+      "description": "Ignore patch updates for renovate",
+      "matchPackageNames": ["renovatebot/renovate"],
+      "matchUpdateTypes": ["patch"],
+      "enabled": false
+    }
+  ]
+}
