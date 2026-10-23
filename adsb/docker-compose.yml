@@ -58,7 +58,7 @@ services:
       - /var/log
 
   planewatch:
-    image: ghcr.io/plane-watch/docker-plane-watch:v0.0.10@sha256:f8cc3254943c3f0cd8b97d448bee929c87f3c78b9ecf1a61a255343797e61745
+    image: ghcr.io/plane-watch/docker-plane-watch:v0.0.11@sha256:24562527ff8ecd1b99f439646596bb9d4e2ee575d8dc09cafb663180767695d6
     env_file:
       - ".env"
       - "secrets.enc.env"
